@@ -1,0 +1,16 @@
+﻿using System.IO;
+using System.Runtime.Serialization.Json;
+
+namespace UNicoAPI2.APIs.search
+{
+    public class Parser : IParser<Serial.contract>
+    {
+        public Serial.contract Parse(byte[] Value)
+        {
+            //var xml = Encoding.UTF8.GetString(Value);
+            var serialize = new DataContractJsonSerializer(typeof(Serial.contract));
+
+            return (Serial.contract)serialize.ReadObject(new MemoryStream(Value));
+        }
+    }
+}
