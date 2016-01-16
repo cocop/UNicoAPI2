@@ -107,42 +107,10 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APIs\getflv\Accesser.cs" />
-    <Compile Include="APIs\getflv\Parser.cs" />
-    <Compile Include="APIs\IAccesser.cs" />
-    <Compile Include="APIs\AccesserType.cs" />
-    <Compile Include="APIs\IParser.cs" />
-    <Compile Include="APIs\login\Accesser.cs" />
-    <Compile Include="APIs\login\Parser.cs" />
-    <Compile Include="APIs\search\Accesser.cs" />
-    <Compile Include="APIs\search\Parser.cs" />
-    <Compile Include="APIs\search\Serial\contract.cs" />
-    <Compile Include="APIs\search\Serial\list.cs" />
-    <Compile Include="APIs\search\Serial\nicopedia.cs" />
-    <Compile Include="APIs\Serial\error.cs" />
-    <Compile Include="Connect\ContentMethod.cs" />
-    <Compile Include="Connect\ContentType.cs" />
-    <Compile Include="Connect\Session.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="NicoServicePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VideoService\PlayTimeFilter.cs" />
-    <Compile Include="VideoService\PostTimeFilter.cs" />
-    <Compile Include="VideoService\Response.cs" />
-    <Compile Include="VideoService\SearchOption.cs" />
-    <Compile Include="VideoService\SearchType.cs" />
-    <Compile Include="VideoService\SortOrder.cs" />
-    <Compile Include="VideoService\SortTarget.cs" />
-    <Compile Include="VideoService\Status.cs" />
-    <Compile Include="VideoService\User\User.cs" />
-    <Compile Include="VideoService\VideoServicePage.cs" />
-    <Compile Include="VideoService\Video\Tag.cs" />
-    <Compile Include="VideoService\Video\VideoInfo.cs" />
     <EmbeddedResource Include="Properties\UNicoAPI2.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="VideoService\Mylist\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
