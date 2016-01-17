@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace UNicoAPI2.APIs.videopagehtml
+namespace UNicoAPI2.APIs.video_page_html
 {
     public class Parser : IParser<string>
     {

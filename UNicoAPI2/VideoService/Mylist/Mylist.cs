@@ -79,11 +79,11 @@ namespace UNicoAPI2.VideoService.Mylist
         /// <summary>
         /// マイリスト動画
         /// </summary>
-        //public MylistItem[] MylistItem { get; set; }
+        public MylistItem[] MylistItem { get; set; }
 
         /// <summary>
         /// マイリストページ
         /// </summary>
-        //internal MylistPage mylistPage { get; set; }
+        internal MylistPage mylistPage { get; set; }
     }
 }

@@ -63,7 +63,7 @@ namespace UNicoAPI2.VideoService.User
         /// <summary>
         /// アイコン
         /// </summary>
-        //public Picture Icon { get; set; }
+        public Picture Icon { get; set; }
 
         /// <summary>
         /// プレミアムかどうか

@@ -61,7 +61,7 @@ namespace UNicoAPI2.VideoService.Video
                     if (videoCache == null)
                         videoCache = new APIs.getflv.Parser().Parse(data);
 
-                    var accesser = new APIs.videopagehtml.Accesser();
+                    var accesser = new APIs.video_page_html.Accesser();
                     accesser.Setting(
                         context.CookieContainer,
                         target.ID);
@@ -70,7 +70,7 @@ namespace UNicoAPI2.VideoService.Video
                 },
                 (data) =>
                 {
-                    htmlCache = new APIs.videopagehtml.Parser().Parse(data);
+                    htmlCache = new APIs.video_page_html.Parser().Parse(data);
 
                     var accesser = new APIs.getvideo.Accesser();
                     accesser.Setting(

@@ -69,7 +69,7 @@ namespace UNicoAPI2.VideoService
                 info.ShortDescription = Serial[i].description_short;
                 info.Title = Serial[i].title;
                 info.ViewCounter = Serial[i].view_counter;
-                //info.Thumbnail = NewPicture(info.Thumbnail, Serial[i].thumbnail_url);
+                info.Thumbnail = new Picture(Serial[i].thumbnail_url, Context.CookieContainer);
                 result[i] = info;
             }
 

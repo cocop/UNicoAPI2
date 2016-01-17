@@ -52,7 +52,7 @@ namespace UNicoAPI2.VideoService.Video
         /// <summary>
         /// サムネイル画像
         /// </summary>
-        //public Picture Thumbnail { set; get; }
+        public Picture Thumbnail { set; get; }
 
         /// <summary>
         /// 投稿日時

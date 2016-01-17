@@ -134,8 +134,8 @@
     <Compile Include="APIs\upload_comment\Parser.cs" />
     <Compile Include="APIs\upload_comment\Serial\chat_result.cs" />
     <Compile Include="APIs\upload_comment\Serial\packet.cs" />
-    <Compile Include="APIs\videopagehtml\Accesser.cs" />
-    <Compile Include="APIs\videopagehtml\Parser.cs" />
+    <Compile Include="APIs\video_page_html\Accesser.cs" />
+    <Compile Include="APIs\video_page_html\Parser.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
     <Compile Include="Connect\ContentType.cs" />
     <Compile Include="Connect\Session.cs" />
@@ -146,6 +146,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VideoService\Converter.cs" />
     <Compile Include="VideoService\Mylist\Mylist.cs" />
+    <Compile Include="VideoService\Mylist\MylistItem.cs" />
+    <Compile Include="VideoService\Mylist\MylistPage.cs" />
+    <Compile Include="VideoService\Picture.cs" />
+    <Compile Include="VideoService\PictureSize.cs" />
     <Compile Include="VideoService\PlayTimeFilter.cs" />
     <Compile Include="VideoService\PostTimeFilter.cs" />
     <Compile Include="VideoService\Response.cs" />
@@ -155,6 +159,7 @@
     <Compile Include="VideoService\SortTarget.cs" />
     <Compile Include="VideoService\Status.cs" />
     <Compile Include="VideoService\User\User.cs" />
+    <Compile Include="VideoService\User\UserPage.cs" />
     <Compile Include="VideoService\VideoServicePage.cs" />
     <Compile Include="VideoService\Video\Comment.cs" />
     <Compile Include="VideoService\Video\Tag.cs" />
