@@ -44,6 +44,7 @@ namespace UNicoAPI2.Connect
             }
         }
 
+
         /// <summary>
         /// ストリームを処理する
         /// </summary>
@@ -58,7 +59,10 @@ namespace UNicoAPI2.Connect
                 if (accesser.Type == APIs.AccesserType.Upload)
                     RunUpload(Token, accesser);
 
-                RunDownload(Token, accesser);
+                var streamResult = RunDownload(Token, accesser);
+
+                if (streamResult != null)
+                    return Result = (ResultType)streamResult;
 
                 ++nowIndex;
             }
@@ -79,7 +83,7 @@ namespace UNicoAPI2.Connect
             ustream.WriteAsync(udata, 0, udata.Length).Wait(Token);
         }
 
-        private void RunDownload(CancellationToken Token, APIs.IAccesser accesser)
+        private object RunDownload(CancellationToken Token, APIs.IAccesser accesser)
         {
             var dstreamTask = accesser.GetDownloadStreamAsync();
             dstreamTask.Wait(Token);
@@ -87,12 +91,17 @@ namespace UNicoAPI2.Connect
             var dresponse = dstreamTask.Result;
             var dstream = dresponse.GetResponseStream();
 
+            if (dresponse is ResultType && UntreatedCount == 1)
+                return dresponse;
+
             using (var stream = new MemoryStream())
             {
                 var task = dstream.CopyToAsync(stream);
                 task.Wait(Token);
                 data = stream.ToArray();
             }
+
+            return null;
         }
 
         /// <summary>

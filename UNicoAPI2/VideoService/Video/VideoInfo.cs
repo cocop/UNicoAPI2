@@ -113,5 +113,10 @@ namespace UNicoAPI2.VideoService.Video
         /// 外部再生の可否
         /// </summary>
         public bool IsExternalPlay { set; get; }
+
+        /// <summary>
+        /// キャッシュ
+        /// </summary>
+        internal VideoPage videoPage;
     }
 }

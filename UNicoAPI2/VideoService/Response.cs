@@ -5,13 +5,8 @@
     /// レスポンス
     /// </summary>
     /******************************************/
-    public class Response<ResultType>
+    public class Response
     {
-        /// <summary>
-        /// 通信結果
-        /// </summary>
-        ResultType Result;
-
         /// <summary>
         /// レスポンスの可否
         /// </summary>
@@ -21,5 +16,18 @@
         /// 失敗した場合のメッセージ
         /// </summary>
         public string ErrorMessage { set; get; }
+    }
+
+    /******************************************/
+    /// <summary>
+    /// レスポンス
+    /// </summary>
+    /******************************************/
+    public class Response<ResultType> : Response
+    {
+        /// <summary>
+        /// 通信結果
+        /// </summary>
+        public ResultType Result;
     }
 }

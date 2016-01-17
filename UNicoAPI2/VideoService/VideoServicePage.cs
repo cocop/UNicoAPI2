@@ -11,14 +11,24 @@ namespace UNicoAPI2.VideoService
     /******************************************/
     public class VideoServicePage
     {
-        private Context context;
+        Context context;
 
         internal VideoServicePage(Context Context)
         {
-            this.context = Context;
+            context = Context;
         }
 
-        /// <summary>動画を検索するストリームを取得する</summary>
+        /// <summary>動画へアクセスするページを取得する</summary>
+        /// <param name="Target">ターゲット動画</param>
+        public VideoPage GetVideoPage(VideoInfo Target)
+        {
+            if (Target.videoPage != null)
+                return Target.videoPage;
+            else
+                return Target.videoPage = new VideoPage(Target, context);
+        }
+
+        /// <summary>動画を検索する</summary>
         /// <param name="Keyword">検索キーワード</param>
         /// <param name="SearchPage">検索ページの指定、1～nの間の数値を指定する</param>
         /// <param name="SearchType">検索方法を指定する</param>
@@ -50,12 +60,7 @@ namespace UNicoAPI2.VideoService
                 }
             },
             (data) =>
-            {
-                var result = new Response<VideoInfo[]>();
-                var response = new APIs.search.Parser().Parse(data);
-
-                return result;
-            });
+                Converter.ToVideoInfoResponse(context, new APIs.search.Parser().Parse(data)));
 
             return session;
         }

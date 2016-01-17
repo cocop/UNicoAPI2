@@ -7,7 +7,7 @@ namespace UNicoAPI2
     /// 受け渡しオブジェクト
     /// </summary>
     /******************************************/
-    internal class Context
+    public class Context
     {
         /// <summary>
         /// クライアント通信処理
@@ -17,6 +17,6 @@ namespace UNicoAPI2
         /// <summary>
         /// インスタンスの管理
         /// </summary>
-        //public InstanceContainer InstanceContainer;
+        public IDContainer IDContainer = new IDContainer();
     }
 }
