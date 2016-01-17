@@ -109,7 +109,16 @@
   <ItemGroup>
     <Compile Include="APIs\getflv\Accesser.cs" />
     <Compile Include="APIs\getflv\Parser.cs" />
+    <Compile Include="APIs\getpostkey\Accesser.cs" />
+    <Compile Include="APIs\getpostkey\Parser.cs" />
     <Compile Include="APIs\getvideo\Accesser.cs" />
+    <Compile Include="APIs\get_download_comment\Accesser.cs" />
+    <Compile Include="APIs\get_download_comment\Parser.cs" />
+    <Compile Include="APIs\get_download_comment\Serial\chat.cs" />
+    <Compile Include="APIs\get_download_comment\Serial\leaf.cs" />
+    <Compile Include="APIs\get_download_comment\Serial\Packet.cs" />
+    <Compile Include="APIs\get_download_comment\Serial\thread.cs" />
+    <Compile Include="APIs\get_download_comment\Serial\view_counter.cs" />
     <Compile Include="APIs\IAccesser.cs" />
     <Compile Include="APIs\AccesserType.cs" />
     <Compile Include="APIs\IParser.cs" />
@@ -121,6 +130,10 @@
     <Compile Include="APIs\search\Serial\list.cs" />
     <Compile Include="APIs\search\Serial\nicopedia.cs" />
     <Compile Include="APIs\Serial\error.cs" />
+    <Compile Include="APIs\upload_comment\Accesser.cs" />
+    <Compile Include="APIs\upload_comment\Parser.cs" />
+    <Compile Include="APIs\upload_comment\Serial\chat_result.cs" />
+    <Compile Include="APIs\upload_comment\Serial\packet.cs" />
     <Compile Include="APIs\videopagehtml\Accesser.cs" />
     <Compile Include="APIs\videopagehtml\Parser.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
@@ -143,6 +156,7 @@
     <Compile Include="VideoService\Status.cs" />
     <Compile Include="VideoService\User\User.cs" />
     <Compile Include="VideoService\VideoServicePage.cs" />
+    <Compile Include="VideoService\Video\Comment.cs" />
     <Compile Include="VideoService\Video\Tag.cs" />
     <Compile Include="VideoService\Video\VideoInfo.cs" />
     <Compile Include="VideoService\Video\VideoPage.cs" />
