@@ -111,6 +111,12 @@
     <Compile Include="APIs\getflv\Parser.cs" />
     <Compile Include="APIs\getpostkey\Accesser.cs" />
     <Compile Include="APIs\getpostkey\Parser.cs" />
+    <Compile Include="APIs\getthumbinfo\Accesser.cs" />
+    <Compile Include="APIs\getthumbinfo\Parser.cs" />
+    <Compile Include="APIs\getthumbinfo\Serial\nicovideo_thumb_response.cs" />
+    <Compile Include="APIs\getthumbinfo\Serial\tag.cs" />
+    <Compile Include="APIs\getthumbinfo\Serial\tags.cs" />
+    <Compile Include="APIs\getthumbinfo\Serial\thumb.cs" />
     <Compile Include="APIs\getvideo\Accesser.cs" />
     <Compile Include="APIs\get_download_comment\Accesser.cs" />
     <Compile Include="APIs\get_download_comment\Parser.cs" />

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UNicoAPI2.VideoService;
 using UNicoAPI2.VideoService.Video;
 
 namespace UNicoAPI2.VideoService
@@ -18,6 +13,37 @@ namespace UNicoAPI2.VideoService
             var result = new Response<VideoInfo[]>();
             ToResponse(result, Serial.status, Serial.error);
             result.Result = ToVideoInfos(Context, Serial.list);
+
+            return result;
+        }
+
+        public static Response<VideoInfo> ToVideoInfoResponse(Context Context, APIs.getthumbinfo.Serial.nicovideo_thumb_response Serial)
+        {
+            var result = new Response<VideoInfo>();
+
+            ToResponse(result, Serial.status, Serial.error);
+
+            if (Serial.thumb != null)
+            {
+                result.Result = Context.IDContainer.GetVideoInfo(Serial.thumb.video_id);
+                result.Result.ComentCounter = Serial.thumb.comment_num;
+                result.Result.Description = Serial.thumb.description;
+                result.Result.EconomyVideoSize = Serial.thumb.size_low;
+                result.Result.IsExternalPlay = Serial.thumb.embeddable;
+                result.Result.Length = UNicoAPI2.Converter.ToTimeSpan(Serial.thumb.length);
+                result.Result.MylistCounter = Serial.thumb.mylist_counter;
+                result.Result.IsLivePlay = !Serial.thumb.no_live_play;
+                result.Result.PostTime = DateTime.Parse(Serial.thumb.first_retrieve);
+                result.Result.Tags = ToTags(Serial.thumb.tags);
+                result.Result.Title = Serial.thumb.title;
+                result.Result.VideoSize = Serial.thumb.size_high;
+                result.Result.VideoType = Serial.thumb.movie_type;
+                result.Result.ViewCounter = Serial.thumb.view_counter;
+                result.Result.Thumbnail = new Picture(Serial.thumb.thumbnail_url, Context.CookieContainer);
+                result.Result.User = Context.IDContainer.GetUser(Serial.thumb.user_id);
+                result.Result.User.Name = Serial.thumb.user_nickname;
+                result.Result.User.Icon = new Picture(Serial.thumb.user_icon_url, Context.CookieContainer);
+            }
 
             return result;
         }
@@ -52,6 +78,23 @@ namespace UNicoAPI2.VideoService
         }
 
         /********************************************/
+        public static Tag[] ToTags(APIs.getthumbinfo.Serial.tags Serial)
+        {
+            var result = new Tag[Serial.tag.Length];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = new Tag()
+                {
+                    IsCategory = Serial.tag[i].category != 0,
+                    IsLock = Serial.tag[i]._lock != 0,
+                    Name = Serial.tag[i]._tag,
+                };
+            }
+
+            return result;
+        }
+
         public static VideoInfo[] ToVideoInfos(Context Context, APIs.search.Serial.list[] Serial)
         {
             if (Serial == null) return null;

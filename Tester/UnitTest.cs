@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UNicoAPI2.VideoService;
-using System.IO;
 using UNicoAPI2.VideoService.Video;
 
 namespace Tester
@@ -14,7 +13,6 @@ namespace Tester
         [TestMethod]
         public async void TestMethod1()
         {
-
         }
     }
 }

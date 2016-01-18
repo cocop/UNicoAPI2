@@ -32,6 +32,30 @@ namespace UNicoAPI2.VideoService.Video
             context = Context;
         }
 
+        /// <summary>
+        /// 動画の詳細情報を取得する
+        /// </summary>
+        public Session<Response<VideoInfo>> DownloadVideoInfo()
+        {
+            var session = new Session<Response<VideoInfo>>();
+
+            session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+            {
+                (data) =>
+                {
+                    var accesser = new APIs.getthumbinfo.Accesser();
+                    accesser.Setting(
+                        context.CookieContainer,
+                        target.ID);
+
+                    return accesser;
+                }
+            },
+            (data) =>
+                Converter.ToVideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data)));
+
+            return session;
+        }
 
         /// <summary>
         /// 動画をダウンロードする
