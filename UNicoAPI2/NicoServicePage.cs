@@ -14,6 +14,11 @@ namespace UNicoAPI2
 
         VideoService.VideoServicePage videoServicePage;
 
+        /// <summary>
+        /// ID管理
+        /// </summary>
+        public IDContainer IDContainer { get { return context.IDContainer; } }
+
         /// <summary>ログインする</summary>
         /// <param name="MailAddress">メールアドレス</param>
         /// <param name="Password">パスワード</param>

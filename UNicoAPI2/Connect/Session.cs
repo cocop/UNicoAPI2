@@ -15,7 +15,7 @@ namespace UNicoAPI2.Connect
 
 
         /// <summary>
-        /// 未処理のストリーム数
+        /// 未処理のアクセッサ数
         /// </summary>
         public int UntreatedCount { get { return accessers.Length - nowIndex; } }
 

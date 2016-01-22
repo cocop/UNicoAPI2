@@ -33,6 +33,15 @@ namespace UNicoAPI2.VideoService.Video
         }
 
         /// <summary>
+        /// このページの動画情報を取得する
+        /// </summary>
+        /// <returns></returns>
+        public VideoInfo GetVideoInfo()
+        {
+            return target;
+        }
+
+        /// <summary>
         /// 動画の詳細情報を取得する
         /// </summary>
         public Session<Response<VideoInfo>> DownloadVideoInfo()
