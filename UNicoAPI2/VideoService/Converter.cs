@@ -68,7 +68,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Response<Comment[]> ToCommentResponse(APIs.get_download_comment.Serial.packet Serial)
+        public static Response<Comment[]> ToCommentResponse(APIs.download_comment.Serial.packet Serial)
         {
             var result = new Response<Comment[]>();
             ToResponse(result, "ok", null);
@@ -77,7 +77,37 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
+        public static Response<Tag[]> ToTagsResponse(APIs.tag_edit.Serial.contract Serial)
+        {
+            var result = new Response<Tag[]>();
+            ToResponse(result, Serial.status, new APIs.Serial.error() { description = Serial.error_msg });
+            result.Result = ToTags(Serial.tags);
+
+            return result;
+        }
+
         /********************************************/
+        public static Tag[] ToTags(APIs.tag_edit.Serial._tag[] Serial)
+        {
+            if (Serial == null)
+                return null;
+
+            var result = new Tag[Serial.Length];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = new Tag()
+                {
+                    IsNicopedia = Serial[i].dic,
+                    IsCategory = Serial[i].can_cat,
+                    IsLock = Serial[i].owner_lock != 0,
+                    Name = Serial[i].tag,
+                };
+            }
+
+            return result;
+        }
+
         public static Tag[] ToTags(APIs.getthumbinfo.Serial.tags Serial)
         {
             var result = new Tag[Serial.tag.Length];
@@ -119,7 +149,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Comment[] ToComment(APIs.get_download_comment.Serial.chat[] Serial)
+        public static Comment[] ToComment(APIs.download_comment.Serial.chat[] Serial)
         {
             var result = new Comment[(Serial != null) ? Serial.Length : 0];
 
@@ -163,6 +193,9 @@ namespace UNicoAPI2.VideoService
                     {
                         case "DELETED":
                             Response.Status = VideoService.Status.Deleted;
+                            break;
+                        default:
+                            Response.Status = VideoService.Status.UnknownError;
                             break;
                     }
                     Response.ErrorMessage = Error.description;

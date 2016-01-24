@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 
-namespace UNicoAPI2.APIs.get_download_comment
+namespace UNicoAPI2.APIs.tag_edit
 {
-    public class Accesser : IAccesser
+    public class DownloadAccesser : IAccesser
     {
         public AccesserType Type
         {
@@ -18,14 +17,16 @@ namespace UNicoAPI2.APIs.get_download_comment
         }
 
         CookieContainer cookieContainer;
-        string thread_id = "";
-        string ms = "";//メッセージサーバー
+        string id = "";
+        string res_type = "";
+        string cmd = "";
 
-        public void Setting(CookieContainer CookieContainer, string ms, string thread_id)
+        public void Setting(CookieContainer CookieContainer, string id, string res_type, string cmd)
         {
             cookieContainer = CookieContainer;
-            this.ms = ms;
-            this.thread_id = thread_id;
+            this.id = id;
+            this.res_type = res_type;
+            this.cmd = cmd;
         }
 
         public byte[] GetUploadData()
@@ -41,7 +42,9 @@ namespace UNicoAPI2.APIs.get_download_comment
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                ms + "thread?version=20090904&thread=" + thread_id + "&res_from=1");
+                "http://www.nicovideo.jp/tag_edit/" + id +
+                "?res_type=" + res_type +
+                "&cmd=" + cmd);
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = cookieContainer;

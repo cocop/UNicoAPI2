@@ -28,6 +28,6 @@
         /// <summary>
         /// 通信結果
         /// </summary>
-        public ResultType Result;
+        public ResultType Result { set; get; }
     }
 }

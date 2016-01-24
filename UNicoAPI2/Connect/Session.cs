@@ -19,6 +19,9 @@ namespace UNicoAPI2.Connect
         /// </summary>
         public int UntreatedCount { get { return accessers.Length - nowIndex; } }
 
+        /// <summary>
+        /// セッションの処理結果
+        /// </summary>
         public ResultType Result { get; private set; }
 
 
@@ -82,7 +85,7 @@ namespace UNicoAPI2.Connect
             var ustream = ustreamTask.Result;
             ustream.WriteAsync(udata, 0, udata.Length).Wait(Token);
         }
-
+        
         private object RunDownload(CancellationToken Token, APIs.IAccesser accesser)
         {
             var dstreamTask = accesser.GetDownloadStreamAsync();

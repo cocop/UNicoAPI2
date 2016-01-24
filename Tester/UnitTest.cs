@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using UNicoAPI2;
 using UNicoAPI2.VideoService;
 using UNicoAPI2.VideoService.Video;
 
@@ -13,7 +14,6 @@ namespace Tester
         [TestMethod]
         public async void TestMethod1()
         {
-
         }
     }
 }

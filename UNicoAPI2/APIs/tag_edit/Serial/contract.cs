@@ -1,39 +1,30 @@
 ﻿using System.Runtime.Serialization;
 using UNicoAPI2.APIs.Serial;
 
-namespace UNicoAPI2.APIs.search.Serial
+namespace UNicoAPI2.APIs.tag_edit.Serial
 {
     /******************************************/
     /// <summary>
-    /// 動画情報レスポンス
+    /// タグ
     /// </summary>
     /******************************************/
     [DataContract]
     public class contract
     {
-        /// <summary>
-        /// 動画情報のリスト
-        /// </summary>
         [DataMember]
-        public list[] list;
+        public bool is_owner;
 
         /// <summary>
-        /// 指定した条件で宣伝された動画を取得できるか
+        /// 編集可能か
         /// </summary>
         [DataMember]
-        public bool has_ng_video_for_adsense_on_listing;
+        public bool isuneditable_tag;
 
         /// <summary>
-        /// 検索したタグの説明文
+        /// タグ情報
         /// </summary>
         [DataMember]
-        public nicopedia nicopedia;
-
-        /// <summary>
-        /// 検索したタグ一覧
-        /// </summary>
-        [DataMember]
-        public string[] tags;
+        public _tag[] tags;
 
         /// <summary>
         /// 成功か失敗か
@@ -45,6 +36,6 @@ namespace UNicoAPI2.APIs.search.Serial
         /// エラーコード
         /// </summary>
         [DataMember]
-        public error error;
+        public string error_msg;
     }
 }

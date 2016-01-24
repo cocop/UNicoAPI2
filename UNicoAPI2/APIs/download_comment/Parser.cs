@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace UNicoAPI2.APIs.get_download_comment
+namespace UNicoAPI2.APIs.download_comment
 {
     public class Parser : IParser<Serial.packet>
     {

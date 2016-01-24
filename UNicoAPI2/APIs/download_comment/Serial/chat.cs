@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace UNicoAPI2.APIs.get_download_comment.Serial
+namespace UNicoAPI2.APIs.download_comment.Serial
 {
     public class chat
     {

@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIs\tag_edit\DownloadAccesser.cs" />
+    <Compile Include="APIs\tag_edit\Parser.cs" />
     <Compile Include="APIs\getflv\Accesser.cs" />
     <Compile Include="APIs\getflv\Parser.cs" />
     <Compile Include="APIs\getpostkey\Accesser.cs" />
@@ -118,15 +120,16 @@
     <Compile Include="APIs\getthumbinfo\Serial\tags.cs" />
     <Compile Include="APIs\getthumbinfo\Serial\thumb.cs" />
     <Compile Include="APIs\getvideo\Accesser.cs" />
-    <Compile Include="APIs\get_download_comment\Accesser.cs" />
-    <Compile Include="APIs\get_download_comment\Parser.cs" />
-    <Compile Include="APIs\get_download_comment\Serial\chat.cs" />
-    <Compile Include="APIs\get_download_comment\Serial\leaf.cs" />
-    <Compile Include="APIs\get_download_comment\Serial\Packet.cs" />
-    <Compile Include="APIs\get_download_comment\Serial\thread.cs" />
-    <Compile Include="APIs\get_download_comment\Serial\view_counter.cs" />
+    <Compile Include="APIs\download_comment\Accesser.cs" />
+    <Compile Include="APIs\download_comment\Parser.cs" />
+    <Compile Include="APIs\download_comment\Serial\chat.cs" />
+    <Compile Include="APIs\download_comment\Serial\leaf.cs" />
+    <Compile Include="APIs\download_comment\Serial\packet.cs" />
+    <Compile Include="APIs\download_comment\Serial\thread.cs" />
+    <Compile Include="APIs\download_comment\Serial\view_counter.cs" />
     <Compile Include="APIs\IAccesser.cs" />
     <Compile Include="APIs\AccesserType.cs" />
+    <Compile Include="APIs\IHtmlParser.cs" />
     <Compile Include="APIs\IParser.cs" />
     <Compile Include="APIs\login\Accesser.cs" />
     <Compile Include="APIs\login\Parser.cs" />
@@ -136,12 +139,17 @@
     <Compile Include="APIs\search\Serial\list.cs" />
     <Compile Include="APIs\search\Serial\nicopedia.cs" />
     <Compile Include="APIs\Serial\error.cs" />
+    <Compile Include="APIs\tag_edit\Serial\contract.cs" />
+    <Compile Include="APIs\tag_edit\Serial\tag.cs" />
+    <Compile Include="APIs\tag_edit\UploadAccesser.cs" />
     <Compile Include="APIs\upload_comment\Accesser.cs" />
     <Compile Include="APIs\upload_comment\Parser.cs" />
     <Compile Include="APIs\upload_comment\Serial\chat_result.cs" />
     <Compile Include="APIs\upload_comment\Serial\packet.cs" />
     <Compile Include="APIs\video_page_html\Accesser.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
+    <Compile Include="APIs\video_page_html\csrf_token.cs" />
+    <Compile Include="APIs\video_page_html\watch_auth_key.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
     <Compile Include="Connect\ContentType.cs" />
     <Compile Include="Connect\Session.cs" />
