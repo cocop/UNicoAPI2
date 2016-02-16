@@ -47,24 +47,66 @@ namespace UNicoAPI2.VideoService.Video
         /// <summary>
         /// 動画の詳細情報を取得する
         /// </summary>
-        public Session<Response<VideoInfo>> DownloadVideoInfo()
+        public Session<Response<VideoInfo>> DownloadVideoInfo(DownloadVideoInfoUseAPI DownloadVideoInfoUseAPI)
         {
             var session = new Session<Response<VideoInfo>>();
 
-            session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+            switch (DownloadVideoInfoUseAPI)
             {
-                (data) =>
-                {
-                    var accesser = new APIs.getthumbinfo.Accesser();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        target.ID);
+                case DownloadVideoInfoUseAPI.html:
+                    #region
+                    var accessorList = new List<Func<byte[], APIs.IAccesser>>();
 
-                    return accesser;
-                }
-            },
-            (data) =>
-                Converter.ToVideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data)));
+                    if (htmlCache == "")
+                    {
+                        accessorList.Add((data) =>
+                        {
+                            var accesser = new APIs.video_page_html.Accesser();
+                            accesser.Setting(
+                                context.CookieContainer,
+                                target.ID);
+
+                            return accesser;
+                        });
+                    }
+
+                    session.SetAccessers(
+                        accessorList.ToArray(),
+                        (data) =>
+                        {
+                            if (htmlCache == "")
+                                htmlCache = new APIs.video_page_html.Parser().Parse(data);
+
+                            var result = new Response<VideoInfo>();
+                            result.Status = Status.OK;
+                            result.Result = context.IDContainer.GetVideoInfo(target.ID);
+                            result.Result.Description = new APIs.video_page_html.html_video_info().Parse(htmlCache);
+
+                            return result;
+                        });
+
+                    #endregion
+                    break;
+                case DownloadVideoInfoUseAPI.getthumbinfo:
+                    #region
+                    session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+                    {
+                        (data) =>
+                        {
+                            var accesser = new APIs.getthumbinfo.Accesser();
+                            accesser.Setting(
+                                context.CookieContainer,
+                                target.ID);
+
+                            return accesser;
+                        }
+                    },
+                    (data) =>
+                        Converter.ToVideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data))); 
+                    #endregion
+                    break;
+                default: throw new Exception();
+            }
 
             return session;
         }

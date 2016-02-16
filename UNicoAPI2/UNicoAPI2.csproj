@@ -147,6 +147,7 @@
     <Compile Include="APIs\upload_comment\Serial\chat_result.cs" />
     <Compile Include="APIs\upload_comment\Serial\packet.cs" />
     <Compile Include="APIs\video_page_html\Accesser.cs" />
+    <Compile Include="APIs\video_page_html\description.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\csrf_token.cs" />
     <Compile Include="APIs\video_page_html\watch_auth_key.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="VideoService\User\UserPage.cs" />
     <Compile Include="VideoService\VideoServicePage.cs" />
     <Compile Include="VideoService\Video\Comment.cs" />
+    <Compile Include="VideoService\Video\DownloadVideoInfoUseAPI.cs" />
     <Compile Include="VideoService\Video\Tag.cs" />
     <Compile Include="VideoService\Video\VideoInfo.cs" />
     <Compile Include="VideoService\Video\VideoPage.cs" />
