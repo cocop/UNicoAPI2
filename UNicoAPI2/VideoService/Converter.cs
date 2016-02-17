@@ -1,4 +1,5 @@
 ﻿using System;
+using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Video;
 
 namespace UNicoAPI2.VideoService
@@ -8,20 +9,20 @@ namespace UNicoAPI2.VideoService
         static DateTime unixTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /********************************************/
-        public static Response<VideoInfo[]> ToVideoInfoResponse(Context Context, APIs.search.Serial.contract Serial)
+        public static Response<VideoInfo[]> VideoInfoResponse(Context Context, APIs.search.Serial.contract Serial)
         {
             var result = new Response<VideoInfo[]>();
-            ToResponse(result, Serial.status, Serial.error);
-            result.Result = ToVideoInfos(Context, Serial.list);
+            Response(result, Serial.status, Serial.error);
+            result.Result = VideoInfos(Context, Serial.list);
 
             return result;
         }
 
-        public static Response<VideoInfo> ToVideoInfoResponse(Context Context, APIs.getthumbinfo.Serial.nicovideo_thumb_response Serial)
+        public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.getthumbinfo.Serial.nicovideo_thumb_response Serial)
         {
             var result = new Response<VideoInfo>();
 
-            ToResponse(result, Serial.status, Serial.error);
+            Response(result, Serial.status, Serial.error);
 
             if (Serial.thumb != null)
             {
@@ -30,11 +31,11 @@ namespace UNicoAPI2.VideoService
                 result.Result.Description = Serial.thumb.description;
                 result.Result.EconomyVideoSize = Serial.thumb.size_low;
                 result.Result.IsExternalPlay = Serial.thumb.embeddable;
-                result.Result.Length = UNicoAPI2.Converter.ToTimeSpan(Serial.thumb.length);
+                result.Result.Length = UNicoAPI2.Converter.TimeSpan(Serial.thumb.length);
                 result.Result.MylistCounter = Serial.thumb.mylist_counter;
                 result.Result.IsLivePlay = !Serial.thumb.no_live_play;
                 result.Result.PostTime = DateTime.Parse(Serial.thumb.first_retrieve);
-                result.Result.Tags = ToTags(Serial.thumb.tags);
+                result.Result.Tags = Tags(Serial.thumb.tags);
                 result.Result.Title = Serial.thumb.title;
                 result.Result.VideoSize = Serial.thumb.size_high;
                 result.Result.VideoType = Serial.thumb.movie_type;
@@ -48,7 +49,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Response ToResponse(APIs.upload_comment.Serial.packet Serial)
+        public static Response Response(APIs.upload_comment.Serial.packet Serial)
         {
             var result = new Response();
 
@@ -68,26 +69,46 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Response<Comment[]> ToCommentResponse(APIs.download_comment.Serial.packet Serial)
+        public static Response<Comment[]> CommentResponse(APIs.download_comment.Serial.packet Serial)
         {
             var result = new Response<Comment[]>();
-            ToResponse(result, "ok", null);
-            result.Result = ToComment(Serial.chat);
+            Response(result, "ok", null);
+            result.Result = Comment(Serial.chat);
 
             return result;
         }
 
-        public static Response<Tag[]> ToTagsResponse(APIs.tag_edit.Serial.contract Serial)
+        public static Response<Tag[]> TagsResponse(APIs.tag_edit.Serial.contract Serial)
         {
             var result = new Response<Tag[]>();
-            ToResponse(result, Serial.status, new APIs.Serial.error() { description = Serial.error_msg });
-            result.Result = ToTags(Serial.tags);
+            Response(result, Serial.status, new APIs.Serial.error() { description = Serial.error_msg });
+            result.Result = Tags(Serial.tags);
+
+            return result;
+        }
+
+        public static Response<Mylist.Mylist> MylistResponse(Context Context, APIs.mylistvideo.Serial.contract Serial, string MylistID)
+        {
+            var result = new Response<Mylist.Mylist>();
+
+            Response(result, Serial.status, Serial.error);
+            result.Result = Context.IDContainer.GetMylist(MylistID);
+            result.Result.Description = Serial.description;
+            result.Result.Title = Serial.name;
+            result.Result.IsBookmark = Serial.is_watching_this_mylist;
+            result.Result.MylistItem = MylistItem(Context, Serial.list);
+
+            if (Serial.user_id != null)
+            {
+                result.Result.User = Context.IDContainer.GetUser(Serial.user_id);
+                result.Result.User.Name = Serial.user_nickname;
+            }
 
             return result;
         }
 
         /********************************************/
-        public static Tag[] ToTags(APIs.tag_edit.Serial._tag[] Serial)
+        public static Tag[] Tags(APIs.tag_edit.Serial._tag[] Serial)
         {
             if (Serial == null)
                 return null;
@@ -108,7 +129,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Tag[] ToTags(APIs.getthumbinfo.Serial.tags Serial)
+        public static Tag[] Tags(APIs.getthumbinfo.Serial.tags Serial)
         {
             var result = new Tag[Serial.tag.Length];
 
@@ -125,7 +146,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static VideoInfo[] ToVideoInfos(Context Context, APIs.search.Serial.list[] Serial)
+        public static VideoInfo[] VideoInfos(Context Context, APIs.search.Serial.list[] Serial)
         {
             if (Serial == null) return null;
 
@@ -136,7 +157,7 @@ namespace UNicoAPI2.VideoService
                 var info = Context.IDContainer.GetVideoInfo(Serial[i].id);
 
                 info.ComentCounter = Serial[i].num_res;
-                info.Length = UNicoAPI2.Converter.ToTimeSpan(Serial[i].length);
+                info.Length = UNicoAPI2.Converter.TimeSpan(Serial[i].length);
                 info.MylistCounter = Serial[i].mylist_counter;
                 info.PostTime = DateTime.Parse(Serial[i].first_retrieve);
                 info.ShortDescription = Serial[i].description_short;
@@ -149,7 +170,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Comment[] ToComment(APIs.download_comment.Serial.chat[] Serial)
+        public static Comment[] Comment(APIs.download_comment.Serial.chat[] Serial)
         {
             var result = new Comment[(Serial != null) ? Serial.Length : 0];
 
@@ -174,8 +195,37 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
+        public static MylistItem[] MylistItem(Context Context, APIs.mylistvideo.Serial.list[] Serial)
+        {
+            if (Serial == null)
+                return null;
+
+            var result = new MylistItem[Serial.Length];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = new MylistItem();
+                result[i].Description = Serial[i].mylist_comment;
+                result[i].RegisterTime = unixTime.AddSeconds(Serial[i].create_time).ToLocalTime();
+                result[i].UpdateTime = DateTime.Parse(Serial[i].thread_update_time);
+                result[i].VideoInfo = Context.IDContainer.GetVideoInfo(Serial[i].id);
+
+                result[i].VideoInfo.ComentCounter = Serial[i].num_res;
+                result[i].VideoInfo.ID = Serial[i].id;
+                result[i].VideoInfo.Length = new TimeSpan(0, 0, Serial[i].length_seconds);
+                result[i].VideoInfo.MylistCounter = Serial[i].mylist_counter;
+                result[i].VideoInfo.PostTime = DateTime.Parse(Serial[i].first_retrieve);
+                result[i].VideoInfo.ShortDescription = Serial[i].description_short;
+                result[i].VideoInfo.Thumbnail = new Picture(Serial[i].thumbnail_url, Context.CookieContainer);
+                result[i].VideoInfo.Title = Serial[i].title;
+                result[i].VideoInfo.ViewCounter = Serial[i].view_counter;
+            }
+
+            return result;
+        }
+
         /********************************************/
-        public static void ToResponse(Response Response, string Status, APIs.Serial.error Error)
+        public static void Response(Response Response, string Status, APIs.Serial.error Error)
         {
             switch (Status)
             {

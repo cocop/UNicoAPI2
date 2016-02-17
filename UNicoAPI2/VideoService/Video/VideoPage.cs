@@ -102,7 +102,7 @@ namespace UNicoAPI2.VideoService.Video
                         }
                     },
                     (data) =>
-                        Converter.ToVideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data))); 
+                        Converter.VideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data))); 
                     #endregion
                     break;
                 default: throw new Exception();
@@ -116,7 +116,6 @@ namespace UNicoAPI2.VideoService.Video
         /// </summary>
         public Session<WebResponse> DownloadVideo()
         {
-
             var session = new Session<WebResponse>();
             var accessorList = new List<Func<byte[], APIs.IAccesser>>();
 
@@ -222,7 +221,7 @@ namespace UNicoAPI2.VideoService.Video
             session.SetAccessers(
                 accessorList.ToArray(),
                 (data) =>
-                    Converter.ToResponse(new APIs.upload_comment.Parser().Parse(data)));
+                    Converter.Response(new APIs.upload_comment.Parser().Parse(data)));
 
             return session;
         }
@@ -272,7 +271,7 @@ namespace UNicoAPI2.VideoService.Video
                     ticket = Serial.thread[0].ticket;
                     block_no = ((Serial.thread[0].last_res + 1) / 100).ToString();
 
-                    return Converter.ToCommentResponse(Serial);
+                    return Converter.CommentResponse(Serial);
                 });
 
             return session;
@@ -298,7 +297,7 @@ namespace UNicoAPI2.VideoService.Video
 
                     return accesser;
                 })
-            }, (data) => Converter.ToTagsResponse(new APIs.tag_edit.Parser().Parse(data)));
+            }, (data) => Converter.TagsResponse(new APIs.tag_edit.Parser().Parse(data)));
             
             return session;
         }
@@ -367,7 +366,7 @@ namespace UNicoAPI2.VideoService.Video
             session.SetAccessers(
                 accessorList.ToArray(),
                 (data) =>
-                    Converter.ToTagsResponse(new APIs.tag_edit.Parser().Parse(data)));
+                    Converter.TagsResponse(new APIs.tag_edit.Parser().Parse(data)));
 
             return session;
         }

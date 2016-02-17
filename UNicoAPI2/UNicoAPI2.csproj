@@ -107,6 +107,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIs\mylistvideo\Accesser.cs" />
+    <Compile Include="APIs\mylistvideo\Parser.cs" />
+    <Compile Include="APIs\mylistvideo\Serial\contract.cs" />
+    <Compile Include="APIs\mylistvideo\Serial\list.cs" />
+    <Compile Include="APIs\mylistvideo\Serial\thumbnail_style.cs" />
     <Compile Include="APIs\tag_edit\DownloadAccesser.cs" />
     <Compile Include="APIs\tag_edit\Parser.cs" />
     <Compile Include="APIs\getflv\Accesser.cs" />

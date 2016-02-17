@@ -1,5 +1,6 @@
 ﻿using System;
 using UNicoAPI2.Connect;
+using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Video;
 
 namespace UNicoAPI2.VideoService
@@ -26,6 +27,16 @@ namespace UNicoAPI2.VideoService
                 return Target.videoPage;
             else
                 return Target.videoPage = new VideoPage(Target, context);
+        }
+
+        /// <summary>マイリストへアクセスするページを取得する</summary>
+        /// <param name="Target">ターゲットマイリスト</param>
+        public MylistPage GetMylistPage(Mylist.Mylist Target)
+        {
+            if (Target.mylistPage != null)
+                return Target.mylistPage;
+            else
+                return Target.mylistPage = new MylistPage(Target, context);
         }
 
         /// <summary>動画を検索する</summary>
@@ -60,7 +71,7 @@ namespace UNicoAPI2.VideoService
                 }
             },
             (data) =>
-                Converter.ToVideoInfoResponse(context, new APIs.search.Parser().Parse(data)));
+                Converter.VideoInfoResponse(context, new APIs.search.Parser().Parse(data)));
 
             return session;
         }

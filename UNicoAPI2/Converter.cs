@@ -8,7 +8,7 @@ namespace UNicoAPI2
 {
     public static class Converter
     {
-        public static TimeSpan ToTimeSpan(string TimeSpan)
+        public static TimeSpan TimeSpan(string TimeSpan)
         {
             string[] buf = TimeSpan.Split(':');
             var minute = int.Parse(buf[0]);

@@ -1,4 +1,6 @@
-﻿namespace UNicoAPI2.VideoService.Mylist
+﻿using UNicoAPI2.Connect;
+
+namespace UNicoAPI2.VideoService.Mylist
 {
     /******************************************/
     /// <summary>
@@ -14,6 +16,34 @@
         {
             target = Target;
             context = Context;
+        }
+
+        public Session<Response<Mylist>> DownloadMylist()
+        {
+            var session = new Session<Response<Mylist>>();
+
+            session.SetAccessers(
+                new System.Func<byte[], APIs.IAccesser>[]
+                {
+                    (data) =>
+                    {
+                        var accesser = new APIs.mylistvideo.Accesser();
+                        accesser.Setting(
+                            context.CookieContainer,
+                            target.ID);
+
+                        return accesser;
+                    }
+                },
+                (data) =>
+                {
+                    return Converter.MylistResponse(
+                        context,
+                        new APIs.mylistvideo.Parser().Parse(data),
+                        target.ID);
+                });
+
+            return session;
         }
     }
 }
