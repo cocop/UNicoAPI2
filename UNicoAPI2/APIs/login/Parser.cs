@@ -8,7 +8,9 @@ namespace UNicoAPI2.APIs.login
         {
             var http = Encoding.UTF8.GetString(Value);
 
-            return !http.Contains("ログインエラー");
+            return !(
+                http.Contains("ログインエラー") ||
+                http.Contains("間違っています"));
         }
     }
 }
