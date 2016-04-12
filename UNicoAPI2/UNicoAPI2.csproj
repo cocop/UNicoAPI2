@@ -151,6 +151,8 @@
     <Compile Include="APIs\upload_comment\Parser.cs" />
     <Compile Include="APIs\upload_comment\Serial\chat_result.cs" />
     <Compile Include="APIs\upload_comment\Serial\packet.cs" />
+    <Compile Include="APIs\user_page_html\Accesser.cs" />
+    <Compile Include="APIs\user_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\Accesser.cs" />
     <Compile Include="APIs\video_page_html\description.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
-using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.VideoService.Video
@@ -102,7 +101,7 @@ namespace UNicoAPI2.VideoService.Video
                         }
                     },
                     (data) =>
-                        Converter.VideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data))); 
+                        Converter.VideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data)));
                     #endregion
                     break;
                 default: throw new Exception();
@@ -298,7 +297,7 @@ namespace UNicoAPI2.VideoService.Video
                     return accesser;
                 })
             }, (data) => Converter.TagsResponse(new APIs.tag_edit.Parser().Parse(data)));
-            
+
             return session;
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using UNicoAPI2.APIs.Serial;
 
 namespace UNicoAPI2.APIs.tag_edit.Serial
 {

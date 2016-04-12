@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 
-namespace UNicoAPI2.APIs.getflv
+namespace UNicoAPI2.APIs.user_page_html
 {
     public class Accesser : IAccesser
     {
@@ -17,12 +17,12 @@ namespace UNicoAPI2.APIs.getflv
         }
 
         CookieContainer cookieContainer;
-        string video_id = "";
+        string user_id = "";
 
-        public void Setting(CookieContainer CookieContainer, string video_id)
+        public void Setting(CookieContainer CookieContainer, string user_id)
         {
             cookieContainer = CookieContainer;
-            this.video_id = video_id;
+            this.user_id = user_id;
         }
 
         public byte[] GetUploadData()
@@ -38,7 +38,9 @@ namespace UNicoAPI2.APIs.getflv
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                "http://flapi.nicovideo.jp/api/getflv/" + video_id + "?as3=1");
+                (user_id == "")
+                    ? "http://www.nicovideo.jp/my/"
+                    : "http://www.nicovideo.jp/user/" + user_id);
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = cookieContainer;

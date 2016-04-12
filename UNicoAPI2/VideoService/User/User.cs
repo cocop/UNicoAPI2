@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UNicoAPI2.VideoService.User
+﻿namespace UNicoAPI2.VideoService.User
 {
     /******************************************/
     /// <summary>ユーザー情報</summary>
@@ -14,7 +8,7 @@ namespace UNicoAPI2.VideoService.User
         /// <summary>
         /// IDを指定して初期化
         /// </summary>
-        /// <param name="ID">ユーザーID、空文字の場合自分のアカウント</param>
+        /// <param name="ID">ユーザーID</param>
         public User(string ID)
         {
             this.ID = ID;
@@ -69,5 +63,10 @@ namespace UNicoAPI2.VideoService.User
         /// プレミアムかどうか
         /// </summary>
         public bool IsPremium { get; set; }
+
+        /// <summary>
+        /// ユーザーページ
+        /// </summary>
+        internal UserPage userPage;
     }
 }

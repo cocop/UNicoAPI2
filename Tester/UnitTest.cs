@@ -4,8 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UNicoAPI2;
 using UNicoAPI2.VideoService;
-using UNicoAPI2.VideoService.Mylist;
-using UNicoAPI2.VideoService.Video;
+using UNicoAPI2.VideoService.User;
 
 namespace Tester
 {
@@ -15,7 +14,14 @@ namespace Tester
         [TestMethod]
         public async void TestMethod1()
         {
-            
+            var nsp = new NicoServicePage();
+            var id = ((Task<string>)nsp.Login("rmecila@gmail.com", "asdfghjkl")).Result;
+
+            var up = nsp
+                .GetVideoServicePage()
+                .GetUserPage(new User(id));
+
+            ((Task<Response<User>>)up.UserDownload()).Wait();
         }
     }
 }

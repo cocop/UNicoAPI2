@@ -18,7 +18,7 @@ namespace UNicoAPI2.APIs
         /// アップロードするデータを取得する
         /// </summary>
         byte[] GetUploadData();
-        
+
         /// <summary>
         /// アップロードストリーム、アクセッサタイプがダウンロードである場合は処理しない
         /// </summary>
@@ -29,4 +29,4 @@ namespace UNicoAPI2.APIs
         /// </summary>
         Task<WebResponse> GetDownloadStreamAsync();
     }
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+}

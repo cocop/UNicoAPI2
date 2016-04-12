@@ -56,7 +56,7 @@ namespace UNicoAPI2.APIs.tag_edit
                 "http://www.nicovideo.jp/tag_edit/" + id);
 
             request.Method = ContentMethod.Post;
-            
+
             request.CookieContainer = cookieContainer;
             request.ContentType = ContentType.Form;
             return request.GetRequestStreamAsync();

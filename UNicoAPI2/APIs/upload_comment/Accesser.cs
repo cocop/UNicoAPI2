@@ -44,13 +44,13 @@ namespace UNicoAPI2.APIs.upload_comment
         public byte[] GetUploadData()
         {
             return Encoding.UTF8.GetBytes(
-                "<chat thread=\""+ thread
-                + "\" vpos=\""+ vpos
-                + "\" mail=\""+ mail
-                + "\" ticket=\""+ ticket
-                + "\" user_id=\""+ user_id
-                + "\" postkey=\""+ postkey
-                + "\">"+ body + "</chat>");
+                "<chat thread=\"" + thread
+                + "\" vpos=\"" + vpos
+                + "\" mail=\"" + mail
+                + "\" ticket=\"" + ticket
+                + "\" user_id=\"" + user_id
+                + "\" postkey=\"" + postkey
+                + "\">" + body + "</chat>");
         }
 
         public Task<Stream> GetUploadStreamAsync()

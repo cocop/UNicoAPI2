@@ -1,4 +1,5 @@
-﻿using UNicoAPI2.Connect;
+﻿using System;
+using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.VideoService.Mylist
 {
@@ -23,7 +24,7 @@ namespace UNicoAPI2.VideoService.Mylist
             var session = new Session<Response<Mylist>>();
 
             session.SetAccessers(
-                new System.Func<byte[], APIs.IAccesser>[]
+                new Func<byte[], APIs.IAccesser>[]
                 {
                     (data) =>
                     {

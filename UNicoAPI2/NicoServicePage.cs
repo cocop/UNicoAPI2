@@ -22,9 +22,9 @@ namespace UNicoAPI2
         /// <summary>ログインする</summary>
         /// <param name="MailAddress">メールアドレス</param>
         /// <param name="Password">パスワード</param>
-        public Session<bool> Login(string MailAddress, string Password)
+        public Session<string> Login(string MailAddress, string Password)
         {
-            var session = new Session<bool>();
+            var session = new Session<string>();
 
             session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
             {

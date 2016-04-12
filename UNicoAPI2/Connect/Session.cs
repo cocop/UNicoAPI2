@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,7 +84,7 @@ namespace UNicoAPI2.Connect
             var ustream = ustreamTask.Result;
             ustream.WriteAsync(udata, 0, udata.Length).Wait(Token);
         }
-        
+
         private object RunDownload(CancellationToken Token, APIs.IAccesser accesser)
         {
             var dstreamTask = accesser.GetDownloadStreamAsync();

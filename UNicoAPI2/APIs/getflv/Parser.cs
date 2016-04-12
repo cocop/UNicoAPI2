@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.IO;
-using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace UNicoAPI2.APIs.getflv
