@@ -1,5 +1,6 @@
 ﻿using System;
 using UNicoAPI2.Connect;
+using UNicoAPI2.VideoService.User;
 
 namespace UNicoAPI2
 {
@@ -22,9 +23,9 @@ namespace UNicoAPI2
         /// <summary>ログインする</summary>
         /// <param name="MailAddress">メールアドレス</param>
         /// <param name="Password">パスワード</param>
-        public Session<string> Login(string MailAddress, string Password)
+        public Session<User> Login(string MailAddress, string Password)
         {
-            var session = new Session<string>();
+            var session = new Session<User>();
 
             session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
             {
