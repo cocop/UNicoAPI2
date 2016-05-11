@@ -22,10 +22,8 @@ namespace UNicoAPI2.APIs.search
         string page = "";
         string order = "";
         string sort = "";
-        string f_range = "";
-        string l_range = "";
 
-        public void Setting(CookieContainer CookieContainer, string type, string word, string page, string order, string sort, string f_range, string l_range)
+        public void Setting(CookieContainer CookieContainer, string type, string word, string page, string order, string sort)
         {
             cookieContainer = CookieContainer;
             this.type = type;
@@ -33,8 +31,6 @@ namespace UNicoAPI2.APIs.search
             this.page = page;
             this.order = order;
             this.sort = sort;
-            this.f_range = f_range;
-            this.l_range = l_range;
         }
 
         public byte[] GetUploadData()
@@ -54,9 +50,7 @@ namespace UNicoAPI2.APIs.search
                     + "/" + word
                     + "?mode&page=" + page
                     + "&order=" + order
-                    + "&sort=" + sort
-                    + "&f_range=" + f_range
-                    + "&l_range=" + l_range);
+                    + "&sort=" + sort);
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = cookieContainer;

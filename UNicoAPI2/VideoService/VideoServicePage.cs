@@ -54,7 +54,7 @@ namespace UNicoAPI2.VideoService
         /// <param name="Keyword">検索キーワード</param>
         /// <param name="SearchPage">検索ページの指定、1～nの間の数値を指定する</param>
         /// <param name="SearchType">検索方法を指定する</param>
-        /// <param name="SearchOption">検索オプションを指定する</param>
+        /// <param name="SearchOption">検索オプションを指定する、Filterメンバは無効</param>
         public Session<Response<VideoInfo[]>> Search(
             string Keyword,
             int SearchPage,
@@ -74,9 +74,7 @@ namespace UNicoAPI2.VideoService
                         Keyword,
                         SearchPage.ToString(),
                         SearchOption.SortOrder.ToKey(),
-                        SearchOption.SortTarget.ToKey(),
-                        SearchOption.PostTimeFilter.ToKey(),
-                        SearchOption.PlayTimeFilter.ToKey());
+                        SearchOption.SortTarget.ToKey());
 
                     return accesser;
                 }
