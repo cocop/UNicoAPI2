@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace UNicoAPI2
 {
@@ -18,5 +19,10 @@ namespace UNicoAPI2
         /// インスタンスの管理
         /// </summary>
         public IDContainer IDContainer = new IDContainer();
+
+        /// <summary>
+        /// キャッシュの有効期限
+        /// </summary>
+        public TimeSpan CacheDeadline = TimeSpan.FromMinutes(30);
     }
 }

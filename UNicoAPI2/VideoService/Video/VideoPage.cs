@@ -21,9 +21,46 @@ namespace UNicoAPI2.VideoService.Video
         string ticket = "";
         string block_no = "";
         string postkey = "";
-        string htmlCache = "";
 
-        NameValueCollection videoCache;
+        DateTime htmlCacheDeadline;
+        string htmlcache = null;
+        string htmlCache
+        {
+            get
+            {
+                if (DateTime.Now > htmlCacheDeadline && htmlcache != null)
+                   ClearCache();
+
+                return htmlcache;
+            }
+            set
+            {
+                if (value != "")
+                    htmlCacheDeadline = DateTime.Now.Add(context.CacheDeadline);
+
+                htmlcache = value;
+            }
+        }
+
+        DateTime videoCacheDeadline;
+        NameValueCollection videocache = null;
+        NameValueCollection videoCache
+        {
+            get
+            {
+                if (DateTime.Now > videoCacheDeadline && videocache != null)
+                    ClearCache();
+
+                return videocache;
+            }
+            set
+            {
+                if (value != null)
+                    videoCacheDeadline = DateTime.Now.Add(context.CacheDeadline);
+
+                videocache = value;
+            }
+        }
 
         /******************************************/
         /******************************************/

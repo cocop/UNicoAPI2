@@ -20,6 +20,11 @@ namespace UNicoAPI2
         /// </summary>
         public IDContainer IDContainer { get { return context.IDContainer; } }
 
+        /// <summary>
+        /// キャッシュの有効期限
+        /// </summary>
+        public TimeSpan CacheDeadline { get { return context.CacheDeadline; } set { context.CacheDeadline = value; } }
+
         /// <summary>ログインする</summary>
         /// <param name="MailAddress">メールアドレス</param>
         /// <param name="Password">パスワード</param>
