@@ -11,18 +11,29 @@ namespace UNicoAPI2
     public class Context
     {
         /// <summary>
-        /// クライアント通信処理
+        /// クッキーコンテナ
         /// </summary>
-        public CookieContainer CookieContainer = new CookieContainer();
+        public CookieContainer CookieContainer { get; set; } = new CookieContainer();
 
         /// <summary>
         /// インスタンスの管理
         /// </summary>
-        public IDContainer IDContainer = new IDContainer();
+        public IDContainer IDContainer { get; set; } = new IDContainer();
 
         /// <summary>
         /// キャッシュの有効期限
         /// </summary>
-        public TimeSpan CacheDeadline = TimeSpan.FromMinutes(30);
+        public TimeSpan CacheDeadline
+        {
+            get
+            {
+                return Cache.DefaultDeadline;
+            }
+
+            set
+            {
+                Cache.DefaultDeadline = value;
+            }
+        }
     }
 }

@@ -16,51 +16,16 @@ namespace UNicoAPI2.VideoService.Video
     {
         VideoInfo target;
         Context context;
+
+        Cache<string> htmlCache = new Cache<string>();
+        Cache<NameValueCollection> videoCache = new Cache<NameValueCollection>();
+
         string token = "";
         string watch_auth_key = "";
         string ticket = "";
         string block_no = "";
         string postkey = "";
 
-        DateTime htmlCacheDeadline;
-        string htmlcache = null;
-        string htmlCache
-        {
-            get
-            {
-                if (DateTime.Now > htmlCacheDeadline && htmlcache != null)
-                   ClearCache();
-
-                return htmlcache;
-            }
-            set
-            {
-                if (value != "")
-                    htmlCacheDeadline = DateTime.Now.Add(context.CacheDeadline);
-
-                htmlcache = value;
-            }
-        }
-
-        DateTime videoCacheDeadline;
-        NameValueCollection videocache = null;
-        NameValueCollection videoCache
-        {
-            get
-            {
-                if (DateTime.Now > videoCacheDeadline && videocache != null)
-                    ClearCache();
-
-                return videocache;
-            }
-            set
-            {
-                if (value != null)
-                    videoCacheDeadline = DateTime.Now.Add(context.CacheDeadline);
-
-                videocache = value;
-            }
-        }
 
         /******************************************/
         /******************************************/
@@ -69,6 +34,13 @@ namespace UNicoAPI2.VideoService.Video
         {
             target = Target;
             context = Context;
+
+            htmlCache.ChangedValue += () =>
+            {
+                ticket = "";
+                block_no = "";
+                postkey = "";
+            };
         }
 
         /// <summary>
@@ -93,7 +65,7 @@ namespace UNicoAPI2.VideoService.Video
                     #region
                     var accessorList = new List<Func<byte[], APIs.IAccesser>>();
 
-                    if (htmlCache == "")
+                    if (!htmlCache.IsAvailab)
                     {
                         accessorList.Add((data) =>
                         {
@@ -110,8 +82,8 @@ namespace UNicoAPI2.VideoService.Video
                         accessorList.ToArray(),
                         (data) =>
                         {
-                            if (htmlCache == "")
-                                htmlCache = new APIs.video_page_html.Parser().Parse(data);
+                            if (data != null)
+                                htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
 
                             var result = new Response<VideoInfo>();
                             result.Status = Status.OK;
@@ -154,9 +126,12 @@ namespace UNicoAPI2.VideoService.Video
         {
             var session = new Session<WebResponse>();
             var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var isVideoCacheProgress = false;
+            var isHtmlCacheProgress = false;
 
-            if (videoCache == null)
+            if (!videoCache.IsAvailab)
             {
+                isVideoCacheProgress = true;
                 accessorList.Add((data) =>
                 {
                     var accesser = new APIs.getflv.Accesser();
@@ -167,32 +142,41 @@ namespace UNicoAPI2.VideoService.Video
                     return accesser;
                 });
             }
-            accessorList.AddRange(new Func<byte[], APIs.IAccesser>[]
+
+            if (!htmlCache.IsAvailab)
             {
+                isHtmlCacheProgress = true;
+                accessorList.Add(
+                    (data) =>
+                    {
+                        if (data != null)
+                            videoCache.Value = new APIs.getflv.Parser().Parse(data);
+
+                        var accesser = new APIs.video_page_html.Accesser();
+                        accesser.Setting(
+                            context.CookieContainer,
+                            target.ID);
+
+                        return accesser;
+                    });
+            }
+
+            accessorList.Add(
                 (data) =>
                 {
-                    if (videoCache == null)
-                        videoCache = new APIs.getflv.Parser().Parse(data);
-
-                    var accesser = new APIs.video_page_html.Accesser();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        target.ID);
-
-                    return accesser;
-                },
-                (data) =>
-                {
-                    htmlCache = new APIs.video_page_html.Parser().Parse(data);
+                    if (data != null)
+                        if (isHtmlCacheProgress)
+                            htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
+                        else if (isVideoCacheProgress)
+                            videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
                     var accesser = new APIs.getvideo.Accesser();
                     accesser.Setting(
                         context.CookieContainer,
-                        videoCache["url"]);
+                        videoCache.Value["url"]);
 
                     return accesser;
-                },
-            });
+                });
 
             session.SetAccessers(accessorList.ToArray(), null);
             return session;
@@ -207,7 +191,7 @@ namespace UNicoAPI2.VideoService.Video
             var session = new Session<Response>();
             var accessorList = new List<Func<byte[], APIs.IAccesser>>();
 
-            if (videoCache == null)
+            if (!videoCache.IsAvailab)
                 accessorList.Add((data) =>
                 {
                     var accesser = new APIs.getflv.Accesser();
@@ -221,14 +205,14 @@ namespace UNicoAPI2.VideoService.Video
             if (postkey == "")
                 accessorList.Add((data) =>
                 {
-                    if (videoCache == null)
-                        videoCache = new APIs.getflv.Parser().Parse(data);
+                    if (data != null)
+                        videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
                     var accesser = new APIs.getpostkey.Accesser();
                     accesser.Setting(
                         context.CookieContainer,
                         block_no,
-                        videoCache["thread_id"]);
+                        videoCache.Value["thread_id"]);
 
                     return accesser;
                 });
@@ -241,12 +225,12 @@ namespace UNicoAPI2.VideoService.Video
                 var accesser = new APIs.upload_comment.Accesser();
                 accesser.Setting(
                     context.CookieContainer,
-                    videoCache["ms"],
-                    videoCache["thread_id"],
+                    videoCache.Value["ms"],
+                    videoCache.Value["thread_id"],
                     ((int)(Comment.PlayTime.TotalMilliseconds / 10)).ToString(),
                     Comment.Command,
                     ticket,
-                    videoCache["user_id"],
+                    videoCache.Value["user_id"],
                     postkey,
                     Comment.Body);
 
@@ -270,7 +254,7 @@ namespace UNicoAPI2.VideoService.Video
             var session = new Session<Response<Comment[]>>();
             var accessorList = new List<Func<byte[], APIs.IAccesser>>();
 
-            if (videoCache == null)
+            if (!videoCache.IsAvailab)
             {
                 accessorList.Add((data) =>
                 {
@@ -282,18 +266,19 @@ namespace UNicoAPI2.VideoService.Video
                     return accesser;
                 });
             }
+
             accessorList.AddRange(new Func<byte[], APIs.IAccesser>[]
             {
                 (data) =>
                 {
-                    if (videoCache == null)
-                        videoCache = new APIs.getflv.Parser().Parse(data);
+                    if (data != null)
+                        videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
                     var accesser = new APIs.download_comment.Accesser();
                     accesser.Setting(
                         context.CookieContainer,
-                        videoCache["ms"],
-                        videoCache["thread_id"]);
+                        videoCache.Value["ms"],
+                        videoCache.Value["thread_id"]);
 
                     return accesser;
                 },
@@ -361,7 +346,7 @@ namespace UNicoAPI2.VideoService.Video
             var session = new Session<Response<Tag[]>>();
             var accessorList = new List<Func<byte[], APIs.IAccesser>>();
 
-            if (htmlCache == "")
+            if (!htmlCache.IsAvailab)
             {
                 accessorList.Add(new Func<byte[], APIs.IAccesser>((byte[] data) =>
                 {
@@ -376,8 +361,8 @@ namespace UNicoAPI2.VideoService.Video
 
             accessorList.Add(new Func<byte[], APIs.IAccesser>((byte[] data) =>
             {
-                if (htmlCache == "")
-                    htmlCache = new APIs.video_page_html.Parser().Parse(data);
+                if (data != null)
+                    htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
 
                 if (token == "")
                     token = new APIs.video_page_html.csrf_token().Parse(htmlCache);
@@ -412,11 +397,8 @@ namespace UNicoAPI2.VideoService.Video
         /// </summary>
         public void ClearCache()
         {
-            videoCache = null;
-            ticket = "";
-            block_no = "";
-            postkey = "";
-            htmlCache = "";
+            videoCache.Clear();
+            htmlCache.Clear();
         }
     }
 }

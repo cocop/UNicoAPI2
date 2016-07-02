@@ -151,6 +151,8 @@
     <Compile Include="APIs\upload_comment\Parser.cs" />
     <Compile Include="APIs\upload_comment\Serial\chat_result.cs" />
     <Compile Include="APIs\upload_comment\Serial\packet.cs" />
+    <Compile Include="APIs\user_mylist_page_html\Accesser.cs" />
+    <Compile Include="APIs\user_mylist_page_html\Parser.cs" />
     <Compile Include="APIs\user_page_html\Accesser.cs" />
     <Compile Include="APIs\user_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\Accesser.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="APIs\video_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\csrf_token.cs" />
     <Compile Include="APIs\video_page_html\watch_auth_key.cs" />
+    <Compile Include="Cache.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
     <Compile Include="Connect\ContentType.cs" />
     <Compile Include="Connect\Session.cs" />

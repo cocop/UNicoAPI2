@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 
-namespace UNicoAPI2.APIs.user_page_html
+namespace UNicoAPI2.APIs.user_mylist_page_html
 {
     public class Accesser : IAccesser
     {
@@ -38,7 +38,7 @@ namespace UNicoAPI2.APIs.user_page_html
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                "http://www.nicovideo.jp/user/" + user_id);
+                "http://www.nicovideo.jp/user/" + user_id + "/mylist");
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = cookieContainer;

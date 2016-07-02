@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Video;
 
@@ -102,6 +103,40 @@ namespace UNicoAPI2.VideoService
             {
                 result.Result.User = Context.IDContainer.GetUser(Serial.user_id);
                 result.Result.User.Name = Serial.user_nickname;
+            }
+
+            return result;
+        }
+
+        public static Response<User.User> UserResponse(Context Context, Dictionary<string, string> Serial)
+        {
+            var result = new Response<User.User>();
+
+            Response(result, "ok", null);
+            result.Result = Context.IDContainer.GetUser(Serial["id"]);
+            result.Result.Icon = new Picture(Serial["icon"], Context.CookieContainer);
+            result.Result.Name = Serial["name"];
+            result.Result.Sex = Serial["sex"];
+            result.Result.Birthday = Serial["birthday"];
+            result.Result.Area = Serial["area"];
+            result.Result.BookmarkCount = int.Parse(Serial["bookmark"]);
+            result.Result.Experience = int.Parse(Serial["exp"]);
+            result.Result.Description = Serial["description"];
+
+            return result;
+        }
+
+        public static Response<Mylist.Mylist[]> PublicMylistListResponse(Context context, Dictionary<string, string>[] Serial)
+        {
+            var result = new Response<Mylist.Mylist[]>();
+
+            Response(result, "ok", null);
+            result.Result = new Mylist.Mylist[Serial.Length];
+
+            for (int i = 0; i < result.Result.Length; i++)
+            {
+                result.Result[i] = context.IDContainer.GetMylist(Serial[i]["id"]);
+                result.Result[i].Title = Serial[i]["name"];
             }
 
             return result;

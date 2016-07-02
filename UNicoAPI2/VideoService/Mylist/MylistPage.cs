@@ -19,6 +19,9 @@ namespace UNicoAPI2.VideoService.Mylist
             context = Context;
         }
 
+        /// <summary>
+        /// マイリストを取得する
+        /// </summary>
         public Session<Response<Mylist>> DownloadMylist()
         {
             var session = new Session<Response<Mylist>>();
