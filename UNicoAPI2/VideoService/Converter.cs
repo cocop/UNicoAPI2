@@ -119,9 +119,12 @@ namespace UNicoAPI2.VideoService
             result.Result.Sex = Serial["sex"];
             result.Result.Birthday = Serial["birthday"];
             result.Result.Area = Serial["area"];
-            result.Result.BookmarkCount = int.Parse(Serial["bookmark"]);
-            result.Result.Experience = int.Parse(Serial["exp"]);
             result.Result.Description = Serial["description"];
+            try
+            {
+                result.Result.BookmarkCount = int.Parse(Serial["bookmark"]);
+                result.Result.Experience = int.Parse(Serial["exp"]);
+            } catch (Exception) { }
 
             return result;
         }
@@ -222,9 +225,14 @@ namespace UNicoAPI2.VideoService
                     IsPremium = Serial[i].premium,
                     UserID = Serial[i].user_id,
                     WriteTime = unixTime.AddSeconds(double.Parse(Serial[i].date)).ToLocalTime(),
-                    Scores = int.Parse(Serial[i].scores ?? "0"),
                     IsYourPost = Serial[i].yourpost,
                 };
+
+                try
+                {
+                    result[i].Scores = int.Parse(Serial[i].scores ?? "0");
+                }
+                catch (Exception) { }
             }
 
             return result;
