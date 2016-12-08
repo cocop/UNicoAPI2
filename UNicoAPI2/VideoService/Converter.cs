@@ -116,9 +116,7 @@ namespace UNicoAPI2.VideoService
             result.Result = Context.IDContainer.GetUser(Serial["id"]);
             result.Result.Icon = new Picture(Serial["icon"], Context.CookieContainer);
             result.Result.Name = Serial["name"];
-            result.Result.Sex = Serial["sex"];
-            result.Result.Birthday = Serial["birthday"];
-            result.Result.Area = Serial["area"];
+
             result.Result.Description = Serial["description"];
             try
             {

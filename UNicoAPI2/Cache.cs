@@ -81,8 +81,8 @@ namespace UNicoAPI2
         /// <summary></summary>
         public void Clear()
         {
-            gotTime = null;
             Value = default(Type);
+            gotTime = null;
         }
     }
 }

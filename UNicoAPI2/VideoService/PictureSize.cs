@@ -10,6 +10,11 @@ namespace UNicoAPI2.VideoService
         None,
 
         /// <summary>
+        /// 中サイズ
+        /// </summary>
+        Medium,
+
+        /// <summary>
         /// 大きいサイズ
         /// </summary>
         Large,
@@ -24,6 +29,7 @@ namespace UNicoAPI2.VideoService
             switch (PictureSize)
             {
                 case PictureSize.None: return "";
+                case PictureSize.Medium: return ".M";
                 case PictureSize.Large: return ".L";
                 default: throw new Exception("設定したサーチオプションが不正です");
             }

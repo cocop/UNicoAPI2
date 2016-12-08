@@ -30,21 +30,6 @@
         public string Description { get; set; }
 
         /// <summary>
-        /// 性別
-        /// </summary>
-        public string Sex { get; set; }
-
-        /// <summary>
-        /// 生年月日
-        /// </summary>
-        public string Birthday { get; set; }
-
-        /// <summary>
-        /// お住まいの地域
-        /// </summary>
-        public string Area { get; set; }
-
-        /// <summary>
         /// お気に入り登録された数
         /// </summary>
         public int BookmarkCount { get; set; }

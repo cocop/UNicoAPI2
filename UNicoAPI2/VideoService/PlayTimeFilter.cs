@@ -4,7 +4,7 @@ namespace UNicoAPI2.VideoService
 {
     /******************************************/
     /// <summary>
-    /// 投稿時間フィルタ
+    /// 再生時間フィルタ
     /// </summary>
     /******************************************/
     public enum PlayTimeFilter
