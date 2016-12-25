@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AC76A7C4-F2E5-4625-909D-115FFAF26B7B}</ProjectGuid>
+    <ProjectGuid>{8DD15737-0A87-42A8-B491-BB3EE70C6F6C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UNicoAPI2</RootNamespace>
     <AssemblyName>UNicoAPI2</AssemblyName>
     <DefaultLanguage>ja-JP</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -107,13 +107,14 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="APIs\mylistvideo\Accesser.cs" />
-    <Compile Include="APIs\mylistvideo\Parser.cs" />
-    <Compile Include="APIs\mylistvideo\Serial\contract.cs" />
-    <Compile Include="APIs\mylistvideo\Serial\list.cs" />
-    <Compile Include="APIs\mylistvideo\Serial\thumbnail_style.cs" />
-    <Compile Include="APIs\tag_edit\DownloadAccesser.cs" />
-    <Compile Include="APIs\tag_edit\Parser.cs" />
+    <Compile Include="APIs\AccesserType.cs" />
+    <Compile Include="APIs\download_comment\Accesser.cs" />
+    <Compile Include="APIs\download_comment\Parser.cs" />
+    <Compile Include="APIs\download_comment\Serial\chat.cs" />
+    <Compile Include="APIs\download_comment\Serial\leaf.cs" />
+    <Compile Include="APIs\download_comment\Serial\packet.cs" />
+    <Compile Include="APIs\download_comment\Serial\thread.cs" />
+    <Compile Include="APIs\download_comment\Serial\view_counter.cs" />
     <Compile Include="APIs\getflv\Accesser.cs" />
     <Compile Include="APIs\getflv\Parser.cs" />
     <Compile Include="APIs\getpostkey\Accesser.cs" />
@@ -125,25 +126,24 @@
     <Compile Include="APIs\getthumbinfo\Serial\tags.cs" />
     <Compile Include="APIs\getthumbinfo\Serial\thumb.cs" />
     <Compile Include="APIs\getvideo\Accesser.cs" />
-    <Compile Include="APIs\download_comment\Accesser.cs" />
-    <Compile Include="APIs\download_comment\Parser.cs" />
-    <Compile Include="APIs\download_comment\Serial\chat.cs" />
-    <Compile Include="APIs\download_comment\Serial\leaf.cs" />
-    <Compile Include="APIs\download_comment\Serial\packet.cs" />
-    <Compile Include="APIs\download_comment\Serial\thread.cs" />
-    <Compile Include="APIs\download_comment\Serial\view_counter.cs" />
     <Compile Include="APIs\IAccesser.cs" />
-    <Compile Include="APIs\AccesserType.cs" />
     <Compile Include="APIs\IHtmlParser.cs" />
     <Compile Include="APIs\IParser.cs" />
     <Compile Include="APIs\login\Accesser.cs" />
     <Compile Include="APIs\login\Parser.cs" />
+    <Compile Include="APIs\mylistvideo\Accesser.cs" />
+    <Compile Include="APIs\mylistvideo\Parser.cs" />
+    <Compile Include="APIs\mylistvideo\Serial\contract.cs" />
+    <Compile Include="APIs\mylistvideo\Serial\list.cs" />
+    <Compile Include="APIs\mylistvideo\Serial\thumbnail_style.cs" />
     <Compile Include="APIs\search\Accesser.cs" />
     <Compile Include="APIs\search\Parser.cs" />
     <Compile Include="APIs\search\Serial\contract.cs" />
     <Compile Include="APIs\search\Serial\list.cs" />
     <Compile Include="APIs\search\Serial\nicopedia.cs" />
     <Compile Include="APIs\Serial\error.cs" />
+    <Compile Include="APIs\tag_edit\DownloadAccesser.cs" />
+    <Compile Include="APIs\tag_edit\Parser.cs" />
     <Compile Include="APIs\tag_edit\Serial\contract.cs" />
     <Compile Include="APIs\tag_edit\Serial\tag.cs" />
     <Compile Include="APIs\tag_edit\UploadAccesser.cs" />
@@ -156,9 +156,9 @@
     <Compile Include="APIs\user_page_html\Accesser.cs" />
     <Compile Include="APIs\user_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\Accesser.cs" />
+    <Compile Include="APIs\video_page_html\csrf_token.cs" />
     <Compile Include="APIs\video_page_html\description.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
-    <Compile Include="APIs\video_page_html\csrf_token.cs" />
     <Compile Include="APIs\video_page_html\watch_auth_key.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
