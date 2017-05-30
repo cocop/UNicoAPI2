@@ -12,6 +12,13 @@ namespace UNicoAPI2.Connect
             return This.RunAsync(This.UntreatedCount, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Task化
+        /// </summary>
+        public Task<ResultType> ToTask()
+        {
+            return (Task<ResultType>)this;
+        }
 
         /// <summary>
         /// 未処理のアクセッサ数
