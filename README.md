@@ -1,5 +1,5 @@
 # UNicoAPI2
-ユニバーサル用ニコニコ動画へアクセスするAPI
+UWP用ニコニコ動画へアクセスするAPI
 
 前バージョンはこちら  
 https://github.com/cocop/NicoServiceAPI  
