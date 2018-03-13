@@ -36,6 +36,10 @@ namespace UNicoAPI2
             {
                 (data) =>
                 {
+                    return new APIs.login_page_html.Accesser();
+                },
+                (data) =>
+                {
                     var accesser = new APIs.login.Accesser();
                     accesser.Setting(context.CookieContainer, MailAddress, Password);
 

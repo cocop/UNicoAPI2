@@ -11,11 +11,12 @@ namespace UNicoAPI2.APIs.login
         public User Parse(byte[] Value)
         {
             var http = Encoding.UTF8.GetString(Value);
+            var result = regex.Match(http);
 
-            if (http.Contains("ログインエラー") || http.Contains("間違っています"))
+            if (!result.Success)
                 return null;
 
-            return new User(regex.Match(http).Groups["value"].Value);
+            return new User(result.Groups["value"].Value);
         }
     }
 }

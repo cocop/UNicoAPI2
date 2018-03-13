@@ -131,6 +131,8 @@
     <Compile Include="APIs\IParser.cs" />
     <Compile Include="APIs\login\Accesser.cs" />
     <Compile Include="APIs\login\Parser.cs" />
+    <Compile Include="APIs\login_page_html\Accesser.cs" />
+    <Compile Include="APIs\login_page_html\Parser.cs" />
     <Compile Include="APIs\mylistvideo\Accesser.cs" />
     <Compile Include="APIs\mylistvideo\Parser.cs" />
     <Compile Include="APIs\mylistvideo\Serial\contract.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="APIs\user_page_html\Accesser.cs" />
     <Compile Include="APIs\user_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\Accesser.cs" />
+    <Compile Include="APIs\video_page_html\Serial\Rootobject.cs" />
     <Compile Include="APIs\video_page_html\csrf_token.cs" />
     <Compile Include="APIs\video_page_html\description.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
@@ -193,7 +196,6 @@
     <Compile Include="VideoService\Video\VideoPage.cs" />
     <EmbeddedResource Include="Properties\UNicoAPI2.rd.xml" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

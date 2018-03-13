@@ -37,7 +37,7 @@ namespace UNicoAPI2.APIs.login
 
         public Task<Stream> GetUploadStreamAsync()
         {
-            request = (HttpWebRequest)WebRequest.Create("https://secure.nicovideo.jp/secure/login");
+            request = (HttpWebRequest)WebRequest.Create("https://account.nicovideo.jp/api/v1/login");
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Form;

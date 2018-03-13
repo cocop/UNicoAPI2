@@ -7,8 +7,6 @@ namespace UNicoAPI2.APIs.search
     {
         public Serial.contract Parse(byte[] Value)
         {
-            var a = System.Text.Encoding.UTF8.GetString(Value);
-
             var serialize = new DataContractJsonSerializer(typeof(Serial.contract));
 
             return (Serial.contract)serialize.ReadObject(new MemoryStream(Value));
