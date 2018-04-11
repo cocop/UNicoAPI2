@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.User;
 using UNicoAPI2.VideoService.Video;
@@ -16,11 +15,44 @@ namespace UNicoAPI2
         /// <summary>
         /// trueの場合一つのIDに付き一つのインスタンスが保証される
         /// </summary>
-        public bool IsBuffering { get; set; } = true;
+        public bool IsBuffering
+        {
+            get
+            {
+                return isBuffering;
+            }
+            set
+            {
+                if (!value)
+                    Clear();
 
-        Dictionary<string, VideoInfo> videoInfoTable = new Dictionary<string, VideoInfo>();
-        Dictionary<string, Mylist> mylistTable = new Dictionary<string, Mylist>();
-        Dictionary<string, User> userTable = new Dictionary<string, User>();
+                isBuffering = value;
+            }
+        }
+        bool isBuffering = true;
+
+        /// <summary>
+        /// ID毎の最大バッファ数
+        /// </summary>
+        public int BufferLength
+        {
+            get
+            {
+                return bufferLength;
+            }
+            set
+            {
+                bufferLength = value;
+                videoInfoTable.BufferCount = value;
+                mylistTable.BufferCount = value;
+                userTable.BufferCount = value;
+            }
+        }
+        int bufferLength = 10;
+
+        BufferingManager<VideoInfo> videoInfoTable = new BufferingManager<VideoInfo>();
+        BufferingManager<Mylist> mylistTable = new BufferingManager<Mylist>();
+        BufferingManager<User> userTable = new BufferingManager<User>();
 
         /// <summary>動画情報を取得する</summary>
         /// <param name="ID">動画ID</param>
@@ -53,18 +85,12 @@ namespace UNicoAPI2
             userTable.Clear();
         }
 
-        ManageType GetInstance<ManageType>(string ID, Dictionary<string, ManageType> Table, Func<string, ManageType> New)
+        ManageType GetInstance<ManageType>(string ID, BufferingManager<ManageType> Table, Func<string, ManageType> New)
         {
-            ManageType result;
+            if (IsBuffering)
+                return Table.Get(ID, New);
 
-            if (!Table.TryGetValue(ID, out result))
-            {
-                result = New(ID);
-
-                if (IsBuffering)
-                    Table.Add(ID, result);
-            }
-            return result;
+            return New(ID);
         }
     }
 }

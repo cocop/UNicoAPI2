@@ -163,6 +163,8 @@
     <Compile Include="APIs\video_page_html\description.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\watch_auth_key.cs" />
+    <Compile Include="BufferingManager.cs" />
+    <Compile Include="BufferingMapType.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
     <Compile Include="Connect\ContentType.cs" />

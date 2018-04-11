@@ -15491,12 +15491,12 @@
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\ここ\\Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
+      "projectUniqueName": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
       "projectName": "UNicoAPI2",
-      "projectPath": "C:\\Users\\ここ\\Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
-      "projectJsonPath": "C:\\Users\\ここ\\Source\\UNicoAPI2\\UNicoAPI2\\project.json",
+      "projectPath": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
+      "projectJsonPath": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\project.json",
       "packagesPath": "C:\\Users\\ここ\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ここ\\Source\\UNicoAPI2\\UNicoAPI2\\obj\\",
+      "outputPath": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\obj\\",
       "projectStyle": "ProjectJson",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\"
