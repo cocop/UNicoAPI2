@@ -80,17 +80,25 @@ namespace UNicoAPI2
         /// </summary>
         public void Clear()
         {
-            videoInfoTable.Clear();
-            mylistTable.Clear();
-            userTable.Clear();
+            lock (videoInfoTable)
+            lock (mylistTable)
+            lock (userTable)
+            {
+                videoInfoTable.Clear();
+                mylistTable.Clear();
+                userTable.Clear();
+            }
         }
 
         ManageType GetInstance<ManageType>(string ID, BufferingManager<ManageType> Table, Func<string, ManageType> New)
         {
-            if (IsBuffering)
-                return Table.Get(ID, New);
+            lock (Table)
+            {
+                if (IsBuffering)
+                    return Table.Get(ID, New);
 
-            return New(ID);
+                return New(ID);
+            }
         }
     }
 }
