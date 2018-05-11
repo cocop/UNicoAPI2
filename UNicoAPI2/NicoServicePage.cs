@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using UNicoAPI2.Connect;
 using UNicoAPI2.VideoService.User;
 
@@ -19,6 +20,8 @@ namespace UNicoAPI2
         /// ID管理
         /// </summary>
         public IDContainer IDContainer { get { return context.IDContainer; } }
+
+        public CookieContainer CookieContainer { get { return context.CookieContainer; } }
 
         /// <summary>
         /// キャッシュの有効期限

@@ -17,7 +17,7 @@ namespace UNicoAPI2.VideoService
         /// <summary>自動生成される画像データ</summary>
         /// <param name="Url">画像データのURL</param>
         /// <param name="CookieContainer">クッキーを持っているClient</param>
-        internal Picture(string Url, CookieContainer CookieContainer)
+        public Picture(string Url, CookieContainer CookieContainer)
         {
             this.Url = Url;
             cookieContainer = CookieContainer;
