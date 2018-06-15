@@ -38,7 +38,6 @@ namespace UNicoAPI2.VideoService.Video
             htmlCache.ChangedValue += () =>
             {
                 ticket = "";
-                block_no = "";
                 postkey = "";
             };
         }
