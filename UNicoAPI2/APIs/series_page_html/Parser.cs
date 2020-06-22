@@ -8,17 +8,8 @@ namespace UNicoAPI2.APIs.series_page_html
     public class Parser : IHtmlParser<Result>
     {
         static readonly Regex titleRegex = new Regex("<div class=\"SeriesDetailContainer-bodyTitle\">(?<title>.*?)</div>");
-        static readonly Regex videoInfoRegex = new Regex(@"<div class=""MediaObject-body"">
-        <div class=""SeriesVideoListContainer-videoRegisteredAt"">
-          (?<post_time>.*?) 投稿
-      </div>
-    <div class=""VideoMediaObject-title""><a href=""/watch/(?<id>.*?)"" data-href="".*?"">(?<title>.*?)</a></div><div class=""VideoMediaObject-description"">(?<description>.*?)</div>      <div class=""SeriesVideoListContainer-videoMetaCount"">
-        <span class=""VideoMetaCount VideoMetaCount-view"">(?<view_count>.*?)</span>
-        <span class=""VideoMetaCount VideoMetaCount-comment"">(?<comment_count>.*?)</span>
-        <span class=""VideoMetaCount VideoMetaCount-mylist"">(?<mylist_count>.*?)</span>
-      </div>
-    </div>
-  </div>");
+        static readonly Regex videoInfoRegex = new Regex("<div class=\"Thumbnail VideoThumbnail\"   >\n  <div\n    class=\"Thumbnail-image\"\n    data-thumbnail\n    data-lazy-load\n    data-background-image=\"(?<thumbnail_url>.*?).M\"\n    alt=\".*?\"  ></div>.*?<div class=\"VideoLength\">(?<length>.*?)</div>.*?<div class=\"SeriesVideoListContainer-videoRegisteredAt\">\n          (?<post_time>.*?) 投稿\n      </div>\n    <div class=\"VideoMediaObject-title\"><a href=\"/watch/(?<id>.*?)\" data-href=\".*?\">(?<title>.*?)</a></div><div class=\"VideoMediaObject-description\">(?<description>.*?)</div>      <div class=\"SeriesVideoListContainer-videoMetaCount\">\n        <span class=\"VideoMetaCount VideoMetaCount-view\">(?<view_count>.*?)</span>\n        <span class=\"VideoMetaCount VideoMetaCount-comment\">(?<comment_count>.*?)</span>\n        <span class=\"VideoMetaCount VideoMetaCount-mylist\">(?<mylist_count>.*?)</span>\n      </div>\n    </div>\n  </div>\n  \n</div>\n", RegexOptions.Singleline);
+        static readonly Regex otherSeriesRegex = new Regex("<a class=\"SeriesMenuContainer-seriesItemLink\"href=\"https://www.nicovideo.jp/series/(?<id>.*?)\">(?<title>.*?)</a>");
         static readonly Regex postUserInfoRegex = new Regex("<a class=\"SeriesAdditionalContainer-ownerName\" href=\"https://www.nicovideo.jp/user/(?<id>.*?)\">(?<name>.*?)</a>");
 
         public string Parse(byte[] Value)
@@ -30,7 +21,7 @@ namespace UNicoAPI2.APIs.series_page_html
         {
             var result = new Result();
 
-            result.Title = titleRegex.Match(Value).Value;
+            result.Title = titleRegex.Match(Value).Groups["title"].Value;
 
             var videoList = new List<Video>();
             foreach (Match item in videoInfoRegex.Matches(Value))
@@ -39,6 +30,7 @@ namespace UNicoAPI2.APIs.series_page_html
                 {
                     Title = item.Groups["title"].Value,
                     ID = item.Groups["id"].Value,
+                    ThumbnailUrl = item.Groups["thumbnail_url"].Value,
                     Description = item.Groups["description"].Value,
                     ViewCount = item.Groups["view_count"].Value,
                     CommentCount = item.Groups["comment_count"].Value,
@@ -46,6 +38,17 @@ namespace UNicoAPI2.APIs.series_page_html
                 });
             }
             result.VideoList = videoList.ToArray();
+
+            var otherSeriesList = new List<Series>();
+            foreach (Match item in otherSeriesRegex.Matches(Value))
+            {
+                otherSeriesList.Add(new Series()
+                {
+                    ID = item.Groups["id"].Value,
+                    Title = item.Groups["title"].Value,
+                });
+            }
+            result.OtherSeriesList = otherSeriesList.ToArray();
 
             var postUserInfoMatch = postUserInfoRegex.Match(Value);
             result.PostUser = new User()

@@ -8,5 +8,6 @@
         public string ViewCount { get; set; }
         public string CommentCount { get; set; }
         public string MylistCount { get; set; }
+        public string ThumbnailUrl { get; internal set; }
     }
 }

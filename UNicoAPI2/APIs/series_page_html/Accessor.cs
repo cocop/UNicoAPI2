@@ -38,7 +38,7 @@ namespace UNicoAPI2.APIs.series_page_html
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                "https://www.nicovideo.jp/series" + series_id);
+                "https://www.nicovideo.jp/series/" + series_id);
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = cookieContainer;

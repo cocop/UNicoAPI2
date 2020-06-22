@@ -142,21 +142,22 @@ namespace UNicoAPI2.VideoService
             result.Result.ID = SeriesID;
             result.Result.Title = Serial.Title;
             result.Result.User = Context.IDContainer.GetUser(Serial.PostUser.ID);
-            result.Result.User.Name = Serial.PostUser.Name;
-            result.Result.OtherSeriesList = Serial.OtherSeriesList.Select((otherSeries) =>
+            result.Result.User.Name = Serial.PostUser?.Name;
+            result.Result.OtherSeriesList = Serial.OtherSeriesList?.Select((otherSeries) =>
             {
                 var series = Context.IDContainer.GetSeries(otherSeries.ID);
                 otherSeries.Title = otherSeries.Title;
                 return series;
             }).ToArray();
-            result.Result.VideoList = Serial.VideoList.Select((video) =>
+            result.Result.VideoList = Serial.VideoList?.Select((video) =>
             {
                 var videoInfo = Context.IDContainer.GetVideoInfo(video.ID);
                 videoInfo.Title = video.Title;
                 videoInfo.ShortDescription = video.Description;
-                videoInfo.ViewCounter = int.Parse(video.ViewCount);
-                videoInfo.ComentCounter = int.Parse(video.CommentCount);
-                videoInfo.MylistCounter = int.Parse(video.MylistCount);
+                videoInfo.Thumbnail = new Picture(video.ThumbnailUrl, Context.CookieContainer);
+                videoInfo.ViewCounter = int.Parse(video.ViewCount.Replace(",", ""));
+                videoInfo.ComentCounter = int.Parse(video.CommentCount.Replace(",", ""));
+                videoInfo.MylistCounter = int.Parse(video.MylistCount.Replace(",", ""));
                 videoInfo.User = result.Result.User;
                 return videoInfo;
             }).ToArray();
