@@ -41,6 +41,11 @@
         public string Title { get; set; }
 
         /// <summary>
+        /// 他のシリーズ
+        /// </summary>
+        public Series[] OtherSeriesList { get; set; }
+
+        /// <summary>
         /// シリーズ動画リスト
         /// </summary>
         public Video.VideoInfo[] VideoList { get; set; }

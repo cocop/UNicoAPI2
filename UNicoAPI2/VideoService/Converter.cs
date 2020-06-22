@@ -143,6 +143,12 @@ namespace UNicoAPI2.VideoService
             result.Result.Title = Serial.Title;
             result.Result.User = Context.IDContainer.GetUser(Serial.PostUser.ID);
             result.Result.User.Name = Serial.PostUser.Name;
+            result.Result.OtherSeriesList = Serial.OtherSeriesList.Select((otherSeries) =>
+            {
+                var series = Context.IDContainer.GetSeries(otherSeries.ID);
+                otherSeries.Title = otherSeries.Title;
+                return series;
+            }).ToArray();
             result.Result.VideoList = Serial.VideoList.Select((video) =>
             {
                 var videoInfo = Context.IDContainer.GetVideoInfo(video.ID);
