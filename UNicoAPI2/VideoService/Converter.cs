@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using UNicoAPI2.APIs.series_page_html.Serial;
 using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Video;
 
@@ -131,6 +133,31 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
+        public static Response<Series.Series> SeriesResponse(Context Context, Result Serial, string SeriesID)
+        {
+            var result = new Response<Series.Series>();
+
+            Response(result, "ok", null);
+            result.Result = Context.IDContainer.GetSeries(SeriesID);
+            result.Result.ID = SeriesID;
+            result.Result.Title = Serial.Title;
+            result.Result.User = Context.IDContainer.GetUser(Serial.PostUser.ID);
+            result.Result.User.Name = Serial.PostUser.Name;
+            result.Result.VideoList = Serial.VideoList.Select((video) =>
+            {
+                var videoInfo = Context.IDContainer.GetVideoInfo(video.ID);
+                videoInfo.Title = video.Title;
+                videoInfo.ShortDescription = video.Description;
+                videoInfo.ViewCounter = int.Parse(video.ViewCount);
+                videoInfo.ComentCounter = int.Parse(video.CommentCount);
+                videoInfo.MylistCounter = int.Parse(video.MylistCount);
+                videoInfo.User = result.Result.User;
+                return videoInfo;
+            }).ToArray();
+
+            return result;
+        }
+
         public static Response<User.User> UserResponse(Context Context, Dictionary<string, string> Serial)
         {
             var result = new Response<User.User>();
@@ -145,7 +172,8 @@ namespace UNicoAPI2.VideoService
             {
                 result.Result.BookmarkCount = int.Parse(Serial["bookmark"]);
                 result.Result.Experience = int.Parse(Serial["exp"]);
-            } catch (Exception) { }
+            }
+            catch (Exception) { }
 
             return result;
         }

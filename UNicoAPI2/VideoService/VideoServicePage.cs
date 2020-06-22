@@ -1,6 +1,7 @@
 ﻿using System;
 using UNicoAPI2.Connect;
 using UNicoAPI2.VideoService.Mylist;
+using UNicoAPI2.VideoService.Series;
 using UNicoAPI2.VideoService.User;
 using UNicoAPI2.VideoService.Video;
 
@@ -38,6 +39,16 @@ namespace UNicoAPI2.VideoService
                 return Target.mylistPage;
             else
                 return Target.mylistPage = new MylistPage(Target, context);
+        }
+
+        /// <summary>マイリストへアクセスするページを取得する</summary>
+        /// <param name="Target">ターゲットマイリスト</param>
+        public SeriesPage GetSeriesPage(Series.Series Target)
+        {
+            if (Target.seriesPage != null)
+                return Target.seriesPage;
+            else
+                return Target.seriesPage = new SeriesPage(Target, context);
         }
 
         /// <summary>ユーザーへアクセスするページを取得する</summary>

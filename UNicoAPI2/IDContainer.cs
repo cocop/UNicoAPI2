@@ -1,5 +1,6 @@
 ﻿using System;
 using UNicoAPI2.VideoService.Mylist;
+using UNicoAPI2.VideoService.Series;
 using UNicoAPI2.VideoService.User;
 using UNicoAPI2.VideoService.Video;
 
@@ -45,6 +46,7 @@ namespace UNicoAPI2
                 bufferLength = value;
                 videoInfoTable.BufferCount = value;
                 mylistTable.BufferCount = value;
+                seriesTable.BufferCount = value;
                 userTable.BufferCount = value;
             }
         }
@@ -52,6 +54,7 @@ namespace UNicoAPI2
 
         BufferingManager<VideoInfo> videoInfoTable = new BufferingManager<VideoInfo>();
         BufferingManager<Mylist> mylistTable = new BufferingManager<Mylist>();
+        BufferingManager<Series> seriesTable = new BufferingManager<Series>();
         BufferingManager<User> userTable = new BufferingManager<User>();
 
         /// <summary>動画情報を取得する</summary>
@@ -68,6 +71,13 @@ namespace UNicoAPI2
             return GetInstance(ID, mylistTable, (id) => new Mylist(id));
         }
 
+        /// <summary>シリーズを取得する</summary>
+        /// <param name="ID">シリーズID</param>
+        public Series GetSeries(string ID)
+        {
+            return GetInstance(ID, seriesTable, (id) => new Series(id));
+        }
+
         /// <summary>ユーザー情報を取得する</summary>
         /// <param name="ID">ユーザーID</param>
         public User GetUser(string ID)
@@ -81,13 +91,14 @@ namespace UNicoAPI2
         public void Clear()
         {
             lock (videoInfoTable)
-            lock (mylistTable)
-            lock (userTable)
-            {
-                videoInfoTable.Clear();
-                mylistTable.Clear();
-                userTable.Clear();
-            }
+                lock (mylistTable)
+                    lock (userTable)
+                    {
+                        videoInfoTable.Clear();
+                        mylistTable.Clear();
+                        seriesTable.Clear();
+                        userTable.Clear();
+                    }
         }
 
         ManageType GetInstance<ManageType>(string ID, BufferingManager<ManageType> Table, Func<string, ManageType> New)

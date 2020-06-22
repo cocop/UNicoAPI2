@@ -144,6 +144,12 @@
     <Compile Include="APIs\search\Serial\list.cs" />
     <Compile Include="APIs\search\Serial\nicopedia.cs" />
     <Compile Include="APIs\Serial\error.cs" />
+    <Compile Include="APIs\series_page_html\Accessor.cs" />
+    <Compile Include="APIs\series_page_html\Parser.cs" />
+    <Compile Include="APIs\series_page_html\Serial\Result.cs" />
+    <Compile Include="APIs\series_page_html\Serial\Series.cs" />
+    <Compile Include="APIs\series_page_html\Serial\User.cs" />
+    <Compile Include="APIs\series_page_html\Serial\Video.cs" />
     <Compile Include="APIs\tag_edit\DownloadAccessor.cs" />
     <Compile Include="APIs\tag_edit\Parser.cs" />
     <Compile Include="APIs\tag_edit\Serial\contract.cs" />
@@ -185,6 +191,8 @@
     <Compile Include="VideoService\Response.cs" />
     <Compile Include="VideoService\SearchOption.cs" />
     <Compile Include="VideoService\SearchType.cs" />
+    <Compile Include="VideoService\Series\SeriesPage.cs" />
+    <Compile Include="VideoService\Series\Series.cs" />
     <Compile Include="VideoService\SortOrder.cs" />
     <Compile Include="VideoService\SortTarget.cs" />
     <Compile Include="VideoService\Status.cs" />
