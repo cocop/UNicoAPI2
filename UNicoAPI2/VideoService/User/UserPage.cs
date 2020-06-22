@@ -28,13 +28,13 @@ namespace UNicoAPI2.VideoService.User
         public Session<Response<User>> DownloadUser()
         {
             var session = new Session<Response<User>>();
-            var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
             if (!htmlCache.IsAvailab)
                 accessorList.Add(
                     (data) =>
                     {
-                        var accesser = new APIs.user_page_html.Accesser();
+                        var accesser = new APIs.user_page_html.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
                             target.ID);
@@ -63,13 +63,13 @@ namespace UNicoAPI2.VideoService.User
         public Session<Response<Mylist.Mylist[]>> DownloadPublicMylistList()
         {
             var session = new Session<Response<Mylist.Mylist[]>>();
-            var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
             if (!htmlMylistCache.IsAvailab)
                 accessorList.Add(
                     (data) =>
                     {
-                        var accesser = new APIs.user_mylist_page_html.Accesser();
+                        var accesser = new APIs.user_mylist_page_html.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
                             target.ID);

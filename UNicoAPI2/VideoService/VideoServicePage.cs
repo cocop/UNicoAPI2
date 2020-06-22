@@ -63,11 +63,11 @@ namespace UNicoAPI2.VideoService
         {
             var session = new Session<Response<VideoInfo[]>>();
 
-            session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+            session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
             {
                 (data) =>
                 {
-                    var accesser = new APIs.search.Accesser();
+                    var accesser = new APIs.search.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         SearchType.ToKey(),

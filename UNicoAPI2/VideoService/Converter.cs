@@ -50,6 +50,29 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
+        public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.video_page_html.Serial.Rootobject Serial)
+        {
+            var result = new Response<VideoInfo>();
+            result.Status = Status.OK;
+            result.Result = Context.IDContainer.GetVideoInfo(Serial.video.id);
+
+            result.Result.ComentCounter = Serial?.thread?.commentCount ?? 0;
+            result.Result.Description = Serial?.video?.description;
+            result.Result.Length = TimeSpan.FromSeconds(Serial?.video?.dmcInfo?.video?.length_seconds ?? 0);
+            result.Result.MylistCounter = Serial?.video?.mylistCount ?? 0;
+            result.Result.PostTime = DateTime.Parse(Serial?.video?.postedDateTime);
+            result.Result.Tags = Tags(Serial?.tags);
+            result.Result.Thumbnail = new Picture(Serial?.video?.thumbnailURL, Context.CookieContainer);
+            result.Result.Title = Serial?.video?.title;
+            result.Result.VideoType = Serial?.video?.movieType;
+            result.Result.ViewCounter = Serial?.video?.viewCount ?? 0;
+            result.Result.User = Context.IDContainer.GetUser(Serial?.owner?.id);
+            result.Result.User.Name = Serial?.owner?.nickname;
+            result.Result.User.Icon = new Picture(Serial?.owner?.iconURL, Context.CookieContainer);
+
+            return result;
+        }
+
         public static Response Response(APIs.upload_comment.Serial.packet Serial)
         {
             var result = new Response();
@@ -176,6 +199,23 @@ namespace UNicoAPI2.VideoService
                     IsCategory = Serial.tag[i].category != 0,
                     IsLock = Serial.tag[i]._lock != 0,
                     Name = Serial.tag[i]._tag,
+                };
+            }
+
+            return result;
+        }
+
+        private static Tag[] Tags(APIs.video_page_html.Serial.Tag[] Serial)
+        {
+            var result = new Tag[Serial.Length];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = new Tag()
+                {
+                    IsCategory = Serial[i].isCategory ?? false,
+                    IsLock = Serial[i].isLocked ?? false,
+                    Name = Serial[i].name,
                 };
             }
 

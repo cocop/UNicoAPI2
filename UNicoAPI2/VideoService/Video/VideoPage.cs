@@ -62,13 +62,13 @@ namespace UNicoAPI2.VideoService.Video
             {
                 case DownloadVideoInfoUseAPI.html:
                     #region
-                    var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+                    var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
                     if (!htmlCache.IsAvailab)
                     {
                         accessorList.Add((data) =>
                         {
-                            var accesser = new APIs.video_page_html.Accesser();
+                            var accesser = new APIs.video_page_html.Accessor();
                             accesser.Setting(
                                 context.CookieContainer,
                                 target.ID);
@@ -84,23 +84,20 @@ namespace UNicoAPI2.VideoService.Video
                             if (data != null)
                                 htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
 
-                            var result = new Response<VideoInfo>();
-                            result.Status = Status.OK;
-                            result.Result = context.IDContainer.GetVideoInfo(target.ID);
-                            result.Result.Description = new APIs.video_page_html.html_video_info().Parse(htmlCache);
-
-                            return result;
+                            return Converter.VideoInfoResponse(
+                                context,
+                                new APIs.video_page_html.DmcInfo().Parse(htmlCache));
                         });
 
                     #endregion
                     break;
                 case DownloadVideoInfoUseAPI.getthumbinfo:
                     #region
-                    session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+                    session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
                     {
                         (data) =>
                         {
-                            var accesser = new APIs.getthumbinfo.Accesser();
+                            var accesser = new APIs.getthumbinfo.Accessor();
                             accesser.Setting(
                                 context.CookieContainer,
                                 target.ID);
@@ -109,7 +106,11 @@ namespace UNicoAPI2.VideoService.Video
                         }
                     },
                     (data) =>
-                        Converter.VideoInfoResponse(context, new APIs.getthumbinfo.Parser().Parse(data)));
+                    {
+                        return Converter.VideoInfoResponse(
+                            context,
+                            new APIs.getthumbinfo.Parser().Parse(data));
+                    });
                     #endregion
                     break;
                 default: throw new Exception();
@@ -121,10 +122,28 @@ namespace UNicoAPI2.VideoService.Video
         /// <summary>
         /// 動画をダウンロードする
         /// </summary>
-        public Session<WebResponse> DownloadVideo()
+        public Session<WebResponse> DownloadVideo(DownloadVideoUseAPI DownloadVideoUseAPI = DownloadVideoUseAPI.getflv)
+        {
+            return DownloadVideo(0, -1, DownloadVideoUseAPI);
+        }
+
+        public Session<WebResponse> DownloadVideo(long Position, long Length, DownloadVideoUseAPI DownloadVideoUseAPI)
+        {
+            switch (DownloadVideoUseAPI)
+            {
+                case DownloadVideoUseAPI.Html5: return DownloadVideoUseHtml5(Position, Length);
+                case DownloadVideoUseAPI.getflv: return DownloadVideoUseGetflv(Position, Length);
+                default: return null;
+            }
+        }
+
+        /// <summary>
+        /// getflvAPIを使用して動画を取得する
+        /// </summary>
+        private Session<WebResponse> DownloadVideoUseGetflv(long Position, long Length)
         {
             var session = new Session<WebResponse>();
-            var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
             var isVideoCacheProgress = false;
             var isHtmlCacheProgress = false;
 
@@ -133,7 +152,7 @@ namespace UNicoAPI2.VideoService.Video
                 isVideoCacheProgress = true;
                 accessorList.Add((data) =>
                 {
-                    var accesser = new APIs.getflv.Accesser();
+                    var accesser = new APIs.getflv.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         target.ID);
@@ -151,7 +170,7 @@ namespace UNicoAPI2.VideoService.Video
                         if (data != null)
                             videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
-                        var accesser = new APIs.video_page_html.Accesser();
+                        var accesser = new APIs.video_page_html.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
                             target.ID);
@@ -169,10 +188,12 @@ namespace UNicoAPI2.VideoService.Video
                         else if (isVideoCacheProgress)
                             videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
-                    var accesser = new APIs.getvideo.Accesser();
+                    var accesser = new APIs.FileDownloadAccessor();
                     accesser.Setting(
                         context.CookieContainer,
-                        videoCache.Value["url"]);
+                        videoCache.Value["url"],
+                        Position,
+                        Length);
 
                     return accesser;
                 });
@@ -182,18 +203,77 @@ namespace UNicoAPI2.VideoService.Video
         }
 
         /// <summary>
+        /// Html内のurlから動画を取得する
+        /// </summary>
+        private Session<WebResponse> DownloadVideoUseHtml5(long Position, long Length)
+        {
+            var session = new Session<WebResponse>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
+            var isHtmlCacheProgress = false;
+
+            if (!htmlCache.IsAvailab)
+            {
+                isHtmlCacheProgress = true;
+                accessorList.Add(
+                    (data) =>
+                    {
+                        if (data != null)
+                            videoCache.Value = new APIs.getflv.Parser().Parse(data);
+
+                        var accesser = new APIs.video_page_html.Accessor();
+                        accesser.Setting(
+                            context.CookieContainer,
+                            target.ID);
+
+                        return accesser;
+                    });
+            }
+
+            accessorList.AddRange(
+                new Func<byte[], APIs.IAccessor>[]
+                {
+                    (data) =>
+                    {
+                        if (data != null)
+                            if (isHtmlCacheProgress)
+                                htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
+
+                        var dmcInfo = new APIs.video_page_html.DmcInfo().Parse(htmlCache.Value);
+
+                        var accesser = new APIs.dmc_session.Accessor();
+                        accesser.Setting(
+                            context.CookieContainer,
+                            dmcInfo);
+
+                        return accesser;
+                    },
+                    (data) =>
+                    {
+                        var parser = new APIs.video_page_html.DmcInfo();
+                        var dmcInfo = parser.Parse(data);
+
+                        return null;
+                    },
+                });
+
+            session.SetAccessers(accessorList.ToArray(), null);
+            return session;
+        }
+
+
+        /// <summary>
         /// コメントをアップロードする
         /// </summary>
         /// <param name="Comment">投稿するコメント</param>
         public Session<Response> UploadComment(Comment Comment)
         {
             var session = new Session<Response>();
-            var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
             if (!videoCache.IsAvailab)
                 accessorList.Add((data) =>
                 {
-                    var accesser = new APIs.getflv.Accesser();
+                    var accesser = new APIs.getflv.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         target.ID);
@@ -207,7 +287,7 @@ namespace UNicoAPI2.VideoService.Video
                     if (data != null)
                         videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
-                    var accesser = new APIs.getpostkey.Accesser();
+                    var accesser = new APIs.getpostkey.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         block_no,
@@ -221,7 +301,7 @@ namespace UNicoAPI2.VideoService.Video
                 if (postkey == "")
                     postkey = new APIs.getpostkey.Parser().Parse(data);
 
-                var accesser = new APIs.upload_comment.Accesser();
+                var accesser = new APIs.upload_comment.Accessor();
                 accesser.Setting(
                     context.CookieContainer,
                     videoCache.Value["ms"],
@@ -251,13 +331,13 @@ namespace UNicoAPI2.VideoService.Video
         public Session<Response<Comment[]>> DownloadComment()
         {
             var session = new Session<Response<Comment[]>>();
-            var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
             if (!videoCache.IsAvailab)
             {
                 accessorList.Add((data) =>
                 {
-                    var accesser = new APIs.getflv.Accesser();
+                    var accesser = new APIs.getflv.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         target.ID);
@@ -266,14 +346,14 @@ namespace UNicoAPI2.VideoService.Video
                 });
             }
 
-            accessorList.AddRange(new Func<byte[], APIs.IAccesser>[]
+            accessorList.AddRange(new Func<byte[], APIs.IAccessor>[]
             {
                 (data) =>
                 {
                     if (data != null)
                         videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
-                    var accesser = new APIs.download_comment.Accesser();
+                    var accesser = new APIs.download_comment.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         videoCache.Value["ms"],
@@ -304,11 +384,11 @@ namespace UNicoAPI2.VideoService.Video
         {
             var session = new Session<Response<Tag[]>>();
 
-            session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+            session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
             {
-                new Func<byte[], APIs.IAccesser>((byte[] data) =>
+                new Func<byte[], APIs.IAccessor>((byte[] data) =>
                 {
-                    var accesser = new APIs.tag_edit.DownloadAccesser();
+                    var accesser = new APIs.tag_edit.DownloadAccessor();
                     accesser.Setting(
                         context.CookieContainer,
                         target.ID,
@@ -343,13 +423,13 @@ namespace UNicoAPI2.VideoService.Video
         private Session<Response<Tag[]>> EditTag(Tag EditTag, string cmd)
         {
             var session = new Session<Response<Tag[]>>();
-            var accessorList = new List<Func<byte[], APIs.IAccesser>>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
             if (!htmlCache.IsAvailab)
             {
-                accessorList.Add(new Func<byte[], APIs.IAccesser>((byte[] data) =>
+                accessorList.Add(new Func<byte[], APIs.IAccessor>((byte[] data) =>
                 {
-                    var accesser = new APIs.video_page_html.Accesser();
+                    var accesser = new APIs.video_page_html.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         target.ID);
@@ -358,7 +438,7 @@ namespace UNicoAPI2.VideoService.Video
                 }));
             }
 
-            accessorList.Add(new Func<byte[], APIs.IAccesser>((byte[] data) =>
+            accessorList.Add(new Func<byte[], APIs.IAccessor>((byte[] data) =>
             {
                 if (data != null)
                     htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
@@ -369,7 +449,7 @@ namespace UNicoAPI2.VideoService.Video
                 if (watch_auth_key == "")
                     watch_auth_key = new APIs.video_page_html.watch_auth_key().Parse(htmlCache);
 
-                var accesser = new APIs.tag_edit.UploadAccesser();
+                var accesser = new APIs.tag_edit.UploadAccessor();
                 accesser.Setting(
                     context.CookieContainer,
                     target.ID,

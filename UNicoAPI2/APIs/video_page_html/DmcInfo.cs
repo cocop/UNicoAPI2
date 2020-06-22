@@ -1,0 +1,28 @@
+﻿using System.IO;
+using System.Net;
+using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace UNicoAPI2.APIs.video_page_html
+{
+    public class DmcInfo : IHtmlParser<Serial.Rootobject>
+    {
+        static readonly Regex info =
+            new Regex("<div id=\"js-initial-watch-data\" data-api-data=\"(?<value>.*?)\" data-environment=\"");
+
+        public string Parse(byte[] Value)
+        {
+            return Encoding.UTF8.GetString(Value);
+        }
+
+        public Serial.Rootobject Parse(string Value)
+        {
+            var result = info.Match(Value).Groups["value"].Value;
+            result = WebUtility.HtmlDecode(result);
+
+            var serialize = new DataContractJsonSerializer(typeof(Serial.Rootobject));
+            return (Serial.Rootobject)serialize.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(result)));
+        }
+    }
+}

@@ -203,7 +203,7 @@ namespace UNicoAPI2.APIs.video_page_html.Serial
 
     public class User
     {
-        public int? user_id { get; set; }
+        public string user_id { get; set; }
         public bool? is_premium { get; set; }
         public string nickname { get; set; }
     }
@@ -239,6 +239,7 @@ namespace UNicoAPI2.APIs.video_page_html.Serial
     public class Auth_Types
     {
         public string http { get; set; }
+        public string hls { get; set; }
     }
 
     public class Url

@@ -27,11 +27,11 @@ namespace UNicoAPI2.VideoService.Mylist
             var session = new Session<Response<Mylist>>();
 
             session.SetAccessers(
-                new Func<byte[], APIs.IAccesser>[]
+                new Func<byte[], APIs.IAccessor>[]
                 {
                     (data) =>
                     {
-                        var accesser = new APIs.mylistvideo.Accesser();
+                        var accesser = new APIs.mylistvideo.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
                             target.ID);

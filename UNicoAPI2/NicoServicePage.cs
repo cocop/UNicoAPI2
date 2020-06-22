@@ -35,15 +35,15 @@ namespace UNicoAPI2
         {
             var session = new Session<User>();
 
-            session.SetAccessers(new Func<byte[], APIs.IAccesser>[]
+            session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
             {
                 (data) =>
                 {
-                    return new APIs.login_page_html.Accesser();
+                    return new APIs.login_page_html.Accessor();
                 },
                 (data) =>
                 {
-                    var accesser = new APIs.login.Accesser();
+                    var accesser = new APIs.login.Accessor();
                     accesser.Setting(context.CookieContainer, MailAddress, Password);
 
                     return accesser;

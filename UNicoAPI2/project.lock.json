@@ -15486,25 +15486,21 @@
     "UAP,Version=v10.0.10240": []
   },
   "packageFolders": {
-    "C:\\Users\\ここ\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {}
+    "C:\\Users\\coco\\.nuget\\packages\\": {}
   },
   "project": {
+    "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
+      "projectUniqueName": "D:\\sauce\\C#Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
       "projectName": "UNicoAPI2",
-      "projectPath": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
-      "projectJsonPath": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\project.json",
-      "packagesPath": "C:\\Users\\ここ\\.nuget\\packages\\",
-      "outputPath": "C:\\ProgramSource\\C#Source\\UNicoAPI2\\UNicoAPI2\\obj\\",
+      "projectPath": "D:\\sauce\\C#Source\\UNicoAPI2\\UNicoAPI2\\UNicoAPI2.csproj",
+      "projectJsonPath": "D:\\sauce\\C#Source\\UNicoAPI2\\UNicoAPI2\\project.json",
+      "packagesPath": "C:\\Users\\coco\\.nuget\\packages\\",
+      "outputPath": "D:\\sauce\\C#Source\\UNicoAPI2\\UNicoAPI2\\obj\\",
       "projectStyle": "ProjectJson",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\ここ\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Users\\coco\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},

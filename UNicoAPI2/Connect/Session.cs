@@ -33,7 +33,7 @@ namespace UNicoAPI2.Connect
 
         int nowIndex;
         byte[] data;
-        Func<byte[], APIs.IAccesser>[] accessers;
+        Func<byte[], APIs.IAccessor>[] accessers;
         Func<byte[], ResultType> result;
         object key = new object();
 
@@ -42,7 +42,7 @@ namespace UNicoAPI2.Connect
         /// 処理するアクセッサを設定する
         /// </summary>
         /// <param name="Accessers">設定するアクセッサのリスト</param>
-        public void SetAccessers(Func<byte[], APIs.IAccesser>[] Accessers, Func<byte[], ResultType> Result)
+        public void SetAccessers(Func<byte[], APIs.IAccessor>[] Accessers, Func<byte[], ResultType> Result)
         {
             lock (key)
             {
@@ -65,7 +65,7 @@ namespace UNicoAPI2.Connect
             {
                 var accesser = accessers[nowIndex](data);
 
-                if (accesser.Type == APIs.AccesserType.Upload)
+                if (accesser.Type == APIs.AccessorType.Upload)
                     RunUpload(Token, accesser);
 
                 var streamResult = RunDownload(Token, accesser);
@@ -82,17 +82,17 @@ namespace UNicoAPI2.Connect
             return default(ResultType);
         }
 
-        private void RunUpload(CancellationToken Token, APIs.IAccesser accesser)
+        private void RunUpload(CancellationToken Token, APIs.IAccessor accesser)
         {
             var udata = accesser.GetUploadData();
-            var ustreamTask = accesser.GetUploadStreamAsync();
+            var ustreamTask = accesser.GetUploadStreamAsync(udata.Length);
             ustreamTask.Wait(Token);
 
             var ustream = ustreamTask.Result;
             ustream.WriteAsync(udata, 0, udata.Length).Wait(Token);
         }
 
-        private object RunDownload(CancellationToken Token, APIs.IAccesser accesser)
+        private object RunDownload(CancellationToken Token, APIs.IAccessor accesser)
         {
             var dstreamTask = accesser.GetDownloadStreamAsync();
             dstreamTask.Wait(Token);
