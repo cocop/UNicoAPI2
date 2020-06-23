@@ -111,6 +111,26 @@ namespace UNicoAPI2.VideoService.Video
         public bool IsExternalPlay { set; get; }
 
         /// <summary>
+        /// シリーズ
+        /// </summary>
+        public Series.Series Series { set; get; }
+
+        /// <summary>
+        /// シリーズの最初の動画
+        /// </summary>
+        public VideoInfo First { set; get; }
+
+        /// <summary>
+        /// シリーズの次の動画
+        /// </summary>
+        public VideoInfo Next { set; get; }
+
+        /// <summary>
+        /// シリーズの前の動画
+        /// </summary>
+        public VideoInfo Prev { set; get; }
+
+        /// <summary>
         /// キャッシュ
         /// </summary>
         internal VideoPage videoPage;

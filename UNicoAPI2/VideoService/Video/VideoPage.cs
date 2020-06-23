@@ -81,12 +81,14 @@ namespace UNicoAPI2.VideoService.Video
                         accessorList.ToArray(),
                         (data) =>
                         {
+                            var parser = new APIs.video_page_html.Parser();
+
                             if (data != null)
-                                htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
+                                htmlCache.Value = parser.Parse(data);
 
                             return Converter.VideoInfoResponse(
                                 context,
-                                new APIs.video_page_html.DmcInfo().Parse(htmlCache));
+                                parser.Parse(htmlCache));
                         });
 
                     #endregion
@@ -234,22 +236,22 @@ namespace UNicoAPI2.VideoService.Video
                 {
                     (data) =>
                     {
+                        var parser = new APIs.video_page_html.Parser();
+
                         if (data != null)
                             if (isHtmlCacheProgress)
-                                htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
-
-                        var dmcInfo = new APIs.video_page_html.DmcInfo().Parse(htmlCache.Value);
+                                htmlCache.Value = parser.Parse(data);
 
                         var accesser = new APIs.dmc_session.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
-                            dmcInfo);
+                            parser.Parse(htmlCache.Value));
 
                         return accesser;
                     },
                     (data) =>
                     {
-                        var parser = new APIs.video_page_html.DmcInfo();
+                        var parser = new APIs.video_page_html.Parser();
                         var dmcInfo = parser.Parse(data);
 
                         return null;
@@ -440,14 +442,16 @@ namespace UNicoAPI2.VideoService.Video
 
             accessorList.Add(new Func<byte[], APIs.IAccessor>((byte[] data) =>
             {
+                var parser = new APIs.video_page_html.Parser();
+
                 if (data != null)
-                    htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
+                    htmlCache.Value = parser.Parse(data);
 
                 if (token == "")
-                    token = new APIs.video_page_html.csrf_token().Parse(htmlCache);
+                    token = parser.Parse(htmlCache).context.csrfToken;
 
                 if (watch_auth_key == "")
-                    watch_auth_key = new APIs.video_page_html.watch_auth_key().Parse(htmlCache);
+                    watch_auth_key = parser.Parse(htmlCache).context.watchAuthKey;
 
                 var accesser = new APIs.tag_edit.UploadAccessor();
                 accesser.Setting(

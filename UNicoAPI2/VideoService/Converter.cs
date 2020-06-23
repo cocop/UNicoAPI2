@@ -60,18 +60,26 @@ namespace UNicoAPI2.VideoService
 
             result.Result.ComentCounter = Serial?.thread?.commentCount ?? 0;
             result.Result.Description = Serial?.video?.description;
+            result.Result.IsExternalPlay = Serial?.context?.isAllowEmbedPlayer ?? false;
             result.Result.Length = TimeSpan.FromSeconds(Serial?.video?.dmcInfo?.video?.length_seconds ?? 0);
             result.Result.MylistCounter = Serial?.video?.mylistCount ?? 0;
             result.Result.PostTime = DateTime.Parse(Serial?.video?.postedDateTime);
             result.Result.Tags = Tags(Serial?.tags);
-            result.Result.Thumbnail = new Picture(Serial?.video?.thumbnailURL, Context.CookieContainer);
             result.Result.Title = Serial?.video?.title;
             result.Result.VideoType = Serial?.video?.movieType;
             result.Result.ViewCounter = Serial?.video?.viewCount ?? 0;
+            result.Result.Thumbnail = new Picture(Serial?.video?.thumbnailURL, Context.CookieContainer);
             result.Result.User = Context.IDContainer.GetUser(Serial?.owner?.id);
             result.Result.User.Name = Serial?.owner?.nickname;
             result.Result.User.Icon = new Picture(Serial?.owner?.iconURL, Context.CookieContainer);
-
+            if (Serial?.series != null)
+            {
+                result.Result.Series = Context.IDContainer.GetSeries(Serial?.series?.id.ToString());
+                result.Result.Series.Title = Serial?.series?.title;
+                result.Result.First = VideoInfo(Context, Serial?.series?.firstVideo);
+                result.Result.Next = VideoInfo(Context, Serial?.series?.nextVideo);
+                result.Result.Prev = VideoInfo(Context, Serial?.series?.prevVideo);
+            }
             return result;
         }
 
@@ -202,6 +210,31 @@ namespace UNicoAPI2.VideoService
         }
 
         /********************************************/
+        public static VideoInfo VideoInfo(Context Context, APIs.video_page_html.Serial.Rootobject.Series.Video Serial)
+        {
+            if (Serial == null)
+            {
+                return null;
+            }
+
+            return new VideoInfo(Serial.id)
+            {
+                Title = Serial.title,
+                ShortDescription = Serial.shortDescription,
+                User = User(Context, Serial.owner),
+                Thumbnail = new Picture(Serial.thumbnail.url, Context.CookieContainer),
+                VideoType = Serial.type,
+            };
+        }
+
+        public static User.User User(Context Context, APIs.video_page_html.Serial.Rootobject.Series.Video.Owner Serial)
+        {
+            var user = Context.IDContainer.GetUser(Serial?.id);
+            user.Name = Serial?.name;
+            user.Icon = new Picture(Serial?.iconUrl, Context.CookieContainer);
+            return user;
+        }
+
         public static Tag[] Tags(APIs.tag_edit.Serial._tag[] Serial)
         {
             if (Serial == null)
@@ -240,7 +273,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        private static Tag[] Tags(APIs.video_page_html.Serial.Tag[] Serial)
+        private static Tag[] Tags(APIs.video_page_html.Serial.Rootobject.Tag[] Serial)
         {
             var result = new Tag[Serial.Length];
 

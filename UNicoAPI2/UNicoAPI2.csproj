@@ -165,10 +165,7 @@
     <Compile Include="APIs\user_page_html\Parser.cs" />
     <Compile Include="APIs\video_page_html\Accessor.cs" />
     <Compile Include="APIs\video_page_html\Serial\Rootobject.cs" />
-    <Compile Include="APIs\video_page_html\csrf_token.cs" />
-    <Compile Include="APIs\video_page_html\DmcInfo.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
-    <Compile Include="APIs\video_page_html\watch_auth_key.cs" />
     <Compile Include="BufferingManager.cs" />
     <Compile Include="BufferingMapType.cs" />
     <Compile Include="Cache.cs" />
