@@ -154,7 +154,7 @@ namespace UNicoAPI2.VideoService
             result.Result.OtherSeriesList = Serial.OtherSeriesList?.Select((otherSeries) =>
             {
                 var series = Context.IDContainer.GetSeries(otherSeries.ID);
-                otherSeries.Title = otherSeries.Title;
+                series.Title = otherSeries.Title;
                 return series;
             }).ToArray();
             result.Result.VideoList = Serial.VideoList?.Select((video) =>
