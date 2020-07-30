@@ -4,5 +4,5 @@ UWP用ニコニコ動画へアクセスするAPI
 前バージョンはこちら  
 https://github.com/cocop/NicoServiceAPI  
   
-このコードの規約はThe Unlicenceです  
+このコードの規約はThe Unlicenseです  
 好きにどうぞ  
