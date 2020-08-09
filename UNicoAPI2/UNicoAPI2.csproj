@@ -163,6 +163,7 @@
     <Compile Include="APIs\user_mylist_page_html\Parser.cs" />
     <Compile Include="APIs\user_page_html\Accessor.cs" />
     <Compile Include="APIs\user_page_html\Parser.cs" />
+    <Compile Include="APIs\user_page_html\Serial\Rootobject.cs" />
     <Compile Include="APIs\video_page_html\Accessor.cs" />
     <Compile Include="APIs\video_page_html\Serial\Rootobject.cs" />
     <Compile Include="APIs\video_page_html\Parser.cs" />
