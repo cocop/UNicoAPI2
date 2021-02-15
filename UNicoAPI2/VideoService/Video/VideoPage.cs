@@ -17,11 +17,9 @@ namespace UNicoAPI2.VideoService.Video
         VideoInfo target;
         Context context;
 
-        Cache<string> htmlCache = new Cache<string>();
+        Cache<APIs.video_page_html.Response.Rootobject> htmlCache = new Cache<APIs.video_page_html.Response.Rootobject>();
         Cache<NameValueCollection> videoCache = new Cache<NameValueCollection>();
 
-        string token = "";
-        string watch_auth_key = "";
         string ticket = "";
         string block_no = "";
         string postkey = "";
@@ -34,12 +32,6 @@ namespace UNicoAPI2.VideoService.Video
         {
             target = Target;
             context = Context;
-
-            htmlCache.ChangedValue += () =>
-            {
-                ticket = "";
-                postkey = "";
-            };
         }
 
         /// <summary>
@@ -84,11 +76,11 @@ namespace UNicoAPI2.VideoService.Video
                             var parser = new APIs.video_page_html.Parser();
 
                             if (data != null)
-                                htmlCache.Value = parser.Parse(data);
+                                htmlCache.Value = parser.Parse(parser.Parse(data));
 
                             return Converter.VideoInfoResponse(
                                 context,
-                                parser.Parse(htmlCache));
+                                htmlCache.Value);
                         });
 
                     #endregion
@@ -186,7 +178,10 @@ namespace UNicoAPI2.VideoService.Video
                 {
                     if (data != null)
                         if (isHtmlCacheProgress)
-                            htmlCache.Value = new APIs.video_page_html.Parser().Parse(data);
+                        {
+                            var parser = new APIs.video_page_html.Parser();
+                            htmlCache.Value = parser.Parse(parser.Parse(data));
+                        }
                         else if (isVideoCacheProgress)
                             videoCache.Value = new APIs.getflv.Parser().Parse(data);
 
@@ -201,6 +196,62 @@ namespace UNicoAPI2.VideoService.Video
                 });
 
             session.SetAccessers(accessorList.ToArray(), null);
+            return session;
+        }
+
+        /// <summary>
+        /// html5APIを使用して動画を取得する
+        /// </summary>
+        /// <returns>接続維持セッションを持ったVideoSource</returns>
+        public Session<DmcVideoSource> GetDmcVideoSource()
+        {
+            var session = new Session<DmcVideoSource>();
+            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
+
+            if (!htmlCache.IsAvailab)
+            {
+                accessorList.Add((data) =>
+                {
+                    var accesser = new APIs.video_page_html.Accessor();
+                    accesser.Setting(
+                        context.CookieContainer,
+                        target.ID);
+
+                    return accesser;
+                });
+            }
+
+            accessorList.Add((data) =>
+            {
+                var parser = new APIs.video_page_html.Parser();
+                htmlCache.Value = parser.Parse(parser.Parse(data));
+
+                var accesser = new APIs.dmc_session.Accessor();
+                accesser.Setting(
+                    context.CookieContainer,
+                    htmlCache.Value.video.dmcInfo);
+
+                return accesser;
+            });
+
+            accessorList.Add((data) =>
+            {
+                var parser = new APIs.video_page_html.Parser();
+                htmlCache.Value = parser.Parse(parser.Parse(data));
+
+                var accesser = new APIs.dmc_session.Accessor();
+                accesser.Setting(
+                    context.CookieContainer,
+                    htmlCache.Value.video.dmcInfo);
+
+                return accesser;
+            });
+
+            session.SetAccessers(accessorList.ToArray(), (data) =>
+            {
+                var parser = new APIs.heartbeats.Parser();
+                return new DmcVideoSource(context.CookieContainer, parser.Parse(data));
+            });
             return session;
         }
 
@@ -240,12 +291,12 @@ namespace UNicoAPI2.VideoService.Video
 
                         if (data != null)
                             if (isHtmlCacheProgress)
-                                htmlCache.Value = parser.Parse(data);
+                                htmlCache.Value = parser.Parse(parser.Parse(data));
 
                         var accesser = new APIs.dmc_session.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
-                            parser.Parse(htmlCache.Value));
+                            htmlCache.Value.video.dmcInfo);
 
                         return accesser;
                     },
@@ -445,13 +496,7 @@ namespace UNicoAPI2.VideoService.Video
                 var parser = new APIs.video_page_html.Parser();
 
                 if (data != null)
-                    htmlCache.Value = parser.Parse(data);
-
-                if (token == "")
-                    token = parser.Parse(htmlCache).context.csrfToken;
-
-                if (watch_auth_key == "")
-                    watch_auth_key = parser.Parse(htmlCache).context.watchAuthKey;
+                    htmlCache.Value = parser.Parse(parser.Parse(data));
 
                 var accesser = new APIs.tag_edit.UploadAccessor();
                 accesser.Setting(
@@ -460,8 +505,8 @@ namespace UNicoAPI2.VideoService.Video
                     "json",
                     cmd,
                     EditTag.Name,
-                    token,
-                    watch_auth_key,
+                    htmlCache.Value.context.csrfToken,
+                    htmlCache.Value.context.watchAuthKey,
                     (EditTag.IsLock == true) ? "1" : "0");
 
                 return accesser;

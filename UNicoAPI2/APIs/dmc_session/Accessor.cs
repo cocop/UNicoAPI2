@@ -1,72 +1,66 @@
-﻿using System.IO;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
+using UNicoAPI2.APIs.dmc_session.Request;
 
 namespace UNicoAPI2.APIs.dmc_session
 {
+    /// <summary>
+    /// レスポンスはHeartBeats
+    /// </summary>
     public class Accessor : IAccessor
     {
         public AccessorType Type => AccessorType.Upload;
 
         CookieContainer cookieContainer;
-        video_page_html.Serial.Rootobject dmcObject;
+        video_page_html.Response.Rootobject.Video.Dmcinfo dmcInfo;
         HttpWebRequest request;
 
-        public void Setting(CookieContainer CookieContainer, video_page_html.Serial.Rootobject DmcObject)
+        public void Setting(CookieContainer CookieContainer, video_page_html.Response.Rootobject.Video.Dmcinfo dmcInfo)
         {
             cookieContainer = CookieContainer;
-            dmcObject = DmcObject;
+            this.dmcInfo = dmcInfo;
         }
 
         public byte[] GetUploadData()
         {
-            /*
             var data = new Rootobject
             {
                 session = new Session()
                 {
-
                     client_info = new Client_Info
                     {
-                        player_id = dmcObject.video.dmcInfo.session_api.player_id
+                        player_id = dmcInfo.session_api.player_id
                     },
                     content_auth = new Content_Auth
                     {
-                        auth_type = dmcObject.video.dmcInfo.session_api.auth_types.http,
-                        content_key_timeout = dmcObject.video.dmcInfo.session_api.content_key_timeout ?? 0,
+                        auth_type = dmcInfo.session_api.auth_types.http,
+                        content_key_timeout = dmcInfo.session_api.content_key_timeout,
                         service_id = "nicovideo",
-                        service_user_id = dmcObject.video.dmcInfo.user?.user_id ?? "",
+                        service_user_id = dmcInfo.user.user_id,
                     },
-                    content_id = dmcObject.video.dmcInfo.session_api.content_id,
+                    content_id = dmcInfo.session_api.content_id,
                     content_src_id_sets = new Content_Src_Id_Sets[]
                     {
                         new Content_Src_Id_Sets()
                         {
-                            content_src_ids = new Content_Src_Ids[]
-                            {
-                                new Content_Src_Ids()
-                                {
-                                    src_id_to_mux = new Src_Id_To_Mux()
-                                    {
-                                        audio_src_ids = new string[]
-                                        {
-                                            dmcObject.video.dmcInfo.session_api.audios[0]
-                                        },
-                                        video_src_ids = dmcObject.video.dmcInfo.session_api.videos,
-                                    }
-                                }
-                            }
+                            content_src_ids = CreateContent_Src_Ids(dmcInfo.session_api)
                         }
                     },
+                    content_type = "movie",
+                    content_uri = "",
                     keep_method = new Keep_Method()
                     {
                         heartbeat = new Heartbeat()
                         {
-                            lifetime = dmcObject.video.dmcInfo.session_api.heartbeat_lifetime ?? 0,
+                            lifetime = dmcInfo.session_api.heartbeat_lifetime,
                         }
                     },
-                    priority = dmcObject.video.dmcInfo.session_api.priority,
+                    priority = dmcInfo.session_api.priority,
                     protocol = new Protocol()
                     {
                         name = "http",
@@ -78,41 +72,64 @@ namespace UNicoAPI2.APIs.dmc_session
                                 {
                                     hls_parameters = new Hls_Parameters()
                                     {
-                                        segment_duration = 5000,
-                                        use_ssl = "no",
-                                        use_well_known_port = "no",
+                                        segment_duration = 6000,
+                                        transfer_preset = "",
+                                        use_ssl = "yes",
+                                        use_well_known_port = "yes",
                                     }
                                 }
                             }
                         }
                     },
-                    recipe_id = dmcObject.video.dmcInfo.session_api.recipe_id,
+                    recipe_id = dmcInfo.session_api.recipe_id,
                     session_operation_auth = new Session_Operation_Auth()
                     {
                         session_operation_auth_by_signature = new Session_Operation_Auth_By_Signature()
                         {
-                            signature = dmcObject.video.dmcInfo.session_api.signature,
-                            token = dmcObject.video.dmcInfo.session_api.token,
+                            signature = dmcInfo.session_api.signature,
+                            token = dmcInfo.session_api.token,
                         }
                     },
-                    timing_constraint = "unlimited",                    
+                    timing_constraint = "unlimited",
                 }
-            };*/
+            };
 
-            //var serialize = new DataContractJsonSerializer(typeof(Rootobject));
-            //var memStream = new MemoryStream();
-            //serialize.WriteObject(memStream, data);
+            var serialize = new DataContractJsonSerializer(typeof(Rootobject));
+            var memStream = new MemoryStream();
+            serialize.WriteObject(memStream, data);
 
-            //return memStream.ToArray();
+            return memStream.ToArray();
+        }
 
-            var str = "{\"session\":{\"recipe_id\":\"nicovideo-sm33545630\",\"content_id\":\"out1\",\"content_type\":\"movie\",\"content_src_id_sets\":[{\"content_src_ids\":[{\"src_id_to_mux\":{\"video_src_ids\":[\"archive_h264_2000kbps_720p\",\"archive_h264_1600kbps_540p\",\"archive_h264_600kbps_360p\",\"archive_h264_300kbps_360p\"],\"audio_src_ids\":[\"archive_aac_192kbps\"]}}]}],\"timing_constraint\":\"unlimited\",\"keep_method\":{\"heartbeat\":{\"lifetime\":120000}},\"protocol\":{\"name\":\"http\",\"parameters\":{\"http_parameters\":{\"parameters\":{\"http_output_download_parameters\":{\"use_well_known_port\":\"no\",\"use_ssl\":\"no\",\"transfer_preset\":\"\"}}}}},\"content_uri\":\"\",\"session_operation_auth\":{\"session_operation_auth_by_signature\":{\"token\":\"{\\\"service_id\\\":\\\"nicovideo\\\",\\\"player_id\\\":\\\"nicovideo-6-RwiQgH1FaN_1531939862518\\\",\\\"recipe_id\":\"nicovideo-sm33545630\",\"service_user_id\":\"6-RwiQgH1FaN_1531939862518\",\"protocols\":[{\"name\":\"http\",\"auth_type\":\"ht2\"}],\"videos\":[\"archive_h264_1600kbps_540p\",\"archive_h264_2000kbps_720p\",\"archive_h264_300kbps_360p\",\"archive_h264_6000kbps_1080p\",\"archive_h264_600kbps_360p\"],\"audios\":[\"archive_aac_192kbps\",\"archive_aac_64kbps\"],\"movies\":[],\"created_time\":1531939862000,\"expire_time\":1532026262000,\"content_ids\":[\"out1\"],\"heartbeat_lifetime\":120000,\"content_key_timeout\":600000,\"priority\":0,\"transfer_presets\":[]}\",\"signature\":\"21a8e848d3b2b7d3395c88be8867e2e4fa2eb3c0e2dbc2c225181d9ae7042a04\"}},\"content_auth\":{\"auth_type\":\"ht2\",\"content_key_timeout\":600000,\"service_id\":\"nicovideo\",\"service_user_id\":\"6-RwiQgH1FaN_1531939862518\"},\"client_info\":{\"player_id\":\"nicovideo-6-RwiQgH1FaN_1531939862518\"},\"priority\":0}}";
+        private Content_Src_Ids[] CreateContent_Src_Ids(video_page_html.Response.Rootobject.Video.Dmcinfo.Session_Api session_api)
+        {
+            var contentSrcIds = new List<Content_Src_Ids>();
 
-            return System.Text.Encoding.UTF8.GetBytes(str);
+            for (int audioIndex = 0; audioIndex < session_api.audios.Length; audioIndex++)
+            {
+                for (int videoIndex = 0; videoIndex < session_api.videos.Length - 1; videoIndex++)
+                {
+                    contentSrcIds.Add(
+                        new Content_Src_Ids()
+                        {
+                            src_id_to_mux = new Src_Id_To_Mux()
+                            {
+                                audio_src_ids = new string[]
+                                {
+                                    session_api.audios[audioIndex]
+                                },
+                                video_src_ids = session_api.videos.Skip(videoIndex).ToArray(),
+                            }
+                        });
+                }
+            }
+
+            return contentSrcIds.ToArray();
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            var urls = dmcObject?.video?.dmcInfo?.session_api?.urls;
+            var urls = dmcInfo?.session_api?.urls;
             if ((urls?.Length ?? 0) == 0)
                 throw new System.Exception("dmcInfoの取得に失敗しました");
 
@@ -121,12 +138,12 @@ namespace UNicoAPI2.APIs.dmc_session
             request.ContentType = ContentType.Json;
             request.Method = ContentMethod.Post;
             request.CookieContainer = cookieContainer;
-            
+
             request.Headers["Content-Length"] = DataLength.ToString();
             request.Headers["Connection"] = "keep-alive";
             //request.Headers["Referer"] = "";
 
-            return request.GetRequestStreamAsync(); 
+            return request.GetRequestStreamAsync();
         }
 
         public Task<WebResponse> GetDownloadStreamAsync()

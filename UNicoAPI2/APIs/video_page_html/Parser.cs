@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.video_page_html
 {
-    public class Parser : IHtmlParser<Serial.Rootobject>
+    public class Parser : IHtmlParser<Response.Rootobject>
     {
         static readonly Regex info =
             new Regex("<div id=\"js-initial-watch-data\" data-api-data=\"(?<value>.*?)\" data-environment=\"");
@@ -16,13 +16,13 @@ namespace UNicoAPI2.APIs.video_page_html
             return Encoding.UTF8.GetString(Value);
         }
 
-        public Serial.Rootobject Parse(string Value)
+        public Response.Rootobject Parse(string Value)
         {
             var result = info.Match(Value).Groups["value"].Value;
             result = WebUtility.HtmlDecode(result);
 
-            var serialize = new DataContractJsonSerializer(typeof(Serial.Rootobject));
-            return (Serial.Rootobject)serialize.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(result)));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
+            return (Response.Rootobject)serialize.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(result)));
         }
     }
 }

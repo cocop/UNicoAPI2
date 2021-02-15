@@ -3,12 +3,12 @@ using System.Xml.Serialization;
 
 namespace UNicoAPI2.APIs.download_comment
 {
-    public class Parser : IParser<Serial.packet>
+    public class Parser : IParser<Response.packet>
     {
-        public Serial.packet Parse(byte[] Value)
+        public Response.packet Parse(byte[] Value)
         {
-            var serialize = new XmlSerializer(typeof(Serial.packet));
-            return (Serial.packet)serialize.Deserialize(new MemoryStream(Value));
+            var serialize = new XmlSerializer(typeof(Response.packet));
+            return (Response.packet)serialize.Deserialize(new MemoryStream(Value));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using UNicoAPI2.APIs.series_page_html.Serial;
+using UNicoAPI2.APIs.series_page_html.Response;
 
 namespace UNicoAPI2.APIs.series_page_html
 {

@@ -3,13 +3,13 @@ using System.Runtime.Serialization.Json;
 
 namespace UNicoAPI2.APIs.search
 {
-    public class Parser : IParser<Serial.contract>
+    public class Parser : IParser<Response.contract>
     {
-        public Serial.contract Parse(byte[] Value)
+        public Response.contract Parse(byte[] Value)
         {
-            var serialize = new DataContractJsonSerializer(typeof(Serial.contract));
+            var serialize = new DataContractJsonSerializer(typeof(Response.contract));
 
-            return (Serial.contract)serialize.ReadObject(new MemoryStream(Value));
+            return (Response.contract)serialize.ReadObject(new MemoryStream(Value));
         }
     }
 }

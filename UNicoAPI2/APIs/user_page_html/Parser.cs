@@ -20,8 +20,8 @@ namespace UNicoAPI2.APIs.user_page_html
         {
             var matchedJsonText = jsonRegex.Match(Value).Groups["json"];
             var jsonBinary = Encoding.UTF8.GetBytes(WebUtility.HtmlDecode(matchedJsonText.Value));
-            var serialize = new DataContractJsonSerializer(typeof(Serial.Rootobject));
-            var data = (Serial.Rootobject)serialize.ReadObject(new MemoryStream(jsonBinary));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
+            var data = (Response.Rootobject)serialize.ReadObject(new MemoryStream(jsonBinary));
 
             var result = new Dictionary<string, string>();
             result["icon"] = data.userDetails.userDetails.user.icons.large;

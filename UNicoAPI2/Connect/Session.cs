@@ -126,5 +126,28 @@ namespace UNicoAPI2.Connect
                     return Run(RunCount, Token);
             });
         }
+
+        /// <summary>
+        /// すべてのストリームを処理する
+        /// </summary>
+        /// <param name="Token">キャンセルトークン</param>
+        public ResultType Run(CancellationToken Token)
+        {
+            return Run(UntreatedCount, Token);
+        }
+
+        /// <summary>
+        /// すべてのストリームを処理する
+        /// </summary>
+        /// <param name="Token">キャンセルトークン</param>
+        public Task<ResultType> RunAsync(CancellationToken Token)
+        {
+            return Task.Run(() =>
+            {
+                lock (key)
+                    return Run(UntreatedCount, Token);
+            });
+        }
+
     }
 }

@@ -3,12 +3,12 @@ using System.Xml.Serialization;
 
 namespace UNicoAPI2.APIs.getthumbinfo
 {
-    public class Parser : IParser<Serial.nicovideo_thumb_response>
+    public class Parser : IParser<Response.nicovideo_thumb_response>
     {
-        public Serial.nicovideo_thumb_response Parse(byte[] Value)
+        public Response.nicovideo_thumb_response Parse(byte[] Value)
         {
-            var serialize = new XmlSerializer(typeof(Serial.nicovideo_thumb_response));
-            return (Serial.nicovideo_thumb_response)serialize.Deserialize(new MemoryStream(Value));
+            var serialize = new XmlSerializer(typeof(Response.nicovideo_thumb_response));
+            return (Response.nicovideo_thumb_response)serialize.Deserialize(new MemoryStream(Value));
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UNicoAPI2.APIs.series_page_html.Serial;
 using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Video;
 
@@ -12,86 +11,86 @@ namespace UNicoAPI2.VideoService
         static DateTime unixTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         /********************************************/
-        public static Response<VideoInfo[]> VideoInfoResponse(Context Context, APIs.search.Serial.contract Serial)
+        public static Response<VideoInfo[]> VideoInfoResponse(Context Context, APIs.search.Response.contract Response)
         {
             var result = new Response<VideoInfo[]>();
-            Response(result, Serial.status, Serial.error);
-            result.Result = VideoInfos(Context, Serial.list);
+            Converter.Response(result, Response.status, Response.error);
+            result.Result = VideoInfos(Context, Response.list);
 
             return result;
         }
 
-        public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.getthumbinfo.Serial.nicovideo_thumb_response Serial)
+        public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.getthumbinfo.Response.nicovideo_thumb_response Response)
         {
             var result = new Response<VideoInfo>();
 
-            Response(result, Serial.status, Serial.error);
+            Converter.Response(result, Response.status, Response.error);
 
-            if (Serial.thumb != null)
+            if (Response.thumb != null)
             {
-                result.Result = Context.IDContainer.GetVideoInfo(Serial.thumb.video_id);
-                result.Result.ComentCounter = Serial.thumb.comment_num;
-                result.Result.Description = Serial.thumb.description;
-                result.Result.EconomyVideoSize = Serial.thumb.size_low;
-                result.Result.IsExternalPlay = Serial.thumb.embeddable;
-                result.Result.Length = UNicoAPI2.Converter.TimeSpan(Serial.thumb.length);
-                result.Result.MylistCounter = Serial.thumb.mylist_counter;
-                result.Result.IsLivePlay = !Serial.thumb.no_live_play;
-                result.Result.PostTime = DateTime.Parse(Serial.thumb.first_retrieve);
-                result.Result.Tags = Tags(Serial.thumb.tags);
-                result.Result.Title = Serial.thumb.title;
-                result.Result.VideoSize = Serial.thumb.size_high;
-                result.Result.VideoType = Serial.thumb.movie_type;
-                result.Result.ViewCounter = Serial.thumb.view_counter;
-                result.Result.Thumbnail = new Picture(Serial.thumb.thumbnail_url, Context.CookieContainer);
-                result.Result.User = Context.IDContainer.GetUser(Serial.thumb.user_id);
-                result.Result.User.Name = Serial.thumb.user_nickname;
-                result.Result.User.Icon = new Picture(Serial.thumb.user_icon_url, Context.CookieContainer);
+                result.Result = Context.IDContainer.GetVideoInfo(Response.thumb.video_id);
+                result.Result.ComentCounter = Response.thumb.comment_num;
+                result.Result.Description = Response.thumb.description;
+                result.Result.EconomyVideoSize = Response.thumb.size_low;
+                result.Result.IsExternalPlay = Response.thumb.embeddable;
+                result.Result.Length = UNicoAPI2.Converter.TimeSpan(Response.thumb.length);
+                result.Result.MylistCounter = Response.thumb.mylist_counter;
+                result.Result.IsLivePlay = !Response.thumb.no_live_play;
+                result.Result.PostTime = DateTime.Parse(Response.thumb.first_retrieve);
+                result.Result.Tags = Tags(Response.thumb.tags);
+                result.Result.Title = Response.thumb.title;
+                result.Result.VideoSize = Response.thumb.size_high;
+                result.Result.VideoType = Response.thumb.movie_type;
+                result.Result.ViewCounter = Response.thumb.view_counter;
+                result.Result.Thumbnail = new Picture(Response.thumb.thumbnail_url, Context.CookieContainer);
+                result.Result.User = Context.IDContainer.GetUser(Response.thumb.user_id);
+                result.Result.User.Name = Response.thumb.user_nickname;
+                result.Result.User.Icon = new Picture(Response.thumb.user_icon_url, Context.CookieContainer);
             }
 
             return result;
         }
 
-        public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.video_page_html.Serial.Rootobject Serial)
+        public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.video_page_html.Response.Rootobject Response)
         {
             var result = new Response<VideoInfo>();
             result.Status = Status.OK;
-            result.Result = Context.IDContainer.GetVideoInfo(Serial.video.id);
+            result.Result = Context.IDContainer.GetVideoInfo(Response.video.id);
 
-            result.Result.ComentCounter = Serial?.thread?.commentCount ?? 0;
-            result.Result.Description = Serial?.video?.description;
-            result.Result.IsExternalPlay = Serial?.context?.isAllowEmbedPlayer ?? false;
-            result.Result.Length = TimeSpan.FromSeconds(Serial?.video?.dmcInfo?.video?.length_seconds ?? 0);
-            result.Result.MylistCounter = Serial?.video?.mylistCount ?? 0;
-            result.Result.PostTime = DateTime.Parse(Serial?.video?.postedDateTime);
-            result.Result.Tags = Tags(Serial?.tags);
-            result.Result.Title = Serial?.video?.title;
-            result.Result.VideoType = Serial?.video?.movieType;
-            result.Result.ViewCounter = Serial?.video?.viewCount ?? 0;
-            result.Result.Thumbnail = new Picture(Serial?.video?.thumbnailURL, Context.CookieContainer);
-            result.Result.User = Context.IDContainer.GetUser(Serial?.owner?.id);
-            result.Result.User.Name = Serial?.owner?.nickname;
-            result.Result.User.Icon = new Picture(Serial?.owner?.iconURL, Context.CookieContainer);
-            if (Serial?.series != null)
+            result.Result.ComentCounter = Response?.thread?.commentCount ?? 0;
+            result.Result.Description = Response?.video?.description;
+            result.Result.IsExternalPlay = Response?.context?.isAllowEmbedPlayer ?? false;
+            result.Result.Length = TimeSpan.FromSeconds(Response?.video?.dmcInfo?.video?.length_seconds ?? 0);
+            result.Result.MylistCounter = Response?.video?.mylistCount ?? 0;
+            result.Result.PostTime = DateTime.Parse(Response?.video?.postedDateTime);
+            result.Result.Tags = Tags(Response?.tags);
+            result.Result.Title = Response?.video?.title;
+            result.Result.VideoType = Response?.video?.movieType;
+            result.Result.ViewCounter = Response?.video?.viewCount ?? 0;
+            result.Result.Thumbnail = new Picture(Response?.video?.thumbnailURL, Context.CookieContainer);
+            result.Result.User = Context.IDContainer.GetUser(Response?.owner?.id);
+            result.Result.User.Name = Response?.owner?.nickname;
+            result.Result.User.Icon = new Picture(Response?.owner?.iconURL, Context.CookieContainer);
+            if (Response?.series != null)
             {
-                result.Result.Series = Context.IDContainer.GetSeries(Serial?.series?.id.ToString());
-                result.Result.Series.Title = Serial?.series?.title;
-                result.Result.First = VideoInfo(Context, Serial?.series?.firstVideo);
-                result.Result.Next = VideoInfo(Context, Serial?.series?.nextVideo);
-                result.Result.Prev = VideoInfo(Context, Serial?.series?.prevVideo);
+                result.Result.Series = Context.IDContainer.GetSeries(Response?.series?.id.ToString());
+                result.Result.Series.Title = Response?.series?.title;
+                result.Result.First = VideoInfo(Context, Response?.series?.firstVideo);
+                result.Result.Next = VideoInfo(Context, Response?.series?.nextVideo);
+                result.Result.Prev = VideoInfo(Context, Response?.series?.prevVideo);
             }
             return result;
         }
 
-        public static Response Response(APIs.upload_comment.Serial.packet Serial)
+        public static Response Response(APIs.upload_comment.Response.packet Response)
         {
             var result = new Response();
 
-            if (Serial.chat_result.status == "0")
+            if (Response.chat_result.status == "0")
                 result.Status = Status.OK;
             else
             {
-                switch (Serial.chat_result.status)
+                switch (Response.chat_result.status)
                 {
                     case "1": result.ErrorMessage = "同じコメントを投稿しようとしました"; break;
                     case "3": result.ErrorMessage = "投稿するためのキーが足りませんでした"; break;
@@ -103,61 +102,61 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Response<Comment[]> CommentResponse(APIs.download_comment.Serial.packet Serial)
+        public static Response<Comment[]> CommentResponse(APIs.download_comment.Response.packet Response)
         {
             var result = new Response<Comment[]>();
-            Response(result, "ok", null);
-            result.Result = Comment(Serial.chat);
+            Converter.Response(result, "ok", null);
+            result.Result = Comment(Response.chat);
 
             return result;
         }
 
-        public static Response<Tag[]> TagsResponse(APIs.tag_edit.Serial.contract Serial)
+        public static Response<Tag[]> TagsResponse(APIs.tag_edit.Response.contract Response)
         {
             var result = new Response<Tag[]>();
-            Response(result, Serial.status, new APIs.Serial.error() { description = Serial.error_msg });
-            result.Result = Tags(Serial.tags);
+            Converter.Response(result, Response.status, new APIs.Response.error() { description = Response.error_msg });
+            result.Result = Tags(Response.tags);
 
             return result;
         }
 
-        public static Response<Mylist.Mylist> MylistResponse(Context Context, APIs.mylistvideo.Serial.contract Serial, string MylistID)
+        public static Response<Mylist.Mylist> MylistResponse(Context Context, APIs.mylistvideo.Response.contract Response, string MylistID)
         {
             var result = new Response<Mylist.Mylist>();
 
-            Response(result, Serial.status, Serial.error);
+            Converter.Response(result, Response.status, Response.error);
             result.Result = Context.IDContainer.GetMylist(MylistID);
-            result.Result.Description = Serial.description;
-            result.Result.Title = Serial.name;
-            result.Result.IsBookmark = Serial.is_watching_this_mylist;
-            result.Result.MylistItem = MylistItem(Context, Serial.list);
+            result.Result.Description = Response.description;
+            result.Result.Title = Response.name;
+            result.Result.IsBookmark = Response.is_watching_this_mylist;
+            result.Result.MylistItem = MylistItem(Context, Response.list);
 
-            if (Serial.user_id != null)
+            if (Response.user_id != null)
             {
-                result.Result.User = Context.IDContainer.GetUser(Serial.user_id);
-                result.Result.User.Name = Serial.user_nickname;
+                result.Result.User = Context.IDContainer.GetUser(Response.user_id);
+                result.Result.User.Name = Response.user_nickname;
             }
 
             return result;
         }
 
-        public static Response<Series.Series> SeriesResponse(Context Context, Result Serial, string SeriesID)
+        public static Response<Series.Series> SeriesResponse(Context Context, APIs.series_page_html.Response.Result Response, string SeriesID)
         {
             var result = new Response<Series.Series>();
 
-            Response(result, "ok", null);
+            Converter.Response(result, "ok", null);
             result.Result = Context.IDContainer.GetSeries(SeriesID);
             result.Result.ID = SeriesID;
-            result.Result.Title = Serial.Title;
-            result.Result.User = Context.IDContainer.GetUser(Serial.PostUser.ID);
-            result.Result.User.Name = Serial.PostUser?.Name;
-            result.Result.OtherSeriesList = Serial.OtherSeriesList?.Select((otherSeries) =>
+            result.Result.Title = Response.Title;
+            result.Result.User = Context.IDContainer.GetUser(Response.PostUser.ID);
+            result.Result.User.Name = Response.PostUser?.Name;
+            result.Result.OtherSeriesList = Response.OtherSeriesList?.Select((otherSeries) =>
             {
                 var series = Context.IDContainer.GetSeries(otherSeries.ID);
                 series.Title = otherSeries.Title;
                 return series;
             }).ToArray();
-            result.Result.VideoList = Serial.VideoList?.Select((video) =>
+            result.Result.VideoList = Response.VideoList?.Select((video) =>
             {
                 var videoInfo = Context.IDContainer.GetVideoInfo(video.ID);
                 videoInfo.Title = video.Title;
@@ -173,170 +172,170 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Response<User.User> UserResponse(Context Context, Dictionary<string, string> Serial)
+        public static Response<User.User> UserResponse(Context Context, Dictionary<string, string> Response)
         {
             var result = new Response<User.User>();
 
-            Response(result, "ok", null);
-            result.Result = Context.IDContainer.GetUser(Serial["id"]);
-            result.Result.Icon = new Picture(Serial["icon"], Context.CookieContainer);
-            result.Result.Name = Serial["name"];
+            Converter.Response(result, "ok", null);
+            result.Result = Context.IDContainer.GetUser(Response["id"]);
+            result.Result.Icon = new Picture(Response["icon"], Context.CookieContainer);
+            result.Result.Name = Response["name"];
 
-            result.Result.Description = Serial["description"];
+            result.Result.Description = Response["description"];
             try
             {
-                result.Result.BookmarkCount = int.Parse(Serial["bookmark"]);
-                result.Result.Experience = int.Parse(Serial["exp"]);
+                result.Result.BookmarkCount = int.Parse(Response["bookmark"]);
+                result.Result.Experience = int.Parse(Response["exp"]);
             }
             catch (Exception) { }
 
             return result;
         }
 
-        public static Response<Mylist.Mylist[]> PublicMylistListResponse(Context context, Dictionary<string, string>[] Serial)
+        public static Response<Mylist.Mylist[]> PublicMylistListResponse(Context context, Dictionary<string, string>[] Response)
         {
             var result = new Response<Mylist.Mylist[]>();
 
-            Response(result, "ok", null);
-            result.Result = new Mylist.Mylist[Serial.Length];
+            Converter.Response(result, "ok", null);
+            result.Result = new Mylist.Mylist[Response.Length];
 
             for (int i = 0; i < result.Result.Length; i++)
             {
-                result.Result[i] = context.IDContainer.GetMylist(Serial[i]["id"]);
-                result.Result[i].Title = Serial[i]["name"];
+                result.Result[i] = context.IDContainer.GetMylist(Response[i]["id"]);
+                result.Result[i].Title = Response[i]["name"];
             }
 
             return result;
         }
 
         /********************************************/
-        public static VideoInfo VideoInfo(Context Context, APIs.video_page_html.Serial.Rootobject.Series.Video Serial)
+        public static VideoInfo VideoInfo(Context Context, APIs.video_page_html.Response.Rootobject.Series.Video Response)
         {
-            if (Serial == null)
+            if (Response == null)
             {
                 return null;
             }
 
-            return new VideoInfo(Serial.id)
+            return new VideoInfo(Response.id)
             {
-                Title = Serial.title,
-                ShortDescription = Serial.shortDescription,
-                User = User(Context, Serial.owner),
-                Thumbnail = new Picture(Serial.thumbnail.url, Context.CookieContainer),
-                VideoType = Serial.type,
+                Title = Response.title,
+                ShortDescription = Response.shortDescription,
+                User = User(Context, Response.owner),
+                Thumbnail = new Picture(Response.thumbnail.url, Context.CookieContainer),
+                VideoType = Response.type,
             };
         }
 
-        public static User.User User(Context Context, APIs.video_page_html.Serial.Rootobject.Series.Video.Owner Serial)
+        public static User.User User(Context Context, APIs.video_page_html.Response.Rootobject.Series.Video.Owner Response)
         {
-            var user = Context.IDContainer.GetUser(Serial?.id);
-            user.Name = Serial?.name;
-            user.Icon = new Picture(Serial?.iconUrl, Context.CookieContainer);
+            var user = Context.IDContainer.GetUser(Response?.id);
+            user.Name = Response?.name;
+            user.Icon = new Picture(Response?.iconUrl, Context.CookieContainer);
             return user;
         }
 
-        public static Tag[] Tags(APIs.tag_edit.Serial._tag[] Serial)
+        public static Tag[] Tags(APIs.tag_edit.Response._tag[] Response)
         {
-            if (Serial == null)
+            if (Response == null)
                 return null;
 
-            var result = new Tag[Serial.Length];
+            var result = new Tag[Response.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new Tag()
                 {
-                    IsNicopedia = Serial[i].dic,
-                    IsCategory = Serial[i].can_cat,
-                    IsLock = Serial[i].owner_lock != 0,
-                    Name = Serial[i].tag,
+                    IsNicopedia = Response[i].dic,
+                    IsCategory = Response[i].can_cat,
+                    IsLock = Response[i].owner_lock != 0,
+                    Name = Response[i].tag,
                 };
             }
 
             return result;
         }
 
-        public static Tag[] Tags(APIs.getthumbinfo.Serial.tags Serial)
+        public static Tag[] Tags(APIs.getthumbinfo.Response.tags Response)
         {
-            var result = new Tag[Serial.tag.Length];
+            var result = new Tag[Response.tag.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new Tag()
                 {
-                    IsCategory = Serial.tag[i].category != 0,
-                    IsLock = Serial.tag[i]._lock != 0,
-                    Name = Serial.tag[i]._tag,
+                    IsCategory = Response.tag[i].category != 0,
+                    IsLock = Response.tag[i]._lock != 0,
+                    Name = Response.tag[i]._tag,
                 };
             }
 
             return result;
         }
 
-        private static Tag[] Tags(APIs.video_page_html.Serial.Rootobject.Tag[] Serial)
+        private static Tag[] Tags(APIs.video_page_html.Response.Rootobject.Tag[] Response)
         {
-            var result = new Tag[Serial.Length];
+            var result = new Tag[Response.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new Tag()
                 {
-                    IsCategory = Serial[i].isCategory ?? false,
-                    IsLock = Serial[i].isLocked ?? false,
-                    Name = Serial[i].name,
+                    IsCategory = Response[i].isCategory ?? false,
+                    IsLock = Response[i].isLocked ?? false,
+                    Name = Response[i].name,
                 };
             }
 
             return result;
         }
 
-        public static VideoInfo[] VideoInfos(Context Context, APIs.search.Serial.list[] Serial)
+        public static VideoInfo[] VideoInfos(Context Context, APIs.search.Response.list[] Response)
         {
-            if (Serial == null) return null;
+            if (Response == null) return null;
 
-            var result = new VideoInfo[Serial.Length];
+            var result = new VideoInfo[Response.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
-                var info = Context.IDContainer.GetVideoInfo(Serial[i].id);
+                var info = Context.IDContainer.GetVideoInfo(Response[i].id);
 
-                info.ComentCounter = Serial[i].num_res;
-                info.Length = UNicoAPI2.Converter.TimeSpan(Serial[i].length);
-                info.MylistCounter = Serial[i].mylist_counter;
-                info.PostTime = DateTime.Parse(Serial[i].first_retrieve);
-                info.ShortDescription = Serial[i].description_short;
-                info.Title = Serial[i].title;
-                info.ViewCounter = Serial[i].view_counter;
-                info.Thumbnail = new Picture(Serial[i].thumbnail_url, Context.CookieContainer);
+                info.ComentCounter = Response[i].num_res;
+                info.Length = UNicoAPI2.Converter.TimeSpan(Response[i].length);
+                info.MylistCounter = Response[i].mylist_counter;
+                info.PostTime = DateTime.Parse(Response[i].first_retrieve);
+                info.ShortDescription = Response[i].description_short;
+                info.Title = Response[i].title;
+                info.ViewCounter = Response[i].view_counter;
+                info.Thumbnail = new Picture(Response[i].thumbnail_url, Context.CookieContainer);
                 result[i] = info;
             }
 
             return result;
         }
 
-        public static Comment[] Comment(APIs.download_comment.Serial.chat[] Serial)
+        public static Comment[] Comment(APIs.download_comment.Response.chat[] Response)
         {
-            var result = new Comment[(Serial != null) ? Serial.Length : 0];
+            var result = new Comment[(Response != null) ? Response.Length : 0];
 
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new Comment()
                 {
-                    IsAnonymity = Serial[i].anonymity,
-                    Body = Serial[i].body,
-                    Command = Serial[i].mail,
-                    Leaf = Serial[i].leaf,
-                    No = Serial[i].no,
-                    PlayTime = TimeSpan.FromMilliseconds(double.Parse(Serial[i].vpos + '0')),
-                    IsPremium = Serial[i].premium,
-                    UserID = Serial[i].user_id,
-                    WriteTime = unixTime.AddSeconds(double.Parse(Serial[i].date)).ToLocalTime(),
-                    IsYourPost = Serial[i].yourpost,
+                    IsAnonymity = Response[i].anonymity,
+                    Body = Response[i].body,
+                    Command = Response[i].mail,
+                    Leaf = Response[i].leaf,
+                    No = Response[i].no,
+                    PlayTime = TimeSpan.FromMilliseconds(double.Parse(Response[i].vpos + '0')),
+                    IsPremium = Response[i].premium,
+                    UserID = Response[i].user_id,
+                    WriteTime = unixTime.AddSeconds(double.Parse(Response[i].date)).ToLocalTime(),
+                    IsYourPost = Response[i].yourpost,
                 };
 
                 try
                 {
-                    result[i].Scores = int.Parse(Serial[i].scores ?? "0");
+                    result[i].Scores = int.Parse(Response[i].scores ?? "0");
                 }
                 catch (Exception) { }
             }
@@ -344,37 +343,37 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static MylistItem[] MylistItem(Context Context, APIs.mylistvideo.Serial.list[] Serial)
+        public static MylistItem[] MylistItem(Context Context, APIs.mylistvideo.Response.list[] Response)
         {
-            if (Serial == null)
+            if (Response == null)
                 return null;
 
-            var result = new MylistItem[Serial.Length];
+            var result = new MylistItem[Response.Length];
 
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new MylistItem();
-                result[i].Description = Serial[i].mylist_comment;
-                result[i].RegisterTime = unixTime.AddSeconds(Serial[i].create_time).ToLocalTime();
-                result[i].UpdateTime = DateTime.Parse(Serial[i].thread_update_time);
-                result[i].VideoInfo = Context.IDContainer.GetVideoInfo(Serial[i].id);
+                result[i].Description = Response[i].mylist_comment;
+                result[i].RegisterTime = unixTime.AddSeconds(Response[i].create_time).ToLocalTime();
+                result[i].UpdateTime = DateTime.Parse(Response[i].thread_update_time);
+                result[i].VideoInfo = Context.IDContainer.GetVideoInfo(Response[i].id);
 
-                result[i].VideoInfo.ComentCounter = Serial[i].num_res;
-                result[i].VideoInfo.ID = Serial[i].id;
-                result[i].VideoInfo.Length = new TimeSpan(0, 0, Serial[i].length_seconds);
-                result[i].VideoInfo.MylistCounter = Serial[i].mylist_counter;
-                result[i].VideoInfo.PostTime = DateTime.Parse(Serial[i].first_retrieve);
-                result[i].VideoInfo.ShortDescription = Serial[i].description_short;
-                result[i].VideoInfo.Thumbnail = new Picture(Serial[i].thumbnail_url, Context.CookieContainer);
-                result[i].VideoInfo.Title = Serial[i].title;
-                result[i].VideoInfo.ViewCounter = Serial[i].view_counter;
+                result[i].VideoInfo.ComentCounter = Response[i].num_res;
+                result[i].VideoInfo.ID = Response[i].id;
+                result[i].VideoInfo.Length = new TimeSpan(0, 0, Response[i].length_seconds);
+                result[i].VideoInfo.MylistCounter = Response[i].mylist_counter;
+                result[i].VideoInfo.PostTime = DateTime.Parse(Response[i].first_retrieve);
+                result[i].VideoInfo.ShortDescription = Response[i].description_short;
+                result[i].VideoInfo.Thumbnail = new Picture(Response[i].thumbnail_url, Context.CookieContainer);
+                result[i].VideoInfo.Title = Response[i].title;
+                result[i].VideoInfo.ViewCounter = Response[i].view_counter;
             }
 
             return result;
         }
 
         /********************************************/
-        public static void Response(Response Response, string Status, APIs.Serial.error Error)
+        public static void Response(Response Response, string Status, APIs.Response.error Error)
         {
             switch (Status)
             {

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using UNicoAPI2.APIs.tag_edit.Serial;
+using UNicoAPI2.APIs.tag_edit.Response;
 
 namespace UNicoAPI2.APIs.tag_edit
 {

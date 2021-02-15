@@ -3,12 +3,12 @@ using System.Runtime.Serialization.Json;
 
 namespace UNicoAPI2.APIs.mylistvideo
 {
-    public class Parser : IParser<Serial.contract>
+    public class Parser : IParser<Response.contract>
     {
-        public Serial.contract Parse(byte[] Value)
+        public Response.contract Parse(byte[] Value)
         {
-            var serialize = new DataContractJsonSerializer(typeof(Serial.contract));
-            return (Serial.contract)serialize.ReadObject(new MemoryStream(Value));
+            var serialize = new DataContractJsonSerializer(typeof(Response.contract));
+            return (Response.contract)serialize.ReadObject(new MemoryStream(Value));
         }
     }
 }
