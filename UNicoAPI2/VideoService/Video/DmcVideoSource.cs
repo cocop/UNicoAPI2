@@ -10,15 +10,15 @@ namespace UNicoAPI2.VideoService.Video
     {
         public Uri ContentsUri { get; private set; }
         public HeartBeatsStatus Status { get; private set; }
+        public event Action HeartbeatsError;
 
         APIs.heartbeats.Response.Rootobject heartbeatsInfo;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
 
-        public DmcVideoSource(CookieContainer cookieContainer, APIs.heartbeats.Response.Rootobject rootobject)
+        public DmcVideoSource(CookieContainer cookieContainer, Uri heartBeatsUri, APIs.heartbeats.Response.Rootobject rootobject)
         {
             Status = HeartBeatsStatus.Active;
-
             ContentsUri = new Uri(rootobject.data.session.content_uri);
 
             Task.Run(() =>
@@ -27,20 +27,24 @@ namespace UNicoAPI2.VideoService.Video
                 {
                     try
                     {
-                        var beatTask = BeatAsync(cookieContainer, rootobject);
+                        Task.Delay(rootobject.data.session.keep_method.heartbeat.lifetime / 3).Wait(tokenSource.Token);
+                        var beatTask = BeatAsync(cookieContainer, heartBeatsUri, rootobject);
                         beatTask.Wait(tokenSource.Token);
                         heartbeatsInfo = beatTask.Result;
-                        Task.Delay(rootobject.data.session.keep_method.heartbeat.lifetime).Wait(tokenSource.Token);
                     }
                     catch (OperationCanceledException)
                     {
                         return;
                     }
+                    catch (Exception)
+                    {
+                        HeartbeatsError?.Invoke();
+                    }
                 } while (heartbeatsInfo != null && !tokenSource.IsCancellationRequested);
             });
         }
 
-        private async Task<APIs.heartbeats.Response.Rootobject> BeatAsync(CookieContainer cookieContainer, APIs.heartbeats.Response.Rootobject rootobject)
+        private async Task<APIs.heartbeats.Response.Rootobject> BeatAsync(CookieContainer cookieContainer, Uri heartBeatsUri, APIs.heartbeats.Response.Rootobject rootobject)
         {
             var session = new Session<APIs.heartbeats.Response.Rootobject>();
             session.SetAccessers(
@@ -49,7 +53,7 @@ namespace UNicoAPI2.VideoService.Video
                     (data) =>
                     {
                         var accessor = new APIs.heartbeats.Accessor();
-                        accessor.Setting(cookieContainer, rootobject.data.session);
+                        accessor.Setting(cookieContainer, heartBeatsUri, rootobject.data);
                         return accessor;
                     }
                 },

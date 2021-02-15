@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 using UNicoAPI2.APIs.dmc_session.Request;
+using System.Text;
 
 namespace UNicoAPI2.APIs.dmc_session
 {
@@ -94,11 +95,12 @@ namespace UNicoAPI2.APIs.dmc_session
                 }
             };
 
-            var serialize = new DataContractJsonSerializer(typeof(Rootobject));
-            var memStream = new MemoryStream();
-            serialize.WriteObject(memStream, data);
-
-            return memStream.ToArray();
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                var serialize = new DataContractJsonSerializer(typeof(Rootobject));
+                serialize.WriteObject(memStream, data);
+                return memStream.ToArray();
+            };
         }
 
         private Content_Src_Ids[] CreateContent_Src_Ids(video_page_html.Response.Rootobject.Video.Dmcinfo.Session_Api session_api)
@@ -129,11 +131,7 @@ namespace UNicoAPI2.APIs.dmc_session
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            var urls = dmcInfo?.session_api?.urls;
-            if ((urls?.Length ?? 0) == 0)
-                throw new System.Exception("dmcInfoの取得に失敗しました");
-
-            request = (HttpWebRequest)WebRequest.Create(urls[0].url + "?_format=json");
+            request = (HttpWebRequest)WebRequest.Create(dmcInfo.session_api.urls[0].url + "?_format=json");
             request.Accept = ContentType.Json;
             request.ContentType = ContentType.Json;
             request.Method = ContentMethod.Post;
@@ -141,7 +139,6 @@ namespace UNicoAPI2.APIs.dmc_session
 
             request.Headers["Content-Length"] = DataLength.ToString();
             request.Headers["Connection"] = "keep-alive";
-            //request.Headers["Referer"] = "";
 
             return request.GetRequestStreamAsync();
         }

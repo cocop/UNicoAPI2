@@ -125,7 +125,6 @@ namespace UNicoAPI2.VideoService.Video
         {
             switch (DownloadVideoUseAPI)
             {
-                case DownloadVideoUseAPI.Html5: return DownloadVideoUseHtml5(Position, Length);
                 case DownloadVideoUseAPI.getflv: return DownloadVideoUseGetflv(Position, Length);
                 default: return null;
             }
@@ -223,8 +222,11 @@ namespace UNicoAPI2.VideoService.Video
 
             accessorList.Add((data) =>
             {
-                var parser = new APIs.video_page_html.Parser();
-                htmlCache.Value = parser.Parse(parser.Parse(data));
+                if (data != null)
+                {
+                    var parser = new APIs.video_page_html.Parser();
+                    htmlCache.Value = parser.Parse(parser.Parse(data));
+                }
 
                 var accesser = new APIs.dmc_session.Accessor();
                 accesser.Setting(
@@ -236,9 +238,6 @@ namespace UNicoAPI2.VideoService.Video
 
             accessorList.Add((data) =>
             {
-                var parser = new APIs.video_page_html.Parser();
-                htmlCache.Value = parser.Parse(parser.Parse(data));
-
                 var accesser = new APIs.dmc_session.Accessor();
                 accesser.Setting(
                     context.CookieContainer,
@@ -250,66 +249,8 @@ namespace UNicoAPI2.VideoService.Video
             session.SetAccessers(accessorList.ToArray(), (data) =>
             {
                 var parser = new APIs.heartbeats.Parser();
-                return new DmcVideoSource(context.CookieContainer, parser.Parse(data));
+                return new DmcVideoSource(context.CookieContainer, new Uri(htmlCache.Value.video.dmcInfo.session_api.urls[0].url), parser.Parse(data));
             });
-            return session;
-        }
-
-        /// <summary>
-        /// Html内のurlから動画を取得する
-        /// </summary>
-        private Session<WebResponse> DownloadVideoUseHtml5(long Position, long Length)
-        {
-            var session = new Session<WebResponse>();
-            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
-            var isHtmlCacheProgress = false;
-
-            if (!htmlCache.IsAvailab)
-            {
-                isHtmlCacheProgress = true;
-                accessorList.Add(
-                    (data) =>
-                    {
-                        if (data != null)
-                            videoCache.Value = new APIs.getflv.Parser().Parse(data);
-
-                        var accesser = new APIs.video_page_html.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            target.ID);
-
-                        return accesser;
-                    });
-            }
-
-            accessorList.AddRange(
-                new Func<byte[], APIs.IAccessor>[]
-                {
-                    (data) =>
-                    {
-                        var parser = new APIs.video_page_html.Parser();
-
-                        if (data != null)
-                            if (isHtmlCacheProgress)
-                                htmlCache.Value = parser.Parse(parser.Parse(data));
-
-                        var accesser = new APIs.dmc_session.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            htmlCache.Value.video.dmcInfo);
-
-                        return accesser;
-                    },
-                    (data) =>
-                    {
-                        var parser = new APIs.video_page_html.Parser();
-                        var dmcInfo = parser.Parse(data);
-
-                        return null;
-                    },
-                });
-
-            session.SetAccessers(accessorList.ToArray(), null);
             return session;
         }
 

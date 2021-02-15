@@ -14,27 +14,29 @@ namespace UNicoAPI2.APIs.heartbeats
         public AccessorType Type => AccessorType.Upload;
 
         CookieContainer cookieContainer;
-        Response.Session session;
+        Uri heartBeatsUri;
+        Response.Data data;
         HttpWebRequest request;
 
-        public void Setting(CookieContainer CookieContainer, Response.Session session)
+        public void Setting(CookieContainer CookieContainer, Uri heartBeatsUri, Response.Data data)
         {
             cookieContainer = CookieContainer;
-            this.session = session;
+            this.heartBeatsUri = heartBeatsUri;
+            this.data = data;
         }
 
         public byte[] GetUploadData()
         {
-            var serialize = new DataContractJsonSerializer(typeof(Response.Session));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Data));
             var memStream = new MemoryStream();
-            serialize.WriteObject(memStream, session);
+            serialize.WriteObject(memStream, data);
 
             return memStream.ToArray();
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create(session.content_uri);
+            request = (HttpWebRequest)WebRequest.Create(heartBeatsUri + "/" + data.session.id + "?_format=json&_method=PUT");
             request.Accept = ContentType.Json;
             request.ContentType = ContentType.Json;
             request.Method = ContentMethod.Post;
