@@ -27,7 +27,11 @@ namespace UNicoAPI2
         /// 有効期限
         /// </summary>
         public TimeSpan Deadline { get; set; }
-        DateTime? gotTime = null;
+
+        /// <summary>
+        /// 最後に値を設定した時間
+        /// </summary>
+        public DateTime? GotTime { get; private set; } = null;
 
         /// <summary>
         /// 有効かどうか
@@ -36,7 +40,7 @@ namespace UNicoAPI2
         {
             get
             {
-                return gotTime != null && DateTime.Now < (gotTime?.Add(Deadline) ?? DateTime.Now);
+                return GotTime != null && DateTime.Now < GotTime?.Add(Deadline);
             }
         }
 
@@ -52,7 +56,7 @@ namespace UNicoAPI2
 
             set
             {
-                gotTime = DateTime.Now;
+                GotTime = DateTime.Now;
                 this.value = value;
                 ChangedValue();
             }
@@ -82,7 +86,7 @@ namespace UNicoAPI2
         public void Clear()
         {
             Value = default(Type);
-            gotTime = null;
+            GotTime = null;
         }
     }
 }
