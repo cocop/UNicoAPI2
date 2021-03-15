@@ -76,6 +76,11 @@ namespace UNicoAPI2.VideoService.Video
         public int MylistCounter { set; get; }
 
         /// <summary>
+        /// マイリスト数
+        /// </summary>
+        public int LikeCounter { set; get; }
+
+        /// <summary>
         /// 動画説明文
         /// </summary>
         public string Description { set; get; }

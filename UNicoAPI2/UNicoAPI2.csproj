@@ -105,9 +105,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="APIs\AccessorType.cs" />
-    <Compile Include="APIs\dmc_session\Accessor.cs" />
-    <Compile Include="APIs\dmc_session\Parser.cs" />
-    <Compile Include="APIs\dmc_session\Request\Rootobject.cs" />
+    <Compile Include="APIs\media_session\Accessor.cs" />
+    <Compile Include="APIs\media_session\Parser.cs" />
+    <Compile Include="APIs\media_session\Request\Rootobject.cs" />
     <Compile Include="APIs\DownloadAccessor.cs" />
     <Compile Include="APIs\download_comment\Accessor.cs" />
     <Compile Include="APIs\download_comment\Parser.cs" />

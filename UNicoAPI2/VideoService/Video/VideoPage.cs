@@ -228,20 +228,20 @@ namespace UNicoAPI2.VideoService.Video
                     htmlCache.Value = parser.Parse(parser.Parse(data));
                 }
 
-                var accesser = new APIs.dmc_session.Accessor();
+                var accesser = new APIs.media_session.Accessor();
                 accesser.Setting(
                     context.CookieContainer,
-                    htmlCache.Value.video.dmcInfo);
+                    htmlCache.Value.media);
 
                 return accesser;
             });
 
             accessorList.Add((data) =>
             {
-                var accesser = new APIs.dmc_session.Accessor();
+                var accesser = new APIs.media_session.Accessor();
                 accesser.Setting(
                     context.CookieContainer,
-                    htmlCache.Value.video.dmcInfo);
+                    htmlCache.Value.media);
 
                 return accesser;
             });
@@ -249,7 +249,7 @@ namespace UNicoAPI2.VideoService.Video
             session.SetAccessers(accessorList.ToArray(), (data) =>
             {
                 var parser = new APIs.heartbeats.Parser();
-                return new DmcVideoSource(context.CookieContainer, new Uri(htmlCache.Value.video.dmcInfo.session_api.urls[0].url), parser.Parse(data));
+                return new DmcVideoSource(context.CookieContainer, new Uri(htmlCache.Value.media.delivery.movie.session.urls[0].url), parser.Parse(data));
             });
             return session;
         }
@@ -367,96 +367,6 @@ namespace UNicoAPI2.VideoService.Video
 
                     return Converter.CommentResponse(Serial);
                 });
-
-            return session;
-        }
-
-        /// <summary>
-        /// タグを取得する
-        /// </summary>
-        public Session<Response<Tag[]>> DownloadTags()
-        {
-            var session = new Session<Response<Tag[]>>();
-
-            session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
-            {
-                new Func<byte[], APIs.IAccessor>((byte[] data) =>
-                {
-                    var accesser = new APIs.tag_edit.DownloadAccessor();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        target.ID,
-                        "json",
-                        "tags");
-
-                    return accesser;
-                })
-            }, (data) => Converter.TagsResponse(new APIs.tag_edit.Parser().Parse(data)));
-
-            return session;
-        }
-
-        /// <summary>
-        /// タグを追加する
-        /// </summary>
-        /// <param name="AddTag">追加するタグ</param>
-        public Session<Response<Tag[]>> AddTag(Tag AddTag)
-        {
-            return EditTag(AddTag, "add");
-        }
-
-        /// <summary>
-        /// タグを削除する
-        /// </summary>
-        /// <param name="RemoveTag">削除するタグ</param>
-        public Session<Response<Tag[]>> RemoveTag(Tag RemoveTag)
-        {
-            return EditTag(RemoveTag, "remove");
-        }
-
-        private Session<Response<Tag[]>> EditTag(Tag EditTag, string cmd)
-        {
-            var session = new Session<Response<Tag[]>>();
-            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
-
-            if (!htmlCache.IsAvailab)
-            {
-                accessorList.Add(new Func<byte[], APIs.IAccessor>((byte[] data) =>
-                {
-                    var accesser = new APIs.video_page_html.Accessor();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        target.ID);
-
-                    return accesser;
-                }));
-            }
-
-            accessorList.Add(new Func<byte[], APIs.IAccessor>((byte[] data) =>
-            {
-                var parser = new APIs.video_page_html.Parser();
-
-                if (data != null)
-                    htmlCache.Value = parser.Parse(parser.Parse(data));
-
-                var accesser = new APIs.tag_edit.UploadAccessor();
-                accesser.Setting(
-                    context.CookieContainer,
-                    target.ID,
-                    "json",
-                    cmd,
-                    EditTag.Name,
-                    htmlCache.Value.context.csrfToken,
-                    htmlCache.Value.context.watchAuthKey,
-                    (EditTag.IsLock == true) ? "1" : "0");
-
-                return accesser;
-            }));
-
-            session.SetAccessers(
-                accessorList.ToArray(),
-                (data) =>
-                    Converter.TagsResponse(new APIs.tag_edit.Parser().Parse(data)));
 
             return session;
         }

@@ -1,14 +1,14 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
-using UNicoAPI2.APIs.dmc_session.Request;
+using UNicoAPI2.APIs.media_session.Request;
 using System.Text;
 
-namespace UNicoAPI2.APIs.dmc_session
+namespace UNicoAPI2.APIs.media_session
 {
     /// <summary>
     /// レスポンスはHeartBeats
@@ -18,13 +18,13 @@ namespace UNicoAPI2.APIs.dmc_session
         public AccessorType Type => AccessorType.Upload;
 
         CookieContainer cookieContainer;
-        video_page_html.Response.Rootobject.Video.Dmcinfo dmcInfo;
+        video_page_html.Response.Rootobject.Media mediaInfo;
         HttpWebRequest request;
 
-        public void Setting(CookieContainer CookieContainer, video_page_html.Response.Rootobject.Video.Dmcinfo dmcInfo)
+        public void Setting(CookieContainer CookieContainer, video_page_html.Response.Rootobject.Media mediaInfo)
         {
             cookieContainer = CookieContainer;
-            this.dmcInfo = dmcInfo;
+            this.mediaInfo = mediaInfo;
         }
 
         public byte[] GetUploadData()
@@ -35,21 +35,21 @@ namespace UNicoAPI2.APIs.dmc_session
                 {
                     client_info = new Client_Info
                     {
-                        player_id = dmcInfo.session_api.player_id
+                        player_id = mediaInfo.delivery.movie.session.playerId
                     },
                     content_auth = new Content_Auth
                     {
-                        auth_type = dmcInfo.session_api.auth_types.http,
-                        content_key_timeout = dmcInfo.session_api.content_key_timeout,
+                        auth_type = mediaInfo.delivery.movie.session.authTypes.http,
+                        content_key_timeout = mediaInfo.delivery.movie.session.contentKeyTimeout,
                         service_id = "nicovideo",
-                        service_user_id = dmcInfo.user.user_id,
+                        service_user_id = mediaInfo.delivery.movie.session.serviceUserId,
                     },
-                    content_id = dmcInfo.session_api.content_id,
+                    content_id = mediaInfo.delivery.movie.session.contentId,
                     content_src_id_sets = new Content_Src_Id_Sets[]
                     {
                         new Content_Src_Id_Sets()
                         {
-                            content_src_ids = CreateContent_Src_Ids(dmcInfo.session_api)
+                            content_src_ids = CreateContent_Src_Ids(mediaInfo.delivery.movie.session)
                         }
                     },
                     content_type = "movie",
@@ -58,10 +58,10 @@ namespace UNicoAPI2.APIs.dmc_session
                     {
                         heartbeat = new Heartbeat()
                         {
-                            lifetime = dmcInfo.session_api.heartbeat_lifetime,
+                            lifetime = mediaInfo.delivery.movie.session.heartbeatLifetime,
                         }
                     },
-                    priority = dmcInfo.session_api.priority,
+                    priority = mediaInfo.delivery.movie.session.priority,
                     protocol = new Protocol()
                     {
                         name = "http",
@@ -82,13 +82,13 @@ namespace UNicoAPI2.APIs.dmc_session
                             }
                         }
                     },
-                    recipe_id = dmcInfo.session_api.recipe_id,
+                    recipe_id = mediaInfo.delivery.movie.session.recipeId,
                     session_operation_auth = new Session_Operation_Auth()
                     {
                         session_operation_auth_by_signature = new Session_Operation_Auth_By_Signature()
                         {
-                            signature = dmcInfo.session_api.signature,
-                            token = dmcInfo.session_api.token,
+                            signature = mediaInfo.delivery.movie.session.signature,
+                            token = mediaInfo.delivery.movie.session.token,
                         }
                     },
                     timing_constraint = "unlimited",
@@ -103,13 +103,13 @@ namespace UNicoAPI2.APIs.dmc_session
             };
         }
 
-        private Content_Src_Ids[] CreateContent_Src_Ids(video_page_html.Response.Rootobject.Video.Dmcinfo.Session_Api session_api)
+        private Content_Src_Ids[] CreateContent_Src_Ids(video_page_html.Response.Rootobject.Media.Delivery.Movie.Session sessionInfo)
         {
             var contentSrcIds = new List<Content_Src_Ids>();
 
-            for (int audioIndex = 0; audioIndex < session_api.audios.Length; audioIndex++)
+            for (int audioIndex = 0; audioIndex < sessionInfo.audios.Length; audioIndex++)
             {
-                for (int videoIndex = 0; videoIndex < session_api.videos.Length - 1; videoIndex++)
+                for (int videoIndex = 0; videoIndex < sessionInfo.videos.Length - 1; videoIndex++)
                 {
                     contentSrcIds.Add(
                         new Content_Src_Ids()
@@ -118,9 +118,9 @@ namespace UNicoAPI2.APIs.dmc_session
                             {
                                 audio_src_ids = new string[]
                                 {
-                                    session_api.audios[audioIndex]
+                                    sessionInfo.audios[audioIndex]
                                 },
-                                video_src_ids = session_api.videos.Skip(videoIndex).ToArray(),
+                                video_src_ids = sessionInfo.videos.Skip(videoIndex).ToArray(),
                             }
                         });
                 }
@@ -131,7 +131,7 @@ namespace UNicoAPI2.APIs.dmc_session
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create(dmcInfo.session_api.urls[0].url + "?_format=json");
+            request = (HttpWebRequest)WebRequest.Create(mediaInfo.delivery.movie.session.urls[0].url + "?_format=json");
             request.Accept = ContentType.Json;
             request.ContentType = ContentType.Json;
             request.Method = ContentMethod.Post;

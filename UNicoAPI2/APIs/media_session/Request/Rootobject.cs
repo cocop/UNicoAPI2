@@ -1,4 +1,4 @@
-namespace UNicoAPI2.APIs.dmc_session.Request
+namespace UNicoAPI2.APIs.media_session.Request
 {
     public class Rootobject
     {

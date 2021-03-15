@@ -2,7 +2,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Xml.Serialization;
 
-namespace UNicoAPI2.APIs.dmc_session
+namespace UNicoAPI2.APIs.media_session
 {
     public class Parser : IParser<Request.Rootobject>
     {
