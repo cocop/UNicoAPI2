@@ -20,6 +20,8 @@ namespace UNicoAPI2.VideoService.Video
         Cache<APIs.video_page_html.Response.Rootobject> htmlCache = new Cache<APIs.video_page_html.Response.Rootobject>();
         Cache<NameValueCollection> videoCache = new Cache<NameValueCollection>();
 
+        bool isAvailabDmcCash = false;
+
         string ticket = "";
         string block_no = "";
         string postkey = "";
@@ -32,6 +34,11 @@ namespace UNicoAPI2.VideoService.Video
         {
             target = Target;
             context = Context;
+
+            htmlCache.ChangedValue += () =>
+            {
+                isAvailabDmcCash = true;
+            };
         }
 
         /// <summary>
@@ -207,7 +214,7 @@ namespace UNicoAPI2.VideoService.Video
             var session = new Session<DmcVideoSource>();
             var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
-            if (!htmlCache.IsAvailab || DateTime.Now < (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MaxValue))
+            if (!htmlCache.IsAvailab || !isAvailabDmcCash || DateTime.Now < (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MaxValue))
             {
                 accessorList.Add((data) =>
                 {
@@ -219,6 +226,7 @@ namespace UNicoAPI2.VideoService.Video
                     return accesser;
                 });
             }
+            isAvailabDmcCash = false;
 
             accessorList.Add((data) =>
             {
