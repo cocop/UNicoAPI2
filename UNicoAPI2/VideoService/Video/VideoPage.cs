@@ -214,7 +214,7 @@ namespace UNicoAPI2.VideoService.Video
             var session = new Session<DmcVideoSource>();
             var accessorList = new List<Func<byte[], APIs.IAccessor>>();
 
-            if (!htmlCache.IsAvailab || !isAvailabDmcCash || DateTime.Now < (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MaxValue))
+            if (!htmlCache.IsAvailab || !isAvailabDmcCash || DateTime.Now > (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MinValue))
             {
                 accessorList.Add((data) =>
                 {
