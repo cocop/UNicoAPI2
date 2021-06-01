@@ -121,8 +121,6 @@
     <Compile Include="APIs\download_comment\Response\thread.cs" />
     <Compile Include="APIs\download_comment\Response\view_counter.cs" />
     <Compile Include="APIs\FileDownloadAccessor.cs" />
-    <Compile Include="APIs\getflv\Accessor.cs" />
-    <Compile Include="APIs\getflv\Parser.cs" />
     <Compile Include="APIs\getpostkey\Accessor.cs" />
     <Compile Include="APIs\getpostkey\Parser.cs" />
     <Compile Include="APIs\getthumbinfo\Accessor.cs" />
