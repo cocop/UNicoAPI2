@@ -158,11 +158,7 @@ namespace UNicoAPI2.VideoService
             {
                 var videoInfo = Context.IDContainer.GetVideoInfo(video.ID);
                 videoInfo.Title = video.Title;
-                videoInfo.ShortDescription = video.Description;
                 videoInfo.Thumbnail = new Picture(video.ThumbnailUrl, Context.CookieContainer);
-                videoInfo.ViewCounter = int.Parse(video.ViewCount.Replace(",", ""));
-                videoInfo.ComentCounter = int.Parse(video.CommentCount.Replace(",", ""));
-                videoInfo.MylistCounter = int.Parse(video.MylistCount.Replace(",", ""));
                 videoInfo.User = result.Result.User;
                 return videoInfo;
             }).ToArray();

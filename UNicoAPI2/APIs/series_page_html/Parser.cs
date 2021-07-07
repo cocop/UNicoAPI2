@@ -8,7 +8,7 @@ namespace UNicoAPI2.APIs.series_page_html
     public class Parser : IHtmlParser<Result>
     {
         static readonly Regex titleRegex = new Regex("<div class=\"SeriesDetailContainer-bodyTitle\">(?<title>.*?)</div>");
-        static readonly Regex videoInfoRegex = new Regex("data-watchlater-item-id=\"(?<id>.*?)\">.*?data-background-image=\"(?<thumbnail_url>.+?)\".*?alt=\"(?<title>.+?)\".*?<div class=\"VideoLength\">(?<length>.+?)</div>.*?<div class=\"VideoThumbnailComment\">.*?</div>.*?<div class=\"SeriesVideoListContainer-videoRegisteredAt\">[ \n]*?(?<post_time>.+?) 投稿.*?<div class=\"VideoMediaObject-description\">(?<description>.*?)</div>.*?<span class=\"VideoMetaCount VideoMetaCount-view\">(?<view_count>.+?)</span>.*?<span class=\"VideoMetaCount VideoMetaCount-comment\">(?<comment_count>.+?)</span>.*?<span class=\"VideoMetaCount VideoMetaCount-like\">(?<like_count>.+?)</span>.*?<span class=\"VideoMetaCount VideoMetaCount-mylist\">(?<mylist_count>.+?)</span>.*?", RegexOptions.Singleline);
+        static readonly Regex videoInfoRegex = new Regex("<div class=\"NC-VideoMetaCount NC-VideoMetaCount_view\" >(?<view_count>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_comment\" >(?<comment_count>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_like\" >(?<like_count>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_mylist\" >(?<mylist_count>.*?)</div>.*?<a class=\"NC-Link NC-MediaObject-contents\" href=\"/watch/(?<id>.*?)\".*?>.*?<div class=\"NC-Thumbnail-image\" data-thumbnail data-lazy-load data-background-image=\"(?<thumbnail_url>.*?)([.]M)?\" role=\"img\" aria-label=\"(?<title>.*?)\">.*?<div class=\"NC-VideoLength\">(?<post_time>.*?)</div>", RegexOptions.Singleline);
         static readonly Regex otherSeriesRegex = new Regex("<a class=\"SeriesMenuContainer-seriesItemLink\"href=\"https://www.nicovideo.jp/series/(?<id>.*?)\">(?<title>.*?)</a>");
         static readonly Regex postUserInfoRegex = new Regex("<a class=\"SeriesAdditionalContainer-ownerName\" href=\"https://www.nicovideo.jp/user/(?<id>.*?)\">(?<name>.*?)</a>");
 
@@ -31,7 +31,6 @@ namespace UNicoAPI2.APIs.series_page_html
                     Title = item.Groups["title"].Value,
                     ID = item.Groups["id"].Value,
                     ThumbnailUrl = item.Groups["thumbnail_url"].Value,
-                    Description = item.Groups["description"].Value,
                     ViewCount = item.Groups["view_count"].Value,
                     CommentCount = item.Groups["comment_count"].Value,
                     MylistCount = item.Groups["mylist_count"].Value,
