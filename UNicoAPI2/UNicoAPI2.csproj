@@ -139,17 +139,17 @@
     <Compile Include="APIs\login\Parser.cs" />
     <Compile Include="APIs\login_page_html\Accessor.cs" />
     <Compile Include="APIs\login_page_html\Parser.cs" />
-    <Compile Include="APIs\mylistvideo\Accessor.cs" />
-    <Compile Include="APIs\mylistvideo\Parser.cs" />
-    <Compile Include="APIs\mylistvideo\Response\contract.cs" />
-    <Compile Include="APIs\mylistvideo\Response\list.cs" />
-    <Compile Include="APIs\mylistvideo\Response\thumbnail_style.cs" />
+    <Compile Include="APIs\mylitv2\Accessor.cs" />
+    <Compile Include="APIs\mylitv2\Parser.cs" />
+    <Compile Include="APIs\mylitv2\Response\Rootobject.cs" />
     <Compile Include="APIs\search\Accessor.cs" />
     <Compile Include="APIs\search\Parser.cs" />
     <Compile Include="APIs\search\Response\contract.cs" />
     <Compile Include="APIs\search\Response\list.cs" />
     <Compile Include="APIs\search\Response\nicopedia.cs" />
     <Compile Include="APIs\Response\error.cs" />
+    <Compile Include="APIs\search_page_html\Accessor.cs" />
+    <Compile Include="APIs\search_page_html\Parser.cs" />
     <Compile Include="APIs\series_page_html\Accessor.cs" />
     <Compile Include="APIs\series_page_html\Parser.cs" />
     <Compile Include="APIs\series_page_html\Response\Result.cs" />
@@ -223,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APIs\contents_search\" />
+    <Folder Include="APIs\search_page_html\Response\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

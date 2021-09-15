@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 
-namespace UNicoAPI2.APIs.mylistvideo
+namespace UNicoAPI2.APIs.mylitv2
 {
     public class Accessor : IAccessor
     {
@@ -18,13 +18,17 @@ namespace UNicoAPI2.APIs.mylistvideo
 
         CookieContainer cookieContainer;
         string id = "";
+        int index;
+        int count;
 
         HttpWebRequest request;
 
-        public void Setting(CookieContainer CookieContainer, string id)
+        public void Setting(CookieContainer CookieContainer, string id, int index, int count)
         {
             cookieContainer = CookieContainer;
             this.id = id;
+            this.index = index;
+            this.count = count;
         }
 
         public byte[] GetUploadData()
@@ -40,10 +44,12 @@ namespace UNicoAPI2.APIs.mylistvideo
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             request = (HttpWebRequest)WebRequest.Create(
-                "http://www.nicovideo.jp/api/watch/mylistvideo?id=" + id);
+                $"https://nvapi.nicovideo.jp/v2/mylists/{id}?pageSize={count}&page={index}");
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = cookieContainer;
+            request.Headers["X-Frontend-Id"] = "6";
+            request.Headers["X-Frontend-Version"] = "6";
 
             return request.GetResponseAsync();
         }

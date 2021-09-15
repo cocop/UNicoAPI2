@@ -26,15 +26,19 @@ namespace UNicoAPI2.VideoService.Mylist
         {
             var session = new Session<Response<Mylist>>();
 
+            var index = 1;
+
             session.SetAccessers(
                 new Func<byte[], APIs.IAccessor>[]
                 {
                     (data) =>
                     {
-                        var accesser = new APIs.mylistvideo.Accessor();
+                        var accesser = new APIs.mylitv2.Accessor();
                         accesser.Setting(
                             context.CookieContainer,
-                            target.ID);
+                            target.ID,
+                            index,
+                            100);
 
                         return accesser;
                     }
@@ -43,7 +47,7 @@ namespace UNicoAPI2.VideoService.Mylist
                 {
                     return Converter.MylistResponse(
                         context,
-                        new APIs.mylistvideo.Parser().Parse(data),
+                        new APIs.mylitv2.Parser().Parse(data),
                         target.ID);
                 });
 

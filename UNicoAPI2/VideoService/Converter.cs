@@ -20,6 +20,32 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
+        public static Response<VideoInfo[]> VideoInfoResponse(Context Context, Dictionary<string, string>[] Response)
+        {
+            var result = new Response<VideoInfo[]>();
+            Converter.Response(result, "ok", null);
+
+            var videoList = new List<VideoInfo>();
+            foreach (var item in Response)
+            {
+                videoList.Add(new VideoInfo()
+                {
+                    ID = item["id"],
+                    Title = item["title"],
+                    ShortDescription = item["short_desc"],
+                    Length = UNicoAPI2.Converter.TimeSpan(item["length"]),
+                    Thumbnail = new Picture(item["thumbnail"], Context.CookieContainer),
+                    ViewCounter = int.Parse(item["view"].Replace(",", "")),
+                    ComentCounter = int.Parse(item["comment"].Replace(",", "")),
+                    LikeCounter = int.Parse(item["like"].Replace(",", "")),
+                    MylistCounter = int.Parse(item["mylist"].Replace(",", "")),
+                });
+            }
+
+            result.Result = videoList.ToArray();
+            return result;
+        }
+
         public static Response<VideoInfo> VideoInfoResponse(Context Context, APIs.getthumbinfo.Response.nicovideo_thumb_response Response)
         {
             var result = new Response<VideoInfo>();
@@ -118,21 +144,29 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static Response<Mylist.Mylist> MylistResponse(Context Context, APIs.mylistvideo.Response.contract Response, string MylistID)
+        public static Response<Mylist.Mylist> MylistResponse(Context Context, APIs.mylitv2.Response.Rootobject Response, string MylistID)
         {
             var result = new Response<Mylist.Mylist>();
 
-            Converter.Response(result, Response.status, Response.error);
-            result.Result = Context.IDContainer.GetMylist(MylistID);
-            result.Result.Description = Response.description;
-            result.Result.Title = Response.name;
-            result.Result.IsBookmark = Response.is_watching_this_mylist;
-            result.Result.MylistItem = MylistItem(Context, Response.list);
-
-            if (Response.user_id != null)
+            if (Response.meta.status < 200 && 300 <= Response.meta.status)
             {
-                result.Result.User = Context.IDContainer.GetUser(Response.user_id);
-                result.Result.User.Name = Response.user_nickname;
+                result.Status = Status.UnknownError;
+                result.ErrorMessage = Response.meta.errorCode;
+                return result;
+            }
+
+            result.Status = Status.OK;
+            result.Result = Context.IDContainer.GetMylist(MylistID);
+            result.Result.Description = Response.data.mylist.description;
+            result.Result.Title = Response.data.mylist.name;
+            result.Result.IsBookmark = Response.data.mylist.isFollowing;
+            result.Result.MylistItem = MylistItem(Context, Response.data.mylist.items);
+
+            if (Response.data.mylist.owner != null)
+            {
+                result.Result.User = Context.IDContainer.GetUser(Response.data.mylist.owner.id);
+                result.Result.User.Name = Response.data.mylist.owner.name;
+                result.Result.User.Icon = new Picture(Response.data.mylist.owner.iconUrl, Context.CookieContainer);
             }
 
             return result;
@@ -344,7 +378,7 @@ namespace UNicoAPI2.VideoService
             return result;
         }
 
-        public static MylistItem[] MylistItem(Context Context, APIs.mylistvideo.Response.list[] Response)
+        public static MylistItem[] MylistItem(Context Context, APIs.mylitv2.Response.Item[] Response)
         {
             if (Response == null)
                 return null;
@@ -354,20 +388,17 @@ namespace UNicoAPI2.VideoService
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = new MylistItem();
-                result[i].Description = Response[i].mylist_comment;
-                result[i].RegisterTime = unixTime.AddSeconds(Response[i].create_time).ToLocalTime();
-                result[i].UpdateTime = DateTime.Parse(Response[i].thread_update_time);
-                result[i].VideoInfo = Context.IDContainer.GetVideoInfo(Response[i].id);
-
-                result[i].VideoInfo.ComentCounter = Response[i].num_res;
-                result[i].VideoInfo.ID = Response[i].id;
-                result[i].VideoInfo.Length = new TimeSpan(0, 0, Response[i].length_seconds);
-                result[i].VideoInfo.MylistCounter = Response[i].mylist_counter;
-                result[i].VideoInfo.PostTime = DateTime.Parse(Response[i].first_retrieve);
-                result[i].VideoInfo.ShortDescription = Response[i].description_short;
-                result[i].VideoInfo.Thumbnail = new Picture(Response[i].thumbnail_url, Context.CookieContainer);
-                result[i].VideoInfo.Title = Response[i].title;
-                result[i].VideoInfo.ViewCounter = Response[i].view_counter;
+                result[i].Description = Response[i].description;
+                result[i].RegisterTime = Response[i].addedAt;
+                result[i].VideoInfo = Context.IDContainer.GetVideoInfo(Response[i].watchId);
+                result[i].VideoInfo.Length = TimeSpan.FromSeconds(Response[i].video.duration);
+                result[i].VideoInfo.PostTime = Response[i].video.registeredAt;
+                result[i].VideoInfo.ShortDescription = Response[i].video.shortDescription;
+                result[i].VideoInfo.Thumbnail = new Picture(Response[i].video.thumbnail.url, Context.CookieContainer);
+                result[i].VideoInfo.Title = Response[i].video.title;
+                result[i].VideoInfo.ComentCounter = Response[i].video.count.comment;
+                result[i].VideoInfo.MylistCounter = Response[i].video.count.mylist;
+                result[i].VideoInfo.ViewCounter = Response[i].video.count.view;
             }
 
             return result;

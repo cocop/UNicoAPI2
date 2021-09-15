@@ -78,7 +78,7 @@ namespace UNicoAPI2.VideoService
             {
                 (data) =>
                 {
-                    var accesser = new APIs.search.Accessor();
+                    var accesser = new APIs.search_page_html.Accessor();
                     accesser.Setting(
                         context.CookieContainer,
                         SearchType.ToKey(),
@@ -91,7 +91,10 @@ namespace UNicoAPI2.VideoService
                 }
             },
             (data) =>
-                Converter.VideoInfoResponse(context, new APIs.search.Parser().Parse(data)));
+            {
+                var parser = new APIs.search_page_html.Parser();
+                return Converter.VideoInfoResponse(context, parser.Parse(parser.Parse(data)));
+            });
 
             return session;
         }
