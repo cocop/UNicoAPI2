@@ -8,7 +8,7 @@ namespace UNicoAPI2.APIs.series_page_html
     public class Parser : IHtmlParser<Result>
     {
         static readonly Regex titleRegex = new Regex("<div class=\"SeriesDetailContainer-bodyTitle\">(?<title>.*?)</div>");
-        static readonly Regex videoInfoRegex = new Regex("<a class=\"NC-Link NC-MediaObject-contents\" href=\"/watch/(?<id>.*?)\".*?>.*?<div class=\"NC-Thumbnail-image\" data-thumbnail data-lazy-load data-background-image=\"(?<thumbnail_url>.*?)([.]M)?\" role=\"img\" aria-label=\"(?<title>.*?)\">.*?<div class=\"NC-VideoLength\">(?<post_time>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_view\" >(?<view_count>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_comment\" >(?<comment_count>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_like\" >(?<like_count>.*?)</div>.*?<div class=\"NC-VideoMetaCount NC-VideoMetaCount_mylist\" >(?<mylist_count>.*?)</div>", RegexOptions.Singleline);
+        static readonly Regex videoInfoRegex = new Regex("<a[^<>]*?href=\".*?watch/(?<id>.*?)\".*?>.*?<[^<>]*?data-background-image=\"(?<thumbnail_url>.*?)([.]M)?\".*?aria-label=\"(?<title>.*?)\">.*?<[^<>]*?view[^<>]*?>(?<view_count>.*?)<[^<>]*?>.*?<[^<>]*?comment[^<>]*?>(?<comment_count>.*?)<[^<>]*?>.*?<[^<>]*?like[^<>]*?>(?<like_count>.*?)<[^<>]*?>.*?<[^<>]*?mylist[^<>]*?>(?<mylist_count>.*?)<[^<>]*?>", RegexOptions.Singleline);
         static readonly Regex otherSeriesRegex = new Regex("<a class=\"SeriesMenuContainer-seriesItemLink\"href=\"https://www.nicovideo.jp/series/(?<id>.*?)\">(?<title>.*?)</a>");
         static readonly Regex postUserInfoRegex = new Regex("<a class=\"SeriesAdditionalContainer-ownerName\" href=\"https://www.nicovideo.jp/user/(?<id>.*?)\">(?<name>.*?)</a>");
 
