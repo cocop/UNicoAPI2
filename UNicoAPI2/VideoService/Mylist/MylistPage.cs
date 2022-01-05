@@ -24,34 +24,22 @@ namespace UNicoAPI2.VideoService.Mylist
         /// </summary>
         public Session<Response<Mylist>> DownloadMylist()
         {
-            var session = new Session<Response<Mylist>>();
-
             var index = 1;
+            return new Session<Response<Mylist>>((flow) =>
+            {
+                var accessor = new APIs.mylitv2.Accessor();
+                accessor.Setting(
+                    context.CookieContainer,
+                    target.ID,
+                    index,
+                    100);
+                flow.Return(accessor);
 
-            session.SetAccessers(
-                new Func<byte[], APIs.IAccessor>[]
-                {
-                    (data) =>
-                    {
-                        var accesser = new APIs.mylitv2.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            target.ID,
-                            index,
-                            100);
-
-                        return accesser;
-                    }
-                },
-                (data) =>
-                {
-                    return Converter.MylistResponse(
-                        context,
-                        new APIs.mylitv2.Parser().Parse(data),
-                        target.ID);
-                });
-
-            return session;
+                return Converter.MylistResponse(
+                    context,
+                    new APIs.mylitv2.Parser().Parse(flow.GetResult()),
+                    target.ID);
+            });
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +11,7 @@ namespace UNicoAPI2.Connect
     {
         public static explicit operator Task<ResultType>(Session<ResultType> This)
         {
-            return This.RunAsync(This.UntreatedCount, CancellationToken.None);
+            return This.RunAsync(CancellationToken.None);
         }
 
         /// <summary>
@@ -21,65 +23,53 @@ namespace UNicoAPI2.Connect
         }
 
         /// <summary>
-        /// 未処理のアクセッサ数
+        /// セッションが完了したか
         /// </summary>
-        public int UntreatedCount { get { return accessers.Length - nowIndex; } }
+        public bool IsCompleted { get; private set; } = false;
 
         /// <summary>
         /// セッションの処理結果
         /// </summary>
         public ResultType Result { get; private set; }
 
-
-        int nowIndex;
-        byte[] data;
-        Func<byte[], APIs.IAccessor>[] accessers;
-        Func<byte[], ResultType> result;
-        object key = new object();
+        readonly Flow<byte[]> flow;
+        readonly Func<IInnerDownFlow<byte[]>, ResultType> sessionFlow;
 
 
         /// <summary>
-        /// 処理するアクセッサを設定する
+        /// セッションを作成します
         /// </summary>
-        /// <param name="Accessers">設定するアクセッサのリスト</param>
-        public void SetAccessers(Func<byte[], APIs.IAccessor>[] Accessers, Func<byte[], ResultType> Result)
+        /// <param name="SessionFlow">セッションの処理</param>
+        /// <param name="Complete">セッション終了時の最終結果を出力する関数</param>
+        public Session(Func<IInnerDownFlow<byte[]>, ResultType> SessionFlow)
         {
-            lock (key)
-            {
-                nowIndex = 0;
-                data = null;
-                accessers = Accessers;
-                result = Result;
-            }
+            flow = new Flow<byte[]>();
+            sessionFlow = SessionFlow;
         }
-
 
         /// <summary>
         /// ストリームを処理する
         /// </summary>
-        /// <param name="RunCount">処理するアクセッサの数</param>
         /// <param name="Token">キャンセルトークン</param>
-        public ResultType Run(int RunCount, CancellationToken Token)
+        public ResultType Run(CancellationToken Token)
         {
-            for (int i = 0; i < RunCount; i++)
+            flow.SetSessionFunc((accessor) =>
             {
-                var accesser = accessers[nowIndex](data);
+                if (accessor.Type == APIs.AccessorType.Upload)
+                    RunUpload(Token, accessor);
 
-                if (accesser.Type == APIs.AccessorType.Upload)
-                    RunUpload(Token, accesser);
+                var dres = GetDownloadResponse(Token, accessor);
+                flow.SetResponse(dres);
 
-                var streamResult = RunDownload(Token, accesser);
+                if (!flow.IsBreak)
+                {
+                    flow.SetResult(RunDownload(Token, dres));
+                }
+            });
 
-                if (streamResult != null)
-                    return Result = (ResultType)streamResult;
-
-                ++nowIndex;
-            }
-
-            if (UntreatedCount == 0)
-                return Result = result(data);
-
-            return default(ResultType);
+            var result = sessionFlow(flow);
+            IsCompleted = true;
+            return result;
         }
 
         private void RunUpload(CancellationToken Token, APIs.IAccessor accesser)
@@ -92,60 +82,35 @@ namespace UNicoAPI2.Connect
             ustream.WriteAsync(udata, 0, udata.Length).Wait(Token);
         }
 
-        private object RunDownload(CancellationToken Token, APIs.IAccessor accesser)
+        private WebResponse GetDownloadResponse(CancellationToken Token, APIs.IAccessor accesser)
         {
             var dstreamTask = accesser.GetDownloadStreamAsync();
             dstreamTask.Wait(Token);
+            return dstreamTask.Result;
+        }
 
-            var dresponse = dstreamTask.Result;
-            var dstream = dresponse.GetResponseStream();
+        private byte[] RunDownload(CancellationToken Token, WebResponse response)
+        {
 
-            if (dresponse is ResultType && UntreatedCount == 1)
-                return dresponse;
+            var dstream = response.GetResponseStream();
 
             using (var stream = new MemoryStream())
             {
                 var task = dstream.CopyToAsync(stream);
                 task.Wait(Token);
-                data = stream.ToArray();
+                return stream.ToArray();
             }
-
-            return null;
         }
 
         /// <summary>
         /// ストリームを処理する
-        /// </summary>
-        /// <param name="RunCount">処理するアクセッサの数</param>
-        /// <param name="Token">キャンセルトークン</param>
-        public Task<ResultType> RunAsync(int RunCount, CancellationToken Token)
-        {
-            return Task.Run(() =>
-            {
-                lock (key)
-                    return Run(RunCount, Token);
-            });
-        }
-
-        /// <summary>
-        /// すべてのストリームを処理する
-        /// </summary>
-        /// <param name="Token">キャンセルトークン</param>
-        public ResultType Run(CancellationToken Token)
-        {
-            return Run(UntreatedCount, Token);
-        }
-
-        /// <summary>
-        /// すべてのストリームを処理する
         /// </summary>
         /// <param name="Token">キャンセルトークン</param>
         public Task<ResultType> RunAsync(CancellationToken Token)
         {
             return Task.Run(() =>
             {
-                lock (key)
-                    return Run(UntreatedCount, Token);
+                return Run(Token);
             });
         }
 

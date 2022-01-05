@@ -24,31 +24,20 @@ namespace UNicoAPI2.VideoService.Series
         /// </summary>
         public Session<Response<Series>> DownloadSeries()
         {
-            var session = new Session<Response<Series>>();
+            return new Session<Response<Series>>((flow) =>
+            {
+                var accessor = new APIs.series_page_html.Accessor();
+                accessor.Setting(
+                    context.CookieContainer,
+                    target.ID);
+                flow.Return(accessor);
 
-            session.SetAccessers(
-                new Func<byte[], APIs.IAccessor>[]
-                {
-                    (data) =>
-                    {
-                        var accesser = new APIs.series_page_html.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            target.ID);
-
-                        return accesser;
-                    }
-                },
-                (data) =>
-                {
-                    var parser = new APIs.series_page_html.Parser();
-                    return Converter.SeriesResponse(
-                        context,
-                        parser.Parse(parser.Parse(data)),
-                        target.ID);
-                });
-
-            return session;
+                var parser = new APIs.series_page_html.Parser();
+                return Converter.SeriesResponse(
+                    context,
+                    parser.Parse(parser.Parse(flow.GetResult())),
+                    target.ID);
+            });
         }
     }
 }

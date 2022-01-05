@@ -46,21 +46,14 @@ namespace UNicoAPI2.VideoService.Video
 
         private async Task<APIs.heartbeats.Response.Rootobject> BeatAsync(CookieContainer cookieContainer, Uri heartBeatsUri, APIs.heartbeats.Response.Rootobject rootobject)
         {
-            var session = new Session<APIs.heartbeats.Response.Rootobject>();
-            session.SetAccessers(
-                new Func<byte[], APIs.IAccessor>[]
-                {
-                    (data) =>
-                    {
-                        var accessor = new APIs.heartbeats.Accessor();
-                        accessor.Setting(cookieContainer, heartBeatsUri, rootobject.data);
-                        return accessor;
-                    }
-                },
-                (data) =>
-                {
-                    return new APIs.heartbeats.Parser().Parse(data);
-                });
+            var session = new Session<APIs.heartbeats.Response.Rootobject>((flow) =>
+            {
+                var accessor = new APIs.heartbeats.Accessor();
+                accessor.Setting(cookieContainer, heartBeatsUri, rootobject.data);
+                flow.Return(accessor);
+
+                return new APIs.heartbeats.Parser().Parse(flow.GetResult());
+            });
 
             return await session.RunAsync(tokenSource.Token);
         }

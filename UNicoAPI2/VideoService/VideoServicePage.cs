@@ -72,31 +72,21 @@ namespace UNicoAPI2.VideoService
             SearchType SearchType,
             SearchOption SearchOption)
         {
-            var session = new Session<Response<VideoInfo[]>>();
-
-            session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
+            return new Session<Response<VideoInfo[]>>((flow) =>
             {
-                (data) =>
-                {
-                    var accesser = new APIs.search_page_html.Accessor();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        SearchType.ToKey(),
-                        Keyword,
-                        SearchPage.ToString(),
-                        SearchOption.SortOrder.ToKey(),
-                        SearchOption.SortTarget.ToKey());
+                var accessor = new APIs.search_page_html.Accessor();
+                accessor.Setting(
+                    context.CookieContainer,
+                    SearchType.ToKey(),
+                    Keyword,
+                    SearchPage.ToString(),
+                    SearchOption.SortOrder.ToKey(),
+                    SearchOption.SortTarget.ToKey());
+                flow.Return(accessor);
 
-                    return accesser;
-                }
-            },
-            (data) =>
-            {
                 var parser = new APIs.search_page_html.Parser();
-                return Converter.VideoInfoResponse(context, parser.Parse(parser.Parse(data)));
+                return Converter.VideoInfoResponse(context, parser.Parse(parser.Parse(flow.GetResult())));
             });
-
-            return session;
         }
     }
 }

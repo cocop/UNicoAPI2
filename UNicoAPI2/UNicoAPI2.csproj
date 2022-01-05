@@ -178,6 +178,7 @@
     <Compile Include="Cache.cs" />
     <Compile Include="Connect\ContentMethod.cs" />
     <Compile Include="Connect\ContentType.cs" />
+    <Compile Include="Connect\Flow.cs" />
     <Compile Include="Connect\Session.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Converter.cs" />

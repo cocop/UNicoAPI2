@@ -33,26 +33,16 @@ namespace UNicoAPI2
         /// <param name="Password">パスワード</param>
         public Session<User> Login(string MailAddress, string Password)
         {
-            var session = new Session<User>();
-
-            session.SetAccessers(new Func<byte[], APIs.IAccessor>[]
+            return new Session<User>((flow) =>
             {
-                (data) =>
-                {
-                    return new APIs.login_page_html.Accessor();
-                },
-                (data) =>
-                {
-                    var accesser = new APIs.login.Accessor();
-                    accesser.Setting(context.CookieContainer, MailAddress, Password);
+                flow.Return(new APIs.login_page_html.Accessor());
 
-                    return accesser;
-                }
-            },
-            (data) =>
-                new APIs.login.Parser().Parse(data));
+                var accessor = new APIs.login.Accessor();
+                accessor.Setting(context.CookieContainer, MailAddress, Password);
+                flow.Return(accessor);
 
-            return session;
+                return new APIs.login.Parser().Parse(flow.GetResult());
+            });
         }
 
         /// <summary>

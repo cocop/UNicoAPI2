@@ -27,34 +27,25 @@ namespace UNicoAPI2.VideoService.User
         /// </summary>
         public Session<Response<User>> DownloadUser()
         {
-            var session = new Session<Response<User>>();
-            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
-
-            if (!htmlCache.IsAvailab)
-                accessorList.Add(
-                    (data) =>
-                    {
-                        var accesser = new APIs.user_page_html.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            target.ID);
-
-                        return accesser;
-                    });
-
-            session.SetAccessers(
-                accessorList.ToArray(),
-                (data) =>
+            return new Session<Response<User>>((flow) =>
+            {
+                if (!htmlCache.IsAvailab)
                 {
-                    var parser = new APIs.user_page_html.Parser();
+                    var accessor = new APIs.user_page_html.Accessor();
+                    accessor.Setting(
+                        context.CookieContainer,
+                        target.ID);
 
-                    if (data != null)
-                        htmlCache.Value = parser.Parse(data);
+                    flow.Return(accessor);
+                }
 
-                    return Converter.UserResponse(context, parser.Parse(htmlCache));
-                });
+                var parser = new APIs.user_page_html.Parser();
 
-            return session;
+                if (flow.GetResult() != null)
+                    htmlCache.Value = parser.Parse(flow.GetResult());
+
+                return Converter.UserResponse(context, parser.Parse(htmlCache));
+            });
         }
 
         /// <summary>
@@ -62,34 +53,23 @@ namespace UNicoAPI2.VideoService.User
         /// </summary>
         public Session<Response<Mylist.Mylist[]>> DownloadPublicMylistList()
         {
-            var session = new Session<Response<Mylist.Mylist[]>>();
-            var accessorList = new List<Func<byte[], APIs.IAccessor>>();
+            return new Session<Response<Mylist.Mylist[]>>((flow) =>
+            {
+                var parser = new APIs.user_mylist_page_html.Parser();
 
-            if (!htmlMylistCache.IsAvailab)
-                accessorList.Add(
-                    (data) =>
-                    {
-                        var accesser = new APIs.user_mylist_page_html.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            target.ID);
-
-                        return accesser;
-                    });
-
-            session.SetAccessers(
-                accessorList.ToArray(),
-                (data) =>
+                if (!htmlMylistCache.IsAvailab)
                 {
-                    var parser = new APIs.user_mylist_page_html.Parser();
+                    var accessor = new APIs.user_mylist_page_html.Accessor();
+                    accessor.Setting(
+                        context.CookieContainer,
+                        target.ID);
+                    flow.Return(accessor);
 
-                    if (data != null)
-                        htmlMylistCache.Value = parser.Parse(data);
+                    htmlMylistCache.Value = parser.Parse(flow.GetResult());
+                }
 
-                    return Converter.PublicMylistListResponse(context, parser.Parse(htmlMylistCache));
-                });
-
-            return session;
+                return Converter.PublicMylistListResponse(context, parser.Parse(htmlMylistCache));
+            });
         }
     }
 }
