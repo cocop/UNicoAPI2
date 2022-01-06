@@ -29,14 +29,28 @@ namespace UNicoAPI2
         /// </summary>
         public TimeSpan CacheDeadline { get { return context.CacheDeadline; } set { context.CacheDeadline = value; } }
 
+
         /// <summary>ログインする</summary>
         /// <param name="MailAddress">メールアドレス</param>
         /// <param name="Password">パスワード</param>
-        public Session<User> Login(string MailAddress, string Password, Func<MultiAuthParameter> MultiAuthRequest = null)
+        /// <param name="CheckLogin">すでにログインしているかチェックする、していた場合はそのユーザーを返す</param>
+        /// <param name="MultiAuthRequest">二段階認証の要求に答える、nullの場合に要求が来た場合はログイン失敗する</param>
+        /// <returns>nullの場合はログイン失敗</returns>
+        public Session<User> Login(string MailAddress, string Password, bool CheckLogin = true, Func<MultiAuthParameter> MultiAuthRequest = null)
         {
             return new Session<User>((flow) =>
             {
                 var parser = new APIs.login.Parser();
+
+                if (CheckLogin)
+                {
+                    flow.Return(new APIs.UrlGet.Accessor(context.CookieContainer, "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"));
+                    var rslt = parser.Parse(flow.GetResult());
+                    if (rslt != null)
+                    {
+                        return rslt;
+                    }
+                }
 
                 {
                     var accessor = new APIs.login_page_html.Accessor();
@@ -67,10 +81,7 @@ namespace UNicoAPI2
                 }
 
                 return parser.Parse(flow.GetResult());
-            })
-            {
-
-            };
+            });
         }
 
         /// <summary>
