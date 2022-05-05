@@ -42,7 +42,7 @@ namespace UNicoAPI2.APIs.getpostkey
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             request = (HttpWebRequest)WebRequest.Create(
-                "http://flapi.nicovideo.jp/api/getpostkey/?version_sub=2&device=1&block_no="
+                "https://flapi.nicovideo.jp/api/getpostkey/?version_sub=2&device=1&block_no="
                 + block_no
                 + "&version=1&thread=" + thread);
 
