@@ -9,58 +9,51 @@ using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.APIs.login
 {
-    public class MultiAuthAccessor : IAccessor
+    public class MultiAuthAccessor : IAccessorWithUploadData
     {
-        public AccessorType Type
+        public CookieContainer CookieContainer { get; set; }
+        public string CsrfToken { get; set; }
+        public string Otp { get; set; }
+        string deviceName;
+        /// <summary>
+        /// 上限64文字
+        /// </summary>
+        public string DeviceName
         {
-            get
+            get { return deviceName; }
+            set
             {
-                return AccessorType.Upload;
+                if (value.Length >= 64)
+                {
+                    throw new ArgumentOutOfRangeException("64文字以上の DeviceName を指定出来ません");
+                }
+                deviceName = value;
             }
         }
-
-        CookieContainer cookieContainer;
-        string csrf_token = "";
-        string otp = "";
-        string device_name = "";
-        bool is_mfa_trusted_device = true;
+        public bool IsMfaTrustedDevice { get; set; }
 
         HttpWebRequest request;
-
-        public MultiAuthAccessor(CookieContainer CookieContainer, string csrf_token, string otp, string device_name, bool is_mfa_trusted_device)
-        {
-            cookieContainer = CookieContainer;
-            this.csrf_token = csrf_token;
-            this.otp = otp;
-            this.device_name = device_name;
-            this.is_mfa_trusted_device = is_mfa_trusted_device;
-
-            if (device_name.Length >= 64)
-            {
-                throw new Exception();
-            }
-        }
 
         public byte[] GetUploadData()
         {
             return Encoding.UTF8.GetBytes(
-                "otp=" + otp +
+                "otp=" + Otp +
                 "&loginBtn=" + Uri.EscapeDataString("ログイン") +
-                "&device_name=" + Uri.EscapeDataString(device_name) +
-                (is_mfa_trusted_device ? "&is_mfa_trusted_device=true" : ""));
+                "&device_name=" + Uri.EscapeDataString(DeviceName) +
+                (IsMfaTrustedDevice ? "&is_mfa_trusted_device=true" : ""));
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
             request = (HttpWebRequest)WebRequest.Create(
                 "https://account.nicovideo.jp/mfa?site=niconico&continue=" +
-                Uri.EscapeDataString($"https://account.nicovideo.jp/login/mfa/callback?site=niconico&sec=header_pc&next_url=%2F&csrf_token={this.csrf_token}&facebook=1&twitter=1"));
+                Uri.EscapeDataString($"https://account.nicovideo.jp/login/mfa/callback?site=niconico&sec=header_pc&next_url=%2F&csrf_token={CsrfToken}&facebook=1&twitter=1"));
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Form;
             request.Headers["Cache-Control"] = "max-age=0";
             request.Headers["Content-Length"] = DataLength.ToString();
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetRequestStreamAsync();
         }

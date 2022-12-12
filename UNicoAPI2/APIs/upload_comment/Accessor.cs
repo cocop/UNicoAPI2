@@ -6,60 +6,39 @@ using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.APIs.upload_comment
 {
-    public class Accessor : IAccessor
+    public class Accessor : IAccessorWithUploadData
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Upload;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string ms = "";
-        string thread = "";
-        string vpos = "";
-        string mail = "";
-        string ticket = "";
-        string user_id = "";
-        string postkey = "";
-        string body = "";
+        public CookieContainer CookieContainer { get; set; }
+        public string Ms { get; set; }
+        public string Thread { get; set; }
+        public string Vpos { get; set; }
+        public string Mail { get; set; }
+        public string Ticket { get; set; }
+        public string UserId { get; set; }
+        public string PostKey { get; set; }
+        public string Body { get; set; }
 
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, string ms, string thread, string vpos, string mail, string ticket, string user_id, string postkey, string body)
-        {
-            cookieContainer = CookieContainer;
-            this.ms = ms;
-            this.thread = thread;
-            this.vpos = vpos;
-            this.mail = mail;
-            this.ticket = ticket;
-            this.user_id = user_id;
-            this.postkey = postkey;
-            this.body = body;
-        }
 
         public byte[] GetUploadData()
         {
             return Encoding.UTF8.GetBytes(
-                "<chat thread=\"" + thread
-                + "\" vpos=\"" + vpos
-                + "\" mail=\"" + mail
-                + "\" ticket=\"" + ticket
-                + "\" user_id=\"" + user_id
-                + "\" postkey=\"" + postkey
-                + "\">" + body + "</chat>");
+                "<chat thread=\"" + Thread
+                + "\" vpos=\"" + Vpos
+                + "\" mail=\"" + Mail
+                + "\" ticket=\"" + Ticket
+                + "\" user_id=\"" + UserId
+                + "\" postkey=\"" + PostKey
+                + "\">" + Body + "</chat>");
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create(ms);
+            request = (HttpWebRequest)WebRequest.Create(Ms);
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Xml;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetRequestStreamAsync();
         }

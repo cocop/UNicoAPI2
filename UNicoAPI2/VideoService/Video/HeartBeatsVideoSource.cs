@@ -6,7 +6,7 @@ namespace UNicoAPI2.VideoService.Video
     {
         public Uri VideoUri { get; }
 
-        public HeartBeatsStatus Status { get; }
+        public HeartBeatsStatus Status { get; protected set; }
 
         public void Dispose()
         {

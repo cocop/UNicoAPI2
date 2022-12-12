@@ -2,6 +2,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.likes
@@ -10,8 +11,7 @@ namespace UNicoAPI2.APIs.likes
     {
         public Response.Rootobject Parse(byte[] Value)
         {
-            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
-            return (Response.Rootobject)serialize.ReadObject(new MemoryStream(Value));
+            return (Response.Rootobject)JsonSerializer.Deserialize(Value, typeof(Response.Rootobject));
         }
     }
 }

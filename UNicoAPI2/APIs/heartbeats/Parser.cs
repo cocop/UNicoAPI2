@@ -1,6 +1,6 @@
 using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Xml.Serialization;
+using System.Text.Json;
+
 
 namespace UNicoAPI2.APIs.heartbeats
 {
@@ -8,8 +8,7 @@ namespace UNicoAPI2.APIs.heartbeats
     {
         public Response.Rootobject Parse(byte[] Value)
         {
-            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
-            return (Response.Rootobject)serialize.ReadObject(new MemoryStream(Value));
+            return (Response.Rootobject)JsonSerializer.Deserialize(Value, typeof(Response.Rootobject));
         }
     }
 }

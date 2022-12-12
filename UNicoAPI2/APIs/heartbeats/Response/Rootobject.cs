@@ -28,7 +28,7 @@ namespace UNicoAPI2.APIs.heartbeats.Response
         public Keep_Method keep_method { get; set; }
         public Protocol protocol { get; set; }
         public int play_seek_time { get; set; }
-        public int play_speed { get; set; }
+        public decimal play_speed { get; set; }
         public Play_Control_Range play_control_range { get; set; }
         public string content_uri { get; set; }
         public Session_Operation_Auth session_operation_auth { get; set; }
@@ -99,8 +99,8 @@ namespace UNicoAPI2.APIs.heartbeats.Response
 
     public class Play_Control_Range
     {
-        public int max_play_speed { get; set; }
-        public int min_play_speed { get; set; }
+        public decimal max_play_speed { get; set; }
+        public decimal min_play_speed { get; set; }
     }
 
     public class Session_Operation_Auth

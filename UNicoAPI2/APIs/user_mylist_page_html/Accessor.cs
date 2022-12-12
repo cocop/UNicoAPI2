@@ -8,40 +8,16 @@ namespace UNicoAPI2.APIs.user_mylist_page_html
 {
     public class Accessor : IAccessor
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Download;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string user_id = "";
-
-        public void Setting(CookieContainer CookieContainer, string user_id)
-        {
-            cookieContainer = CookieContainer;
-            this.user_id = user_id;
-        }
-
-        public byte[] GetUploadData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetUploadStreamAsync(int DataLength)
-        {
-            throw new NotImplementedException();
-        }
+        public CookieContainer CookieContainer { get; set; }
+        public string UserId { get; set; }
 
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                "http://www.nicovideo.jp/user/" + user_id + "/mylist");
+                $"http://www.nicovideo.jp/user/{UserId}/mylist");
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetResponseAsync();
         }

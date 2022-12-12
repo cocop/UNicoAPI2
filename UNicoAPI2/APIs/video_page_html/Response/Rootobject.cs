@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace UNicoAPI2.APIs.video_page_html.Response
 {
 
@@ -49,6 +51,7 @@ namespace UNicoAPI2.APIs.video_page_html.Response
             public Thread[] threads { get; set; }
             public Ng ng { get; set; }
             public bool isAttentionRequired { get; set; }
+            public Nvcomment nvComment { get; set; }
 
             public class Server
             {
@@ -77,6 +80,7 @@ namespace UNicoAPI2.APIs.video_page_html.Response
             {
                 public int id { get; set; }
                 public int fork { get; set; }
+                public string forkLabel { get; set; }
                 public bool isActive { get; set; }
                 public bool isDefaultPostTarget { get; set; }
                 public bool isEasyCommentPostTarget { get; set; }
@@ -117,6 +121,26 @@ namespace UNicoAPI2.APIs.video_page_html.Response
                     }
                 }
 
+            }
+
+            public class Nvcomment
+            {
+                public string threadKey { get; set; }
+                public string server { get; set; }
+                [JsonPropertyName("params")]
+                public Params _params { get; set; }
+
+                public class Params
+                {
+                    public Target[] targets { get; set; }
+                    public string language { get; set; }
+                }
+
+                public class Target
+                {
+                    public string id { get; set; }
+                    public string fork { get; set; }
+                }
             }
         }
 
@@ -279,7 +303,7 @@ namespace UNicoAPI2.APIs.video_page_html.Response
 
         public class Owner
         {
-            public string id { get; set; }
+            public int id { get; set; }
             public string nickname { get; set; }
             public string iconUrl { get; set; }
             public object channel { get; set; }

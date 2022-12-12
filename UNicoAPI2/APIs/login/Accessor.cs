@@ -6,33 +6,18 @@ using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.APIs.login
 {
-    public class Accessor : IAccessor
+    public class Accessor : IAccessorWithUploadData
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Upload;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string mail_tel = "";
-        string password = "";
+        public CookieContainer CookieContainer { get; set; }
+        public string MailTel { get; set; }
+        public string Password { get; set; }
 
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, string mail_tel, string password)
-        {
-            cookieContainer = CookieContainer;
-            this.mail_tel = mail_tel;
-            this.password = password;
-        }
 
         public byte[] GetUploadData()
         {
             return Encoding.UTF8.GetBytes(
-                "mail_tel=" + mail_tel + "&password=" + password);
+                "mail_tel=" + MailTel + "&password=" + Password);
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
@@ -41,7 +26,7 @@ namespace UNicoAPI2.APIs.login
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Form;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetRequestStreamAsync();
         }

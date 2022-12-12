@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using UNicoAPI2.VideoService.User;
-using Windows.Foundation;
 
 namespace UNicoAPI2.APIs.login
 {
@@ -31,11 +31,11 @@ namespace UNicoAPI2.APIs.login
 
             try
             {
-                var ctdecoder = new WwwFormUrlDecoder(new Uri("https://account.nicovideo.jp/" + result.Groups["value"].Value).GetComponents(UriComponents.Query, UriFormat.Unescaped));
-                var ct = ctdecoder.GetFirstValueByName("continue");
+                var ctdecoder = HttpUtility.ParseQueryString("https://account.nicovideo.jp/" + result.Groups["value"].Value);
+                var ct = ctdecoder.Get("continue");
 
-                var decoder = new WwwFormUrlDecoder(new Uri(ct).GetComponents(UriComponents.Query, UriFormat.Unescaped));
-                return decoder.GetFirstValueByName("csrf_token");
+                var decoder = HttpUtility.ParseQueryString(ct);
+                return decoder.Get("csrf_token");
             }
             catch (Exception)
             {

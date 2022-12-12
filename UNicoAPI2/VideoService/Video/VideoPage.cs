@@ -21,11 +21,7 @@ namespace UNicoAPI2.VideoService.Video
         Cache<APIs.video_page_html.Response.Rootobject> htmlCache = new Cache<APIs.video_page_html.Response.Rootobject>();
 
         bool isAvailabDmcCash = false;
-
-        string ticket = "";
-        string block_no = "";
-        string postkey = "";
-
+        string postKey = null;
 
         /******************************************/
         /******************************************/
@@ -63,30 +59,30 @@ namespace UNicoAPI2.VideoService.Video
                     {
                         if (!htmlCache.IsAvailab)
                         {
-                            var accesser = new APIs.video_page_html.Accessor();
-                            accesser.Setting(
-                                context.CookieContainer,
-                                target.ID);
-                            flow.Return(accesser);
+                            flow.Return(new APIs.video_page_html.Accessor()
+                            {
+                                CookieContainer = context.CookieContainer,
+                                VideoId = target.ID
+                            });
 
                             var parser = new APIs.video_page_html.Parser();
                             htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                         }
 
-                        return Converter.VideoInfoResponse(
+                        return Converter.VideoPage.DownloadVideoInfo.From(
                             context,
                             htmlCache);
                     });
                 case DownloadVideoInfoUseAPI.getthumbinfo:
                     return new Session<Response<VideoInfo>>((flow) =>
                     {
-                        var accesser = new APIs.getthumbinfo.Accessor();
-                        accesser.Setting(
-                            context.CookieContainer,
-                            target.ID);
-                        flow.Return(accesser);
+                        flow.Return(new APIs.getthumbinfo.Accessor()
+                        {
+                            CookieContainer = context.CookieContainer,
+                            Id = target.ID
+                        });
 
-                        return Converter.VideoInfoResponse(
+                        return Converter.VideoPage.DownloadVideoInfo.From(
                             context,
                             new APIs.getthumbinfo.Parser().Parse(flow.GetResult()));
                     });
@@ -105,35 +101,23 @@ namespace UNicoAPI2.VideoService.Video
             {
                 if (!htmlCache.IsAvailab || !isAvailabDmcCash || DateTime.Now > (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MinValue))
                 {
-                    var accesser = new APIs.video_page_html.Accessor();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        target.ID);
 
-                    flow.Return(accesser);
+                    flow.Return(new APIs.video_page_html.Accessor()
+                    {
+                        CookieContainer = context.CookieContainer,
+                        VideoId = target.ID
+                    });
 
                     var parser = new APIs.video_page_html.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
                 isAvailabDmcCash = false;
 
+                flow.Return(new APIs.media_session.Accessor()
                 {
-                    var accesser = new APIs.media_session.Accessor();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        htmlCache.Value.media);
-
-                    flow.Return(accesser);
-                }
-
-                {
-                    var accesser = new APIs.media_session.Accessor();
-                    accesser.Setting(
-                        context.CookieContainer,
-                        htmlCache.Value.media);
-
-                    flow.Return(accesser);
-                }
+                    CookieContainer = context.CookieContainer,
+                    MediaInfo = htmlCache.Value.media
+                });
 
                 {
                     var parser = new APIs.heartbeats.Parser();
@@ -153,9 +137,11 @@ namespace UNicoAPI2.VideoService.Video
         {
             return new Session<Response<string>>((flow) =>
             {
-                var accessor = new APIs.likes.DoAccessor();
-                accessor.Setting(context.CookieContainer, target.ID);
-                flow.Return(accessor);
+                flow.Return(new APIs.likes.DoAccessor()
+                {
+                    CookieContainer = context.CookieContainer,
+                    VideoId = target.ID
+                });
 
                 return new Response<string>()
                 {
@@ -172,9 +158,11 @@ namespace UNicoAPI2.VideoService.Video
         {
             return new Session<Response>((flow) =>
             {
-                var accessor = new APIs.likes.UndoAccessor();
-                accessor.Setting(context.CookieContainer, target.ID);
-                flow.Return(accessor);
+                flow.Return(new APIs.likes.UndoAccessor()
+                {
+                    CookieContainer = context.CookieContainer,
+                    VideoId = target.ID
+                });
 
                 return new Response()
                 {
@@ -193,44 +181,50 @@ namespace UNicoAPI2.VideoService.Video
             {
                 if (!htmlCache.IsAvailab)
                 {
-                    var accessor = new APIs.video_page_html.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        target.ID);
-                    flow.Return(accessor);
+                    flow.Return(new APIs.video_page_html.Accessor()
+                    {
+                        CookieContainer = context.CookieContainer,
+                        VideoId = target.ID
+                    });
 
                     var parser = new APIs.video_page_html.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
 
-                if (postkey == "")
-                {
-                    var accessor = new APIs.getpostkey.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        block_no,
-                        htmlCache.Value.comment.threads[0].id.ToString());
-                    flow.Return(accessor);
+                var postTarget = Array.Find(htmlCache.Value.comment.nvComment._params.targets, (i) => i.fork == "main");
 
-                    postkey = new APIs.getpostkey.Parser().Parse(flow.GetResult());
+                if (postKey == null)
+                {
+                    flow.Return(new APIs.nvapi.get_comment_key.Accessor()
+                    {
+                        CookieContainer = context.CookieContainer,
+                        ThreadId = postTarget.id.ToString()
+                    });
+
+                    var res = new APIs.nvapi.get_comment_key.Parser().Parse(flow.GetResult());
+                    if (!res.meta.status.ToString().StartsWith("2"))
+                    {
+                        return new Response()
+                        {
+                            Status = Status.UnknownError
+                        };
+                    }
+
+                    postKey = res.data.postKey;
                 }
 
+                flow.Return(new APIs.nvcomment.post.Accessor()
                 {
-                    var accessor = new APIs.upload_comment.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        htmlCache.Value.comment.server.url,
-                        htmlCache.Value.comment.threads[0].id.ToString(),
-                        ((int)(Comment.PlayTime.TotalMilliseconds / 10)).ToString(),
-                        Comment.Command,
-                        ticket,
-                        htmlCache.Value.viewer.id.ToString(),
-                        postkey,
-                        Comment.Body);
-                    flow.Return(accessor);
-                }
+                    CookieContainer = context.CookieContainer,
+                    ThreadId = postTarget.id.ToString(),
+                    VideoId = target.ID,
+                    Body = Comment.Body,
+                    Commands = Comment?.Command?.Split() ?? new string[] { },
+                    PostKey = postKey,
+                    VposMs = (int)(Comment.PlayTime.TotalMilliseconds)
+                });
 
-                return Converter.Response(new APIs.upload_comment.Parser().Parse(flow.GetResult()));
+                return Converter.VideoPage.UploadComment.From(new APIs.nvcomment.post.Parser().Parse(flow.GetResult()));
             });
         }
 
@@ -243,32 +237,34 @@ namespace UNicoAPI2.VideoService.Video
             {
                 if (!htmlCache.IsAvailab)
                 {
-                    var accessor = new APIs.video_page_html.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        target.ID);
-                    flow.Return(accessor);
+                    flow.Return(new APIs.video_page_html.Accessor()
+                    {
+                        CookieContainer = context.CookieContainer,
+                        VideoId = target.ID
+                    });
 
                     var parser = new APIs.video_page_html.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
 
+                flow.Return(new APIs.nvcomment.get.Accessor()
                 {
-                    var accessor = new APIs.download_comment.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        htmlCache.Value.comment.server.url,
-                        htmlCache.Value.comment.threads[0].id.ToString());
-                    flow.Return(accessor);
-                }
+                    CookieContainer = context.CookieContainer,
+                    ThreadKey = htmlCache.Value.comment.nvComment.threadKey,
+                    Target = Array.ConvertAll(
+                        htmlCache.Value.comment.nvComment._params.targets,
+                        (i) =>
+                        {
+                            return new APIs.nvcomment.get.Request.Target()
+                            {
+                                id = i.id.ToString(),
+                                fork = i.fork
+                            };
+                        })
+                });
 
-                {
-                    var Serial = new APIs.download_comment.Parser().Parse(flow.GetResult());
-                    ticket = Serial.thread[0].ticket;
-                    block_no = ((Serial.thread[0].last_res + 1) / 100).ToString();
-
-                    return Converter.CommentResponse(Serial);
-                }
+                var serial = new APIs.nvcomment.get.Parser().Parse(flow.GetResult());
+                return Converter.VideoPage.DownloadComment.From(serial);
             });
         }
 

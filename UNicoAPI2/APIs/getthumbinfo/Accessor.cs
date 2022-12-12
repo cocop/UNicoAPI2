@@ -8,42 +8,18 @@ namespace UNicoAPI2.APIs.getthumbinfo
 {
     public class Accessor : IAccessor
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Download;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string id = "";
+        public CookieContainer CookieContainer { get; set; }
+        public string Id { get; set; }
 
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, string id)
-        {
-            cookieContainer = CookieContainer;
-            this.id = id;
-        }
-
-        public byte[] GetUploadData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetUploadStreamAsync(int DataLength)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             request = (HttpWebRequest)WebRequest.Create(
-                "http://ext.nicovideo.jp/api/getthumbinfo/" + id);
+                "http://ext.nicovideo.jp/api/getthumbinfo/" + Id);
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetResponseAsync();
         }

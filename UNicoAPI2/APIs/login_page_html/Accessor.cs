@@ -8,25 +8,7 @@ namespace UNicoAPI2.APIs.login_page_html
 {
     public class Accessor : IAccessor
     {
-        public AccessorType Type { get { return AccessorType.Download; } }
-
-
-        CookieContainer cookieContainer;
-
-        public void Setting(CookieContainer CookieContainer)
-        {
-            cookieContainer = CookieContainer;
-        }
-
-        public byte[] GetUploadData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetUploadStreamAsync(int DataLength)
-        {
-            throw new NotImplementedException();
-        }
+        public CookieContainer CookieContainer { get; set; }
 
         public Task<WebResponse> GetDownloadStreamAsync()
         {
@@ -34,7 +16,7 @@ namespace UNicoAPI2.APIs.login_page_html
                 "https://account.nicovideo.jp/login");
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetResponseAsync();
         }

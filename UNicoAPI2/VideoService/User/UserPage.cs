@@ -31,12 +31,11 @@ namespace UNicoAPI2.VideoService.User
             {
                 if (!htmlCache.IsAvailab)
                 {
-                    var accessor = new APIs.user_page_html.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        target.ID);
-
-                    flow.Return(accessor);
+                    flow.Return(new APIs.user_page_html.Accessor
+                    {
+                        CookieContainer = context.CookieContainer,
+                        UserId = target.ID
+                    });
                 }
 
                 var parser = new APIs.user_page_html.Parser();
@@ -44,7 +43,7 @@ namespace UNicoAPI2.VideoService.User
                 if (flow.GetResult() != null)
                     htmlCache.Value = parser.Parse(flow.GetResult());
 
-                return Converter.UserResponse(context, parser.Parse(htmlCache));
+                return Converter.UserPage.DownloadUser.From(context, parser.Parse(htmlCache));
             });
         }
 
@@ -59,16 +58,16 @@ namespace UNicoAPI2.VideoService.User
 
                 if (!htmlMylistCache.IsAvailab)
                 {
-                    var accessor = new APIs.user_mylist_page_html.Accessor();
-                    accessor.Setting(
-                        context.CookieContainer,
-                        target.ID);
-                    flow.Return(accessor);
+                    flow.Return(new APIs.user_mylist_page_html.Accessor
+                    {
+                        CookieContainer = context.CookieContainer,
+                        UserId = target.ID
+                    });
 
                     htmlMylistCache.Value = parser.Parse(flow.GetResult());
                 }
 
-                return Converter.PublicMylistListResponse(context, parser.Parse(htmlMylistCache));
+                return Converter.UserPage.DownloadPublicMylistList.From(context, parser.Parse(htmlMylistCache));
             });
         }
     }

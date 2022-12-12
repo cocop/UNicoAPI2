@@ -10,6 +10,11 @@ namespace UNicoAPI2.VideoService.Video
     public class Comment
     {
         /// <summary>
+        /// 投稿者の種類
+        /// </summary>
+        public CommentType PostUserType { get; set; }
+
+        /// <summary>
         /// コメント番号
         /// </summary>
         public int No { get; set; }

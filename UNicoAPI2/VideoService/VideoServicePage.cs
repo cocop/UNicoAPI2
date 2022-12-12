@@ -74,18 +74,18 @@ namespace UNicoAPI2.VideoService
         {
             return new Session<Response<VideoInfo[]>>((flow) =>
             {
-                var accessor = new APIs.search_page_html.Accessor();
-                accessor.Setting(
-                    context.CookieContainer,
-                    SearchType.ToKey(),
-                    Keyword,
-                    SearchPage.ToString(),
-                    SearchOption.SortOrder.ToKey(),
-                    SearchOption.SortTarget.ToKey());
-                flow.Return(accessor);
+                flow.Return(new APIs.search_page_html.Accessor()
+                {
+                    CookieContainer = context.CookieContainer,
+                    Type = SearchType.ToKey(),
+                    Word = Keyword,
+                    Page = SearchPage.ToString(),
+                    Order = SearchOption.SortOrder.ToKey(),
+                    Sort = SearchOption.SortTarget.ToKey()
+                });
 
                 var parser = new APIs.search_page_html.Parser();
-                return Converter.VideoInfoResponse(context, parser.Parse(parser.Parse(flow.GetResult())));
+                return Converter.VideoServicePage.Search.From(context, parser.Parse(parser.Parse(flow.GetResult())));
             });
         }
     }

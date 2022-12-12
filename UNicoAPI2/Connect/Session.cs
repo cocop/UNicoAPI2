@@ -55,16 +55,14 @@ namespace UNicoAPI2.Connect
         {
             flow.SetSessionFunc((accessor) =>
             {
-                if (accessor.Type == APIs.AccessorType.Upload)
-                    RunUpload(Token, accessor);
+                if (accessor is APIs.IAccessorWithUploadData upAccessor)
+                    RunUpload(Token, upAccessor);
 
                 var dres = GetDownloadResponse(Token, accessor);
                 flow.SetResponse(dres);
 
                 if (!flow.IsBreak)
-                {
                     flow.SetResult(RunDownload(Token, dres));
-                }
             });
 
             var result = sessionFlow(flow);
@@ -72,7 +70,7 @@ namespace UNicoAPI2.Connect
             return result;
         }
 
-        private void RunUpload(CancellationToken Token, APIs.IAccessor accesser)
+        private void RunUpload(CancellationToken Token, APIs.IAccessorWithUploadData accesser)
         {
             var udata = accesser.GetUploadData();
             var ustreamTask = accesser.GetUploadStreamAsync(udata.Length);

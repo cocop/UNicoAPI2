@@ -13,19 +13,12 @@ namespace UNicoAPI2.APIs.media_session
     /// <summary>
     /// レスポンスはHeartBeats
     /// </summary>
-    public class Accessor : IAccessor
+    public class Accessor : IAccessorWithUploadData
     {
-        public AccessorType Type => AccessorType.Upload;
+        public CookieContainer CookieContainer { get; set; }
+        public video_page_html.Response.Rootobject.Media MediaInfo { get; set; }
 
-        CookieContainer cookieContainer;
-        video_page_html.Response.Rootobject.Media mediaInfo;
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, video_page_html.Response.Rootobject.Media mediaInfo)
-        {
-            cookieContainer = CookieContainer;
-            this.mediaInfo = mediaInfo;
-        }
 
         public byte[] GetUploadData()
         {
@@ -35,21 +28,21 @@ namespace UNicoAPI2.APIs.media_session
                 {
                     client_info = new Client_Info
                     {
-                        player_id = mediaInfo.delivery.movie.session.playerId
+                        player_id = MediaInfo.delivery.movie.session.playerId
                     },
                     content_auth = new Content_Auth
                     {
-                        auth_type = mediaInfo.delivery.movie.session.authTypes.http,
-                        content_key_timeout = mediaInfo.delivery.movie.session.contentKeyTimeout,
+                        auth_type = MediaInfo.delivery.movie.session.authTypes.http,
+                        content_key_timeout = MediaInfo.delivery.movie.session.contentKeyTimeout,
                         service_id = "nicovideo",
-                        service_user_id = mediaInfo.delivery.movie.session.serviceUserId,
+                        service_user_id = MediaInfo.delivery.movie.session.serviceUserId,
                     },
-                    content_id = mediaInfo.delivery.movie.session.contentId,
+                    content_id = MediaInfo.delivery.movie.session.contentId,
                     content_src_id_sets = new Content_Src_Id_Sets[]
                     {
                         new Content_Src_Id_Sets()
                         {
-                            content_src_ids = CreateContent_Src_Ids(mediaInfo.delivery.movie.session)
+                            content_src_ids = CreateContentSrcIds(MediaInfo.delivery.movie.session)
                         }
                     },
                     content_type = "movie",
@@ -58,10 +51,10 @@ namespace UNicoAPI2.APIs.media_session
                     {
                         heartbeat = new Heartbeat()
                         {
-                            lifetime = mediaInfo.delivery.movie.session.heartbeatLifetime,
+                            lifetime = MediaInfo.delivery.movie.session.heartbeatLifetime,
                         }
                     },
-                    priority = mediaInfo.delivery.movie.session.priority,
+                    priority = MediaInfo.delivery.movie.session.priority,
                     protocol = new Protocol()
                     {
                         name = "http",
@@ -82,13 +75,13 @@ namespace UNicoAPI2.APIs.media_session
                             }
                         }
                     },
-                    recipe_id = mediaInfo.delivery.movie.session.recipeId,
+                    recipe_id = MediaInfo.delivery.movie.session.recipeId,
                     session_operation_auth = new Session_Operation_Auth()
                     {
                         session_operation_auth_by_signature = new Session_Operation_Auth_By_Signature()
                         {
-                            signature = mediaInfo.delivery.movie.session.signature,
-                            token = mediaInfo.delivery.movie.session.token,
+                            signature = MediaInfo.delivery.movie.session.signature,
+                            token = MediaInfo.delivery.movie.session.token,
                         }
                     },
                     timing_constraint = "unlimited",
@@ -103,7 +96,7 @@ namespace UNicoAPI2.APIs.media_session
             };
         }
 
-        private Content_Src_Ids[] CreateContent_Src_Ids(video_page_html.Response.Rootobject.Media.Delivery.Movie.Session sessionInfo)
+        private Content_Src_Ids[] CreateContentSrcIds(video_page_html.Response.Rootobject.Media.Delivery.Movie.Session sessionInfo)
         {
             var contentSrcIds = new List<Content_Src_Ids>();
 
@@ -131,11 +124,11 @@ namespace UNicoAPI2.APIs.media_session
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create(mediaInfo.delivery.movie.session.urls[0].url + "?_format=json");
+            request = (HttpWebRequest)WebRequest.Create(MediaInfo.delivery.movie.session.urls[0].url + "?_format=json");
             request.Accept = ContentType.Json;
             request.ContentType = ContentType.Json;
             request.Method = ContentMethod.Post;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             request.Headers["Content-Length"] = DataLength.ToString();
             request.Headers["Connection"] = "keep-alive";

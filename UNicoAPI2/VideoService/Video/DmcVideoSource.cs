@@ -48,9 +48,12 @@ namespace UNicoAPI2.VideoService.Video
         {
             var session = new Session<APIs.heartbeats.Response.Rootobject>((flow) =>
             {
-                var accessor = new APIs.heartbeats.Accessor();
-                accessor.Setting(cookieContainer, heartBeatsUri, rootobject.data);
-                flow.Return(accessor);
+                flow.Return(new APIs.heartbeats.Accessor()
+                {
+                    CookieContainer = cookieContainer,
+                    HeartBeatsUri = heartBeatsUri,
+                    Data = rootobject.data
+                });
 
                 return new APIs.heartbeats.Parser().Parse(flow.GetResult());
             });

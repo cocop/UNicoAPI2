@@ -27,15 +27,15 @@ namespace UNicoAPI2.VideoService.Mylist
             var index = 1;
             return new Session<Response<Mylist>>((flow) =>
             {
-                var accessor = new APIs.mylitv2.Accessor();
-                accessor.Setting(
-                    context.CookieContainer,
-                    target.ID,
-                    index,
-                    100);
-                flow.Return(accessor);
+                flow.Return(new APIs.mylitv2.Accessor
+                {
+                    CcookieContainer = context.CookieContainer,
+                    Id = target.ID,
+                    Index = index,
+                    Count = 100
+                });
 
-                return Converter.MylistResponse(
+                return Converter.MylistPage.DownloadMylist.From(
                     context,
                     new APIs.mylitv2.Parser().Parse(flow.GetResult()),
                     target.ID);

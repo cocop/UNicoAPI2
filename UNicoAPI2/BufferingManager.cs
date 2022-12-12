@@ -8,8 +8,8 @@ namespace UNicoAPI2
         /*====================================*/
         class Buffer
         {
-            public KeyType Key { get; set; } = default(KeyType);
-            public DataType Data { get; set; } = default(DataType);
+            public KeyType Key { get; set; } = default;
+            public DataType Data { get; set; } = default;
             public int GotCount { get; set; } = 0;
         }
 
@@ -81,8 +81,7 @@ namespace UNicoAPI2
 
         Buffer GetBuffer(KeyType id, Func<KeyType, DataType> createMethod)
         {
-            Buffer result;
-            if (map.TryGetValue(id, out result))
+            if (map.TryGetValue(id, out Buffer result))
             {
                 ++result.GotCount;
                 gotHistory.Enqueue(result);

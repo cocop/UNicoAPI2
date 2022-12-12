@@ -2,7 +2,6 @@
 using System.Net;
 using UNicoAPI2.Connect;
 using UNicoAPI2.VideoService.User;
-using Windows.Foundation;
 
 namespace UNicoAPI2
 {
@@ -44,25 +43,30 @@ namespace UNicoAPI2
 
                 if (CheckLogin)
                 {
-                    flow.Return(new APIs.UrlGet.Accessor(context.CookieContainer, "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"));
-                    var rslt = parser.Parse(flow.GetResult());
-                    if (rslt != null)
+                    flow.Return(new APIs.UrlGet.Accessor()
                     {
-                        return rslt;
+                        CookieContainer = context.CookieContainer,
+                        Url = "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"
+                    });
+
+                    var result = parser.Parse(flow.GetResult());
+                    if (result != null)
+                    {
+                        return result;
                     }
                 }
 
+                flow.Return(new APIs.login_page_html.Accessor()
                 {
-                    var accessor = new APIs.login_page_html.Accessor();
-                    accessor.Setting(context.CookieContainer);
-                    flow.Return(accessor);
-                }
+                    CookieContainer = context.CookieContainer
+                });
 
+                flow.Return(new APIs.login.Accessor()
                 {
-                    var accessor = new APIs.login.Accessor();
-                    accessor.Setting(context.CookieContainer, MailAddress, Password);
-                    flow.Return(accessor);
-                }
+                    CookieContainer = context.CookieContainer,
+                    MailTel = MailAddress,
+                    Password = Password
+                });
 
                 if (parser.IsMultiAuth(flow.GetResult()))
                 {
@@ -70,14 +74,20 @@ namespace UNicoAPI2
                         return null;
 
                     var param = MultiAuthRequest();
-                    flow.Return(new APIs.login.MultiAuthAccessor(
-                        context.CookieContainer,
-                        parser.GetCsrfToken(flow.GetResult()),
-                        param.Code,
-                        param.DeviceName,
-                        param.IsTrustedDevice));
+                    flow.Return(new APIs.login.MultiAuthAccessor()
+                    {
+                        CookieContainer = context.CookieContainer,
+                        CsrfToken = parser.GetCsrfToken(flow.GetResult()),
+                        Otp = param.Code,
+                        DeviceName = param.DeviceName,
+                        IsMfaTrustedDevice = param.IsTrustedDevice
+                    });
 
-                    flow.Return(new APIs.UrlGet.Accessor(context.CookieContainer, "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"));
+                    flow.Return(new APIs.UrlGet.Accessor()
+                    {
+                        CookieContainer = context.CookieContainer,
+                        Url = "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"
+                    });
                 }
 
                 return parser.Parse(flow.GetResult());

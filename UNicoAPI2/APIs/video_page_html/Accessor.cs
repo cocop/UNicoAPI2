@@ -8,40 +8,16 @@ namespace UNicoAPI2.APIs.video_page_html
 {
     public class Accessor : IAccessor
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Download;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string video_id = "";
-
-        public void Setting(CookieContainer CookieContainer, string video_id)
-        {
-            cookieContainer = CookieContainer;
-            this.video_id = video_id;
-        }
-
-        public byte[] GetUploadData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetUploadStreamAsync(int DataLength)
-        {
-            throw new NotImplementedException();
-        }
+        public CookieContainer CookieContainer { get; set; }
+        public string VideoId { get; set; }
 
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                "http://www.nicovideo.jp/watch/" + video_id);
+                $"http://www.nicovideo.jp/watch/{VideoId}");
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetResponseAsync();
         }

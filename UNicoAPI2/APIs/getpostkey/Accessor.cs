@@ -8,26 +8,11 @@ namespace UNicoAPI2.APIs.getpostkey
 {
     public class Accessor : IAccessor
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Download;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string block_no = "";
-        string thread = "";
+        public CookieContainer CookieContainer { get; set; }
+        public string BlockNo { get; set; }
+        public string Thread { get; set; }
 
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, string block_no, string thread)
-        {
-            cookieContainer = CookieContainer;
-            this.block_no = block_no;
-            this.thread = thread;
-        }
 
         public byte[] GetUploadData()
         {
@@ -43,11 +28,11 @@ namespace UNicoAPI2.APIs.getpostkey
         {
             request = (HttpWebRequest)WebRequest.Create(
                 "https://flapi.nicovideo.jp/api/getpostkey/?version_sub=2&device=1&block_no="
-                + block_no
-                + "&version=1&thread=" + thread);
+                + BlockNo
+                + "&version=1&thread=" + Thread);
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetResponseAsync();
         }

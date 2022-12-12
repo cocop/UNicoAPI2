@@ -8,46 +8,20 @@ namespace UNicoAPI2.APIs.mylitv2
 {
     public class Accessor : IAccessor
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Download;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string id = "";
-        int index;
-        int count;
+        public CookieContainer CcookieContainer { get; set; }
+        public string Id { get; set; }
+        public int Index { get; set; }
+        public int Count { get; set; }
 
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, string id, int index, int count)
-        {
-            cookieContainer = CookieContainer;
-            this.id = id;
-            this.index = index;
-            this.count = count;
-        }
-
-        public byte[] GetUploadData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetUploadStreamAsync(int DataLength)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             request = (HttpWebRequest)WebRequest.Create(
-                $"https://nvapi.nicovideo.jp/v2/mylists/{id}?pageSize={count}&page={index}");
+                $"https://nvapi.nicovideo.jp/v2/mylists/{Id}?pageSize={Count}&page={Index}");
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CcookieContainer;
             request.Headers["X-Frontend-Id"] = "6";
             request.Headers["X-Frontend-Version"] = "6";
 

@@ -9,38 +9,30 @@ using System;
 
 namespace UNicoAPI2.APIs.heartbeats
 {
-    public class Accessor : IAccessor
+    public class Accessor : IAccessorWithUploadData
     {
-        public AccessorType Type => AccessorType.Upload;
+        public CookieContainer CookieContainer { get; set; }
+        public Uri HeartBeatsUri { get; set; }
+        public Response.Data Data { get; set; }
 
-        CookieContainer cookieContainer;
-        Uri heartBeatsUri;
-        Response.Data data;
         HttpWebRequest request;
-
-        public void Setting(CookieContainer CookieContainer, Uri heartBeatsUri, Response.Data data)
-        {
-            cookieContainer = CookieContainer;
-            this.heartBeatsUri = heartBeatsUri;
-            this.data = data;
-        }
 
         public byte[] GetUploadData()
         {
             var serialize = new DataContractJsonSerializer(typeof(Response.Data));
             var memStream = new MemoryStream();
-            serialize.WriteObject(memStream, data);
+            serialize.WriteObject(memStream, Data);
 
             return memStream.ToArray();
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create(heartBeatsUri + "/" + data.session.id + "?_format=json&_method=PUT");
+            request = (HttpWebRequest)WebRequest.Create(HeartBeatsUri + "/" + Data.session.id + "?_format=json&_method=PUT");
             request.Accept = ContentType.Json;
             request.ContentType = ContentType.Json;
             request.Method = ContentMethod.Post;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             request.Headers["Content-Length"] = DataLength.ToString();
             request.Headers["Connection"] = "keep-alive";

@@ -8,39 +8,15 @@ namespace UNicoAPI2.APIs
 {
     public class DownloadAccessor : IAccessor
     {
-        public AccessorType Type
-        {
-            get
-            {
-                return AccessorType.Download;
-            }
-        }
-
-        CookieContainer cookieContainer;
-        string url = "";
-
-        public void Setting(CookieContainer CookieContainer, string url)
-        {
-            cookieContainer = CookieContainer;
-            this.url = url;
-        }
-
-        public byte[] GetUploadData()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> GetUploadStreamAsync(int DataLength)
-        {
-            throw new NotImplementedException();
-        }
+        public CookieContainer CookieContainer { get; set; }
+        public string Url { get; set; }
 
         public Task<WebResponse> GetDownloadStreamAsync()
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(Url);
 
             request.Method = ContentMethod.Get;
-            request.CookieContainer = cookieContainer;
+            request.CookieContainer = CookieContainer;
 
             return request.GetResponseAsync();
         }
