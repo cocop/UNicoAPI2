@@ -47,7 +47,7 @@ namespace UNicoAPI2.APIs.login
         {
             request = (HttpWebRequest)WebRequest.Create(
                 "https://account.nicovideo.jp/mfa?site=niconico&continue=" +
-                Uri.EscapeDataString($"https://account.nicovideo.jp/login/mfa/callback?site=niconico&sec=header_pc&next_url=%2F&csrf_token={CsrfToken}&facebook=1&twitter=1"));
+                Uri.EscapeDataString($"https://account.nicovideo.jp/login/mfa/callback?site=niconico&sec=header_pc&next_url=/my&csrf_token={CsrfToken}&facebook=1&twitter=1"));
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Form;

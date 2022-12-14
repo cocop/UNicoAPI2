@@ -14,14 +14,7 @@ namespace UNicoAPI2.VideoService.Converter.UserPage
             result.Result = Context.IDContainer.GetUser(Response["id"]);
             result.Result.Icon = new Picture(Response["icon"], Context.CookieContainer);
             result.Result.Name = Response["name"];
-
             result.Result.Description = Response["description"];
-            try
-            {
-                result.Result.BookmarkCount = int.Parse(Response["bookmark"]);
-                result.Result.Experience = int.Parse(Response["exp"]);
-            }
-            catch (Exception) { }
 
             return result;
         }

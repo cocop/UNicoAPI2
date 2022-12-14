@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -6,11 +7,10 @@ using UNicoAPI2.VideoService.User;
 
 namespace UNicoAPI2.APIs.login
 {
-    public class Parser : IParser<User>
+    public class Parser : IParser<Dictionary<string, string>>
     {
         static readonly Regex isMultiAuthRegex = new Regex("<title>.*?段階認証.*?</title>");
         static readonly Regex getCsrfTokenRegex = new Regex("action=\"(?<value>.*?)\"");
-        static readonly Regex isLoginedRegex = new Regex("<p class=\"item profile-id\"><span class=\"label\">ID</span>(?<value>[0-9].*?)</p>");
 
         public bool IsMultiAuth(byte[] Value)
         {
@@ -31,11 +31,10 @@ namespace UNicoAPI2.APIs.login
 
             try
             {
-                var ctdecoder = HttpUtility.ParseQueryString("https://account.nicovideo.jp/" + result.Groups["value"].Value);
-                var ct = ctdecoder.Get("continue");
+                var ctMatch = new Regex("csrf_token=(?<value>.*?)(&|$)").Match(
+                    HttpUtility.UrlDecode(result.Groups["value"].Value));
 
-                var decoder = HttpUtility.ParseQueryString(ct);
-                return decoder.Get("csrf_token");
+                return ctMatch.Groups["value"].Value;
             }
             catch (Exception)
             {
@@ -43,15 +42,10 @@ namespace UNicoAPI2.APIs.login
             }
         }
 
-        public User Parse(byte[] Value)
+        public Dictionary<string, string> Parse(byte[] Value)
         {
-            var html = Encoding.UTF8.GetString(Value);
-            var result = isLoginedRegex.Match(html);
-
-            if (!result.Success)
-                return null;
-
-            return new User(result.Groups["value"].Value);
+            var parser = new my_page_html.Parser();
+            return parser.Parse(parser.Parse(Value));
         }
     }
 }

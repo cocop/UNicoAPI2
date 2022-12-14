@@ -22,11 +22,17 @@ namespace UNicoAPI2.APIs.login
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create("https://account.nicovideo.jp/api/v1/login");
+            request = (HttpWebRequest)WebRequest.Create("https://account.nicovideo.jp/login/redirector?show_button_twitter=1&site=niconico&show_button_facebook=1&next_url=/my");
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Form;
             request.CookieContainer = CookieContainer;
+
+            request.Headers["Sec-Fetch-Dest"] = "document";
+            request.Headers["Sec-Fetch-Mode"] = "navigate";
+            request.Headers["Sec-Fetch-Site"] = "same-origin";
+            request.Headers["Sec-Fetch-User"] = "?1";
+            request.Headers["Upgrade-Insecure-Requests"] = "1";
 
             return request.GetRequestStreamAsync();
         }

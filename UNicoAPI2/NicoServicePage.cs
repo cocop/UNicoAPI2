@@ -43,17 +43,14 @@ namespace UNicoAPI2
 
                 if (CheckLogin)
                 {
-                    flow.Return(new APIs.UrlGet.Accessor()
+                    flow.Return(new APIs.my_page_html.Accessor()
                     {
-                        CookieContainer = context.CookieContainer,
-                        Url = "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"
+                        CookieContainer = context.CookieContainer
                     });
 
                     var result = parser.Parse(flow.GetResult());
                     if (result != null)
-                    {
-                        return result;
-                    }
+                        return VideoService.Converter.UserPage.DownloadUser.From(context, result).Result;
                 }
 
                 flow.Return(new APIs.login_page_html.Accessor()
@@ -82,15 +79,15 @@ namespace UNicoAPI2
                         DeviceName = param.DeviceName,
                         IsMfaTrustedDevice = param.IsTrustedDevice
                     });
-
-                    flow.Return(new APIs.UrlGet.Accessor()
-                    {
-                        CookieContainer = context.CookieContainer,
-                        Url = "https://account.nicovideo.jp/my/account?ref=pc_mypage_top"
-                    });
                 }
 
-                return parser.Parse(flow.GetResult());
+                {
+                    var result = parser.Parse(flow.GetResult());
+                    if (result == null)
+                        return null;
+
+                    return VideoService.Converter.UserPage.DownloadUser.From(context, result).Result;
+                }
             });
         }
 
