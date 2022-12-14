@@ -1,13 +1,14 @@
-﻿using System.Text.Json;
-using UNicoAPI2.APIs.tag_edit.Response;
+﻿using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace UNicoAPI2.APIs.tag_edit
 {
-    public class Parser : IParser<contract>
+    public class Parser : IParser<Response.contract>
     {
-        public contract Parse(byte[] Value)
+        public Response.contract Parse(byte[] Value)
         {
-            return (contract)JsonSerializer.Deserialize(Value, typeof(contract));
+            var serialize = new DataContractJsonSerializer(typeof(Response.contract));
+            return (Response.contract)serialize.ReadObject(new MemoryStream(Value));
         }
     }
 }

@@ -1,4 +1,5 @@
-using System.Text.Json.Serialization;
+
+using System.Runtime.Serialization;
 
 namespace UNicoAPI2.APIs.video_page_html.Response
 {
@@ -123,11 +124,14 @@ namespace UNicoAPI2.APIs.video_page_html.Response
 
             }
 
+            [DataContract]
             public class Nvcomment
             {
+                [DataMember]
                 public string threadKey { get; set; }
+                [DataMember]
                 public string server { get; set; }
-                [JsonPropertyName("params")]
+                [DataMember(Name = "params")]
                 public Params _params { get; set; }
 
                 public class Params

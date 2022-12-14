@@ -1,19 +1,24 @@
-using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
 namespace UNicoAPI2.APIs.nvcomment.get.Request
 {
+    [DataContract]
     public class Rootobject
     {
-        [JsonPropertyName("params")]
+        [DataMember(Name = "params")]
         public Params _params { get; set; }
+        [DataMember]
         public string threadKey { get; set; }
+        [DataMember]
         public Additionals additionals { get; set; }
     }
 
+    [DataContract]
     public class Params
     {
-        [JsonPropertyName("targets")]
+        [DataMember(Name = "targets")]
         public Target[] targets { get; set; }
+        [DataMember]
         public string language { get; set; }
     }
 

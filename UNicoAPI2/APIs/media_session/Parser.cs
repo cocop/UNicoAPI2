@@ -1,4 +1,5 @@
-using System.Text.Json;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace UNicoAPI2.APIs.media_session
 {
@@ -6,7 +7,8 @@ namespace UNicoAPI2.APIs.media_session
     {
         public Request.Rootobject Parse(byte[] Value)
         {
-            return (Request.Rootobject)JsonSerializer.Deserialize(Value, typeof(Request.Rootobject));
+            var serialize = new DataContractJsonSerializer(typeof(Request.Rootobject));
+            return (Request.Rootobject)serialize.ReadObject(new MemoryStream(Value));
         }
     }
 }

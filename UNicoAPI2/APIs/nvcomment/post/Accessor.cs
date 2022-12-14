@@ -1,7 +1,6 @@
 using System.IO;
 using System.Net;
-using System.Text;
-using System.Text.Json;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 
@@ -32,8 +31,11 @@ namespace UNicoAPI2.APIs.nvcomment.post
                 vposMs = VposMs
             };
 
-            var str = JsonSerializer.Serialize(data, typeof(Request.Rootobject));
-            return Encoding.UTF8.GetBytes(str);
+            var serialize = new DataContractJsonSerializer(typeof(Request.Rootobject));
+            var memStream = new MemoryStream();
+            serialize.WriteObject(memStream, data);
+
+            return memStream.ToArray();
         }
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)

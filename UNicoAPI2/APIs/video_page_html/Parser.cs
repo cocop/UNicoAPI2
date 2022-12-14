@@ -1,6 +1,7 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.video_page_html
@@ -20,7 +21,8 @@ namespace UNicoAPI2.APIs.video_page_html
             var result = info.Match(Value).Groups["value"].Value;
             result = WebUtility.HtmlDecode(result);
 
-            return (Response.Rootobject)JsonSerializer.Deserialize(result, typeof(Response.Rootobject));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
+            return (Response.Rootobject)serialize.ReadObject(new MemoryStream(Encoding.UTF8.GetBytes(result)));
         }
     }
 }

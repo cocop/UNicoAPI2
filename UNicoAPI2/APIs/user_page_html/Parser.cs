@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.user_page_html
@@ -22,7 +23,8 @@ namespace UNicoAPI2.APIs.user_page_html
                 return null;
 
             var jsonBinary = Encoding.UTF8.GetBytes(WebUtility.HtmlDecode(matchedJsonText.Value));
-            var data = (Response.Rootobject)JsonSerializer.Deserialize(jsonBinary, typeof(Response.Rootobject));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
+            var data = (Response.Rootobject)serialize.ReadObject(new MemoryStream(jsonBinary));
 
             var result = new Dictionary<string, string>();
             result["icon"] = data.viewer.icons.large;

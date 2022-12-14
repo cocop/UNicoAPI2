@@ -1,4 +1,5 @@
-using System.Text.Json;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 
 namespace UNicoAPI2.APIs.heartbeats
@@ -7,7 +8,8 @@ namespace UNicoAPI2.APIs.heartbeats
     {
         public Response.Rootobject Parse(byte[] Value)
         {
-            return (Response.Rootobject)JsonSerializer.Deserialize(Value, typeof(Response.Rootobject));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject));
+            return (Response.Rootobject)serialize.ReadObject(new MemoryStream(Value));
         }
     }
 }

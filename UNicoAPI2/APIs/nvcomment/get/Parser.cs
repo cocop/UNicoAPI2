@@ -1,4 +1,5 @@
-using System.Text.Json;
+using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace UNicoAPI2.APIs.nvcomment.get
 {
@@ -6,7 +7,11 @@ namespace UNicoAPI2.APIs.nvcomment.get
     {
         public Response.Rootobject Parse(byte[] Value)
         {
-            return (Response.Rootobject)JsonSerializer.Deserialize(Value, typeof(Response.Rootobject));
+            var serialize = new DataContractJsonSerializer(typeof(Response.Rootobject), new DataContractJsonSerializerSettings()
+            {
+                DateTimeFormat = new System.Runtime.Serialization.DateTimeFormat("yyyy-MM-ddTHH:mm:ssK")
+            });
+            return (Response.Rootobject)serialize.ReadObject(new MemoryStream(Value));
         }
     }
 }
