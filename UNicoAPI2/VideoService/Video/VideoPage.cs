@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net;
 using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.VideoService.Video

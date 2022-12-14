@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UNicoAPI2.VideoService.Video;
 
 namespace UNicoAPI2.VideoService.Converter.VideoPage

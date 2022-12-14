@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -20,7 +18,7 @@ namespace UNicoAPI2.APIs.user_page_html
         public Dictionary<string, string> Parse(string Value)
         {
             var matchedJsonText = jsonRegex.Match(Value).Groups["json"];
-            if(matchedJsonText == null || matchedJsonText.Value == "")
+            if (matchedJsonText == null || matchedJsonText.Value == "")
                 return null;
 
             var jsonBinary = Encoding.UTF8.GetBytes(WebUtility.HtmlDecode(matchedJsonText.Value));

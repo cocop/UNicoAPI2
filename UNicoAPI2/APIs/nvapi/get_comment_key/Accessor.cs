@@ -1,6 +1,4 @@
-using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
 

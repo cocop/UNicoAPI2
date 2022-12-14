@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UNicoAPI2.VideoService.Mylist;
-using UNicoAPI2.VideoService.Video;
-
-namespace UNicoAPI2.VideoService.Converter
+﻿namespace UNicoAPI2.VideoService.Converter
 {
     public static class Response
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Threading.Tasks;
 using UNicoAPI2.APIs;
 
 namespace UNicoAPI2.Connect

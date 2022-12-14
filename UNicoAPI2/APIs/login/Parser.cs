@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using UNicoAPI2.VideoService.User;
 
 namespace UNicoAPI2.APIs.login
 {

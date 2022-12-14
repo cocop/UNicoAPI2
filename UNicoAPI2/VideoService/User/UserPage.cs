@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UNicoAPI2.Connect;
+﻿using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.VideoService.User
 {

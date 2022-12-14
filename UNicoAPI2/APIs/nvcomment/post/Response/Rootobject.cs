@@ -1,5 +1,3 @@
-using System;
-
 namespace UNicoAPI2.APIs.nvcomment.post.Response
 {
     public class Rootobject : Response<Data> { }

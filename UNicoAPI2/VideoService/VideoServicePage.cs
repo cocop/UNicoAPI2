@@ -1,5 +1,4 @@
-﻿using System;
-using UNicoAPI2.Connect;
+﻿using UNicoAPI2.Connect;
 using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Series;
 using UNicoAPI2.VideoService.User;

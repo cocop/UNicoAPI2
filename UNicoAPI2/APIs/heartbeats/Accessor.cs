@@ -1,11 +1,9 @@
-using System.Linq;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
-using System;
 
 namespace UNicoAPI2.APIs.heartbeats
 {

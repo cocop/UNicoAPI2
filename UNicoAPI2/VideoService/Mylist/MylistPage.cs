@@ -1,5 +1,4 @@
-﻿using System;
-using UNicoAPI2.Connect;
+﻿using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.VideoService.Mylist
 {
