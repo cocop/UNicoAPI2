@@ -14,7 +14,7 @@ namespace UNicoAPI2.VideoService.Video
         VideoInfo target;
         Context context;
 
-        Cache<APIs.video_page_html.Response.Rootobject> htmlCache = new Cache<APIs.video_page_html.Response.Rootobject>();
+        Cache<APIs.html.video_page.Response.Rootobject> htmlCache = new Cache<APIs.html.video_page.Response.Rootobject>();
 
         bool isAvailabDmcCash = false;
         string postKey = null;
@@ -55,13 +55,13 @@ namespace UNicoAPI2.VideoService.Video
                     {
                         if (!htmlCache.IsAvailab)
                         {
-                            flow.Return(new APIs.video_page_html.Accessor()
+                            flow.Return(new APIs.html.video_page.Accessor()
                             {
                                 CookieContainer = context.CookieContainer,
                                 VideoId = target.ID
                             });
 
-                            var parser = new APIs.video_page_html.Parser();
+                            var parser = new APIs.html.video_page.Parser();
                             htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                         }
 
@@ -72,7 +72,7 @@ namespace UNicoAPI2.VideoService.Video
                 case DownloadVideoInfoUseAPI.getthumbinfo:
                     return new Session<Response<VideoInfo>>((flow) =>
                     {
-                        flow.Return(new APIs.getthumbinfo.Accessor()
+                        flow.Return(new APIs.ms.getthumbinfo.Accessor()
                         {
                             CookieContainer = context.CookieContainer,
                             Id = target.ID
@@ -80,7 +80,7 @@ namespace UNicoAPI2.VideoService.Video
 
                         return Converter.VideoPage.DownloadVideoInfo.From(
                             context,
-                            new APIs.getthumbinfo.Parser().Parse(flow.GetResult()));
+                            new APIs.ms.getthumbinfo.Parser().Parse(flow.GetResult()));
                     });
             }
 
@@ -98,25 +98,25 @@ namespace UNicoAPI2.VideoService.Video
                 if (!htmlCache.IsAvailab || !isAvailabDmcCash || DateTime.Now > (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MinValue))
                 {
 
-                    flow.Return(new APIs.video_page_html.Accessor()
+                    flow.Return(new APIs.html.video_page.Accessor()
                     {
                         CookieContainer = context.CookieContainer,
                         VideoId = target.ID
                     });
 
-                    var parser = new APIs.video_page_html.Parser();
+                    var parser = new APIs.html.video_page.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
                 isAvailabDmcCash = false;
 
-                flow.Return(new APIs.media_session.Accessor()
+                flow.Return(new APIs.dmc.media_session.Accessor()
                 {
                     CookieContainer = context.CookieContainer,
                     MediaInfo = htmlCache.Value.media
                 });
 
                 {
-                    var parser = new APIs.heartbeats.Parser();
+                    var parser = new APIs.dmc.heartbeats.Parser();
                     return new DmcVideoSource(
                         context.CookieContainer,
                         new Uri(htmlCache.Value.media.delivery.movie.session.urls[0].url),
@@ -133,7 +133,7 @@ namespace UNicoAPI2.VideoService.Video
         {
             return new Session<Response<string>>((flow) =>
             {
-                flow.Return(new APIs.likes.DoAccessor()
+                flow.Return(new APIs.nvapi.likes.DoAccessor()
                 {
                     CookieContainer = context.CookieContainer,
                     VideoId = target.ID
@@ -142,7 +142,7 @@ namespace UNicoAPI2.VideoService.Video
                 return new Response<string>()
                 {
                     Status = Status.OK,
-                    Result = new APIs.likes.DoParser().Parse(flow.GetResult())?.data?.thanksMessage ?? ""
+                    Result = new APIs.nvapi.likes.DoParser().Parse(flow.GetResult())?.data?.thanksMessage ?? ""
                 };
             });
         }
@@ -154,7 +154,7 @@ namespace UNicoAPI2.VideoService.Video
         {
             return new Session<Response>((flow) =>
             {
-                flow.Return(new APIs.likes.UndoAccessor()
+                flow.Return(new APIs.nvapi.likes.UndoAccessor()
                 {
                     CookieContainer = context.CookieContainer,
                     VideoId = target.ID
@@ -177,13 +177,13 @@ namespace UNicoAPI2.VideoService.Video
             {
                 if (!htmlCache.IsAvailab)
                 {
-                    flow.Return(new APIs.video_page_html.Accessor()
+                    flow.Return(new APIs.html.video_page.Accessor()
                     {
                         CookieContainer = context.CookieContainer,
                         VideoId = target.ID
                     });
 
-                    var parser = new APIs.video_page_html.Parser();
+                    var parser = new APIs.html.video_page.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
 
@@ -233,13 +233,13 @@ namespace UNicoAPI2.VideoService.Video
             {
                 if (!htmlCache.IsAvailab)
                 {
-                    flow.Return(new APIs.video_page_html.Accessor()
+                    flow.Return(new APIs.html.video_page.Accessor()
                     {
                         CookieContainer = context.CookieContainer,
                         VideoId = target.ID
                     });
 
-                    var parser = new APIs.video_page_html.Parser();
+                    var parser = new APIs.html.video_page.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
 

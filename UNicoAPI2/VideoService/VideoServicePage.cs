@@ -73,7 +73,7 @@ namespace UNicoAPI2.VideoService
         {
             return new Session<Response<VideoInfo[]>>((flow) =>
             {
-                flow.Return(new APIs.search_page_html.Accessor()
+                flow.Return(new APIs.html.search_page.Accessor()
                 {
                     CookieContainer = context.CookieContainer,
                     Type = SearchType.ToKey(),
@@ -83,7 +83,7 @@ namespace UNicoAPI2.VideoService
                     Sort = SearchOption.SortTarget.ToKey()
                 });
 
-                var parser = new APIs.search_page_html.Parser();
+                var parser = new APIs.html.search_page.Parser();
                 return Converter.VideoServicePage.Search.From(context, parser.Parse(parser.Parse(flow.GetResult())));
             });
         }

@@ -43,7 +43,7 @@ namespace UNicoAPI2
 
                 if (CheckLogin)
                 {
-                    flow.Return(new APIs.my_page_html.Accessor()
+                    flow.Return(new APIs.html.my_page.Accessor()
                     {
                         CookieContainer = context.CookieContainer
                     });
@@ -53,7 +53,7 @@ namespace UNicoAPI2
                         return VideoService.Converter.UserPage.DownloadUser.From(context, result).Result;
                 }
 
-                flow.Return(new APIs.login_page_html.Accessor()
+                flow.Return(new APIs.html.login_page.Accessor()
                 {
                     CookieContainer = context.CookieContainer
                 });

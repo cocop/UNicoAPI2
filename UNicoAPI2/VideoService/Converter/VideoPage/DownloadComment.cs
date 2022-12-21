@@ -9,7 +9,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
 
         static DateTime unixTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        public static Response<Video.Comment[]> From(APIs.download_comment.Response.packet Response)
+        public static Response<Video.Comment[]> From(APIs.ms.download_comment.Response.packet Response)
         {
             var result = Converter.Response.From<Video.Comment[]>(200, null);
 
@@ -17,7 +17,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return result;
         }
 
-        public static Video.Comment[] Comment(APIs.download_comment.Response.chat[] Response)
+        public static Video.Comment[] Comment(APIs.ms.download_comment.Response.chat[] Response)
         {
             var result = new Video.Comment[(Response != null) ? Response.Length : 0];
 

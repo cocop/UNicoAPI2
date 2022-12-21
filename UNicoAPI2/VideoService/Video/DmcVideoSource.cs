@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using UNicoAPI2.APIs.dmc.heartbeats.Response;
 using UNicoAPI2.Connect;
 
 namespace UNicoAPI2.VideoService.Video
@@ -12,11 +13,11 @@ namespace UNicoAPI2.VideoService.Video
         public HeartBeatsStatus Status { get; private set; }
         public event Action HeartbeatsError;
 
-        APIs.heartbeats.Response.Rootobject heartbeatsInfo;
+        Rootobject heartbeatsInfo;
         CancellationTokenSource tokenSource = new CancellationTokenSource();
 
 
-        public DmcVideoSource(CookieContainer cookieContainer, Uri heartBeatsUri, APIs.heartbeats.Response.Rootobject rootobject)
+        public DmcVideoSource(CookieContainer cookieContainer, Uri heartBeatsUri, Rootobject rootobject)
         {
             Status = HeartBeatsStatus.Active;
             ContentsUri = new Uri(rootobject.data.session.content_uri);
@@ -44,18 +45,18 @@ namespace UNicoAPI2.VideoService.Video
             });
         }
 
-        private async Task<APIs.heartbeats.Response.Rootobject> BeatAsync(CookieContainer cookieContainer, Uri heartBeatsUri, APIs.heartbeats.Response.Rootobject rootobject)
+        private async Task<Rootobject> BeatAsync(CookieContainer cookieContainer, Uri heartBeatsUri, Rootobject rootobject)
         {
-            var session = new Session<APIs.heartbeats.Response.Rootobject>((flow) =>
+            var session = new Session<Rootobject>((flow) =>
             {
-                flow.Return(new APIs.heartbeats.Accessor()
+                flow.Return(new APIs.dmc.heartbeats.Accessor()
                 {
                     CookieContainer = cookieContainer,
                     HeartBeatsUri = heartBeatsUri,
                     Data = rootobject.data
                 });
 
-                return new APIs.heartbeats.Parser().Parse(flow.GetResult());
+                return new APIs.dmc.heartbeats.Parser().Parse(flow.GetResult());
             });
 
             return await session.RunAsync(tokenSource.Token);

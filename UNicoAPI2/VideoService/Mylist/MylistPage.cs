@@ -26,7 +26,7 @@ namespace UNicoAPI2.VideoService.Mylist
             var index = 1;
             return new Session<Response<Mylist>>((flow) =>
             {
-                flow.Return(new APIs.mylitv2.Accessor
+                flow.Return(new APIs.nvapi.mylitv2.Accessor
                 {
                     CcookieContainer = context.CookieContainer,
                     Id = target.ID,
@@ -36,7 +36,7 @@ namespace UNicoAPI2.VideoService.Mylist
 
                 return Converter.MylistPage.DownloadMylist.From(
                     context,
-                    new APIs.mylitv2.Parser().Parse(flow.GetResult()),
+                    new APIs.nvapi.mylitv2.Parser().Parse(flow.GetResult()),
                     target.ID);
             });
         }

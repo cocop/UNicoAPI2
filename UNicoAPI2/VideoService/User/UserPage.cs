@@ -29,14 +29,14 @@ namespace UNicoAPI2.VideoService.User
             {
                 if (!htmlCache.IsAvailab)
                 {
-                    flow.Return(new APIs.user_page_html.Accessor
+                    flow.Return(new APIs.html.user_page.Accessor
                     {
                         CookieContainer = context.CookieContainer,
                         UserId = target.ID
                     });
                 }
 
-                var parser = new APIs.user_page_html.Parser();
+                var parser = new APIs.html.my_page.Parser();
 
                 if (flow.GetResult() != null)
                     htmlCache.Value = parser.Parse(flow.GetResult());
@@ -52,11 +52,11 @@ namespace UNicoAPI2.VideoService.User
         {
             return new Session<Response<Mylist.Mylist[]>>((flow) =>
             {
-                var parser = new APIs.user_mylist_page_html.Parser();
+                var parser = new APIs.html.user_mylist_page.Parser();
 
                 if (!htmlMylistCache.IsAvailab)
                 {
-                    flow.Return(new APIs.user_mylist_page_html.Accessor
+                    flow.Return(new APIs.html.user_mylist_page.Accessor
                     {
                         CookieContainer = context.CookieContainer,
                         UserId = target.ID

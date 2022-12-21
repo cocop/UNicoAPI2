@@ -25,13 +25,13 @@ namespace UNicoAPI2.VideoService.Series
         {
             return new Session<Response<Series>>((flow) =>
             {
-                flow.Return(new APIs.series_page_html.Accessor
+                flow.Return(new APIs.html.series_page.Accessor
                 {
                     CookieContainer = context.CookieContainer,
                     SeriesId = target.ID
                 });
 
-                var parser = new APIs.series_page_html.Parser();
+                var parser = new APIs.html.series_page.Parser();
                 return Converter.SeriesPage.DownloadSeries.From(
                     context,
                     parser.Parse(parser.Parse(flow.GetResult())),

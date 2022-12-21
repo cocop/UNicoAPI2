@@ -6,7 +6,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
     public class DownloadVideoInfo
     {
         /*----------------------------------------*/
-        public static Response<VideoInfo> From(Context Context, APIs.getthumbinfo.Response.nicovideo_thumb_response Response)
+        public static Response<VideoInfo> From(Context Context, APIs.ms.getthumbinfo.Response.nicovideo_thumb_response Response)
         {
             var result = Converter.Response.From<VideoInfo>(Response.status, Response.error);
 
@@ -35,7 +35,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return result;
         }
 
-        public static VideoInfo VideoInfo(Context Context, APIs.video_page_html.Response.Rootobject.Series.Video.Item Response)
+        public static VideoInfo VideoInfo(Context Context, APIs.html.video_page.Response.Rootobject.Series.Video.Item Response)
         {
             if (Response == null)
             {
@@ -51,7 +51,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             };
         }
 
-        public static User.User ToUser(Context Context, APIs.video_page_html.Response.Rootobject.Series.Video.Item.Owner Response)
+        public static User.User ToUser(Context Context, APIs.html.video_page.Response.Rootobject.Series.Video.Item.Owner Response)
         {
             var user = Context.IDContainer.GetUser(Response?.id);
             user.Name = Response?.name;
@@ -59,7 +59,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return user;
         }
 
-        public static Tag[] ToTags(APIs.getthumbinfo.Response.tags Response)
+        public static Tag[] ToTags(APIs.ms.getthumbinfo.Response.tags Response)
         {
             var result = new Tag[Response.tag.Length];
 
@@ -78,7 +78,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
 
         /*----------------------------------------*/
 
-        public static Response<VideoInfo> From(Context Context, APIs.video_page_html.Response.Rootobject Response)
+        public static Response<VideoInfo> From(Context Context, APIs.html.video_page.Response.Rootobject Response)
         {
             var result = new Response<VideoInfo>();
             result.Status = Status.OK;
@@ -107,7 +107,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return result;
         }
 
-        public static User.User ToUser(Context Context, APIs.video_page_html.Response.Rootobject.Owner Response)
+        public static User.User ToUser(Context Context, APIs.html.video_page.Response.Rootobject.Owner Response)
         {
             var user = Context.IDContainer.GetUser(Response?.id.ToString());
             user.Name = Response?.nickname;
@@ -115,7 +115,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return user;
         }
 
-        private static Tag[] ToTags(APIs.video_page_html.Response.Rootobject.Tag Response)
+        private static Tag[] ToTags(APIs.html.video_page.Response.Rootobject.Tag Response)
         {
             var result = new Tag[Response.items.Length];
 

@@ -4,7 +4,7 @@ namespace UNicoAPI2.VideoService.Converter.MylistPage
 {
     public class DownloadMylist
     {
-        public static Response<Mylist.Mylist> From(Context Context, APIs.mylitv2.Response.Rootobject Response, string MylistID)
+        public static Response<Mylist.Mylist> From(Context Context, APIs.nvapi.mylitv2.Response.Rootobject Response, string MylistID)
         {
             var result = Converter.Response.From<Mylist.Mylist>(Response.meta.status, Response.meta.errorCode);
 
@@ -30,7 +30,7 @@ namespace UNicoAPI2.VideoService.Converter.MylistPage
         }
 
 
-        public static Mylist.MylistItem[] ToMylistItem(Context Context, APIs.mylitv2.Response.Item[] Response)
+        public static Mylist.MylistItem[] ToMylistItem(Context Context, APIs.nvapi.mylitv2.Response.Item[] Response)
         {
             if (Response == null)
                 return null;

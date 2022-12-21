@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="APIs\search_page_html\Response\" />
+    <Folder Include="APIs\html\search_page\Response\" />
   </ItemGroup>
 
 </Project>

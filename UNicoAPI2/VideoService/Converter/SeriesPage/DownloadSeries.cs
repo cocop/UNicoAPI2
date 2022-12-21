@@ -4,7 +4,7 @@ namespace UNicoAPI2.VideoService.Converter.SeriesPage
 {
     public class DownloadSeries
     {
-        public static Response<Series.Series> From(Context Context, APIs.series_page_html.Response.Result Response, string SeriesID)
+        public static Response<Series.Series> From(Context Context, APIs.html.series_page.Response.Result Response, string SeriesID)
         {
             var result = Converter.Response.From<Series.Series>(200, null);
 

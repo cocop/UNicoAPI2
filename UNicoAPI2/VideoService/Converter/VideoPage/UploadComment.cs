@@ -1,8 +1,10 @@
-﻿namespace UNicoAPI2.VideoService.Converter.VideoPage
+﻿using UNicoAPI2.APIs.ms.upload_comment.Response;
+
+namespace UNicoAPI2.VideoService.Converter.VideoPage
 {
     public class UploadComment
     {
-        public static VideoService.Response From(APIs.upload_comment.Response.packet Response)
+        public static VideoService.Response From(packet Response)
         {
             var result = new VideoService.Response();
 

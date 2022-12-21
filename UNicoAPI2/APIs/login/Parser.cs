@@ -43,7 +43,7 @@ namespace UNicoAPI2.APIs.login
 
         public Dictionary<string, string> Parse(byte[] Value)
         {
-            var parser = new my_page_html.Parser();
+            var parser = new html.my_page.Parser();
             return parser.Parse(parser.Parse(Value));
         }
     }
