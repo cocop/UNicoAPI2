@@ -39,7 +39,6 @@ namespace UNicoAPI2.Connect
         /// セッションを作成します
         /// </summary>
         /// <param name="SessionFlow">セッションの処理</param>
-        /// <param name="Complete">セッション終了時の最終結果を出力する関数</param>
         public Session(Func<IInnerDownFlow<byte[]>, ResultType> SessionFlow)
         {
             flow = new Flow<byte[]>();
