@@ -18,26 +18,25 @@ namespace UNicoAPI2.APIs.html.search_page
             var htmlParser = new AngleSharp.Html.Parser.HtmlParser();
             var htmlDocuments = htmlParser.ParseDocument(Value);
 
-            foreach (var item in htmlDocuments.QuerySelectorAll(@".videoList > ul[class=""list""] > .item"))
+            foreach (var item in htmlDocuments.QuerySelectorAll(@".videoList > ul[class=""list""] > .item:not(.nicoadVideoItem)"))
             {
-                var info = new Dictionary<string, string>();
-
-                info["id"] = item.GetAttribute("data-video-id");
-                info["time"] = item.QuerySelector(".time")?.InnerHtml;
-                info["title"] = item.QuerySelector(".itemTitle > a")?.GetAttribute("title");
-                info["short_desc"] = item.QuerySelector(".itemDescription")?.InnerHtml;
-                info["length"] = item.QuerySelector(".videoLength")?.InnerHtml;
-                info["view"] = item.QuerySelector(".count.view > .value")?.InnerHtml?.Replace(",", "");
-                info["comment"] = item.QuerySelector(".count.comment > .value")?.InnerHtml?.Replace(",", "");
-                info["like"] = item.QuerySelector(".count.like > .value")?.InnerHtml?.Replace(",", "");
-                info["mylist"] = item.QuerySelector(".count.mylist > .value")?.InnerHtml?.Replace(",", "");
-
                 var thumbnailUrl = item.QuerySelector(@"img[class=""thumb""]")?.GetAttribute("src");
                 if (thumbnailUrl != null && thumbnailUrl[thumbnailUrl.Length - 2] == '.')
                     thumbnailUrl = thumbnailUrl.Substring(0, thumbnailUrl.Length - 2);
-                info["thumbnail"] = thumbnailUrl;
 
-                result.Add(info);
+                result.Add(new Dictionary<string, string>
+                {
+                    ["id"] = item.GetAttribute("data-video-id"),
+                    ["time"] = item.QuerySelector(".time")?.InnerHtml,
+                    ["title"] = item.QuerySelector(".itemTitle > a")?.GetAttribute("title"),
+                    ["short_desc"] = item.QuerySelector(".itemDescription")?.InnerHtml,
+                    ["length"] = item.QuerySelector(".videoLength")?.InnerHtml,
+                    ["view"] = item.QuerySelector(".count.view > .value")?.InnerHtml?.Replace(",", ""),
+                    ["comment"] = item.QuerySelector(".count.comment > .value")?.InnerHtml?.Replace(",", ""),
+                    ["like"] = item.QuerySelector(".count.like > .value")?.InnerHtml?.Replace(",", ""),
+                    ["mylist"] = item.QuerySelector(".count.mylist > .value")?.InnerHtml?.Replace(",", ""),
+                    ["thumbnail"] = thumbnailUrl
+                });
             }
 
             return result.ToArray();
