@@ -1,8 +1,9 @@
 # UNicoAPI2
-UWP用ニコニコ動画へアクセスするAPI
+
+.Net Standard 2.0 で作成したニコニコ動画 API へアクセスするライブラリです
 
 前バージョンはこちら  
-https://github.com/cocop/NicoServiceAPI  
-  
-このコードの規約はThe Unlicenseです  
-好きにどうぞ  
+https://github.com/cocop/NicoServiceAPI
+
+このコードの規約は The Unlicense です  
+好きにどうぞ
