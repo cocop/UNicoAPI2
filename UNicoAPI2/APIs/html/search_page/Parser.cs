@@ -24,7 +24,7 @@ namespace UNicoAPI2.APIs.html.search_page
                 if (thumbnailUrl != null && thumbnailUrl[thumbnailUrl.Length - 2] == '.')
                     thumbnailUrl = thumbnailUrl.Substring(0, thumbnailUrl.Length - 2);
 
-                result.Add(new Dictionary<string, string>
+                var itemDict = new Dictionary<string, string>
                 {
                     ["id"] = item.GetAttribute("data-video-id"),
                     ["time"] = item.QuerySelector(".time")?.InnerHtml,
@@ -36,7 +36,12 @@ namespace UNicoAPI2.APIs.html.search_page
                     ["like"] = item.QuerySelector(".count.like > .value")?.InnerHtml?.Replace(",", ""),
                     ["mylist"] = item.QuerySelector(".count.mylist > .value")?.InnerHtml?.Replace(",", ""),
                     ["thumbnail"] = thumbnailUrl
-                });
+                };
+
+                if (itemDict["length"] != null)
+                {
+                    result.Add(itemDict);
+                }
             }
 
             return result.ToArray();
