@@ -6,17 +6,12 @@ using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.html.video_page
 {
-    public class Parser : IHtmlParser<Response.Rootobject>
+    public class Parser : HtmlParser<Response.Rootobject>
     {
         static readonly Regex info =
             new Regex("<div id=\"js-initial-watch-data\" data-api-data=\"(?<value>.*?)\" data-environment=\"");
 
-        public string Parse(byte[] Value)
-        {
-            return Encoding.UTF8.GetString(Value);
-        }
-
-        public Response.Rootobject Parse(string Value)
+        public override Response.Rootobject Parse(string Value)
         {
             var result = info.Match(Value).Groups["value"].Value;
             result = WebUtility.HtmlDecode(result);

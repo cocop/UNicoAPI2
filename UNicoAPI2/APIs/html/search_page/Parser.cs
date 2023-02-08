@@ -5,14 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.html.search_page
 {
-    public class Parser : IHtmlParser<Dictionary<string, string>[]>
+    public class Parser : HtmlParser<Dictionary<string, string>[]>
     {
-        public string Parse(byte[] Value)
-        {
-            return Encoding.UTF8.GetString(Value);
-        }
-
-        public Dictionary<string, string>[] Parse(string Value)
+        public override Dictionary<string, string>[] Parse(string Value)
         {
             var result = new List<Dictionary<string, string>>();
             var htmlParser = new AngleSharp.Html.Parser.HtmlParser();

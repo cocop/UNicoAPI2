@@ -4,16 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.html.user_mylist_page
 {
-    public class Parser : IHtmlParser<Dictionary<string, string>[]>
+    public class Parser : HtmlParser<Dictionary<string, string>[]>
     {
         static readonly Regex regex = new Regex("<a href=\"mylist\\/(?<id>.*?)\"><span class=\"(?<value>.*?)\"></span>(?<name>.*?)</a>");
 
-        public string Parse(byte[] Value)
-        {
-            return Encoding.UTF8.GetString(Value);
-        }
-
-        public Dictionary<string, string>[] Parse(string Value)
+        public override Dictionary<string, string>[] Parse(string Value)
         {
             var result = new List<Dictionary<string, string>>();
 

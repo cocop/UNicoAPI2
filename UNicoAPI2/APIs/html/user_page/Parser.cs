@@ -7,16 +7,11 @@ using System.Text.RegularExpressions;
 
 namespace UNicoAPI2.APIs.html.user_page
 {
-    public class Parser : IHtmlParser<Dictionary<string, string>>
+    public class Parser : HtmlParser<Dictionary<string, string>>
     {
         static readonly Regex jsonRegex = new Regex("data-environment=\"(?<json>.*?)\"");
 
-        public string Parse(byte[] Value)
-        {
-            return Encoding.UTF8.GetString(Value);
-        }
-
-        public Dictionary<string, string> Parse(string Value)
+        public override Dictionary<string, string> Parse(string Value)
         {
             var matchedJsonText = jsonRegex.Match(Value).Groups["json"];
             if (matchedJsonText == null || matchedJsonText.Value == "")
