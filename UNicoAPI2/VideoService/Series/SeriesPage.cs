@@ -29,21 +29,21 @@ namespace UNicoAPI2.VideoService.Series
         /// <summary>
         /// シリーズを取得する
         /// </summary>
-        public Session<Response<Series>> DownloadSeries()
+        /// <param name="Page">100区切りの動画リストのページ(1～)</param>
+        public Session<Response<Series>> DownloadSeries(int Page = 1)
         {
             return new Session<Response<Series>>((flow) =>
             {
-                if (!infoCache.IsAvailab)
+                flow.Return(new APIs.html.series_page.Accessor
                 {
-                    flow.Return(new APIs.html.series_page.Accessor
-                    {
-                        CookieContainer = context.CookieContainer,
-                        SeriesId = target.ID
-                    });
+                    CookieContainer = context.CookieContainer,
+                    SeriesId = target.ID,
+                    UserId = target.User?.ID,
+                    Page = Page
+                });
 
-                    var parser = new APIs.html.series_page.Parser();
-                    infoCache.Value = parser.HtmlParse(flow.GetResult());
-                }
+                var parser = new APIs.html.series_page.Parser();
+                infoCache.Value = parser.HtmlParse(flow.GetResult());
 
                 return Converter.SeriesPage.DownloadSeries.From(
                     context,
