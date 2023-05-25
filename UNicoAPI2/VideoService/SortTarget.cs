@@ -30,6 +30,11 @@ namespace UNicoAPI2.VideoService
         CommentCount,
 
         /// <summary>
+        /// いいね数
+        /// </summary>
+        LikeCount,
+
+        /// <summary>
         /// マイリスト数
         /// </summary>
         MylistCount,
@@ -57,6 +62,7 @@ namespace UNicoAPI2.VideoService
                 case SortTarget.Comment: return "n";
                 case SortTarget.ViewCount: return "v";
                 case SortTarget.CommentCount: return "r";
+                case SortTarget.LikeCount: return "likeCount";
                 case SortTarget.MylistCount: return "m";
                 case SortTarget.PostTime: return "f";
                 case SortTarget.VideoTime: return "l";
