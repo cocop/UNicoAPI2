@@ -37,7 +37,7 @@ namespace UNicoAPI2.APIs.nvcomment.get
 
         public Task<Stream> GetUploadStreamAsync(int DataLength)
         {
-            request = (HttpWebRequest)WebRequest.Create("https://nvcomment.nicovideo.jp/v1/threads");
+            request = (HttpWebRequest)WebRequest.Create("https://nv-comment.nicovideo.jp/v1/threads");
 
             request.Method = ContentMethod.Post;
             request.CookieContainer = CookieContainer;
