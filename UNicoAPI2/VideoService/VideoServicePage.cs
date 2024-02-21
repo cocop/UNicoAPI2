@@ -1,4 +1,5 @@
-﻿using UNicoAPI2.Connect;
+﻿using System.Net;
+using UNicoAPI2.Connect;
 using UNicoAPI2.VideoService.Mylist;
 using UNicoAPI2.VideoService.Series;
 using UNicoAPI2.VideoService.User;
@@ -13,6 +14,8 @@ namespace UNicoAPI2.VideoService
     /******************************************/
     public class VideoServicePage
     {
+        public CookieContainer CookieContainer { get => context.CookieContainer; }
+
         Context context;
 
         internal VideoServicePage(Context Context)

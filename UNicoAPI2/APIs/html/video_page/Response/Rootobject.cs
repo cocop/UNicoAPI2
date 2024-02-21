@@ -200,6 +200,7 @@ namespace UNicoAPI2.APIs.html.video_page.Response
 
         public class Media
         {
+            public Domand domand { get; set; }
             public Delivery delivery { get; set; }
             public object deliveryLegacy { get; set; }
 
@@ -303,6 +304,43 @@ namespace UNicoAPI2.APIs.html.video_page.Response
                 }
             }
 
+            public class Domand
+            {
+                public Video[] videos { get; set; }
+                public Audio[] audios { get; set; }
+                public bool isStoryboardAvailable { get; set; }
+                public string accessRightKey { get; set; }
+            }
+
+            public class Video
+            {
+                public string id { get; set; }
+                public bool isAvailable { get; set; }
+                public string label { get; set; }
+                public int bitRate { get; set; }
+                public int width { get; set; }
+                public int height { get; set; }
+                public int qualityLevel { get; set; }
+                public int recommendedHighestAudioQualityLevel { get; set; }
+            }
+
+            public class Audio
+            {
+                public string id { get; set; }
+                public bool isAvailable { get; set; }
+                public int bitRate { get; set; }
+                public int samplingRate { get; set; }
+                public float integratedLoudness { get; set; }
+                public float truePeak { get; set; }
+                public int qualityLevel { get; set; }
+                public Loudnesscollection[] loudnessCollection { get; set; }
+            }
+
+            public class Loudnesscollection
+            {
+                public string type { get; set; }
+                public float value { get; set; }
+            }
         }
 
         public class Owner

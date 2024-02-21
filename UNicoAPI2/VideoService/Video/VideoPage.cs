@@ -1,5 +1,6 @@
 ﻿using System;
 using UNicoAPI2.Connect;
+using Windows.Media.Core;
 
 namespace UNicoAPI2.VideoService.Video
 {
@@ -16,7 +17,6 @@ namespace UNicoAPI2.VideoService.Video
 
         Cache<APIs.html.video_page.Response.Rootobject> htmlCache = new Cache<APIs.html.video_page.Response.Rootobject>();
 
-        bool isAvailabDmcCash = false;
         string postKey = null;
 
         /******************************************/
@@ -26,11 +26,6 @@ namespace UNicoAPI2.VideoService.Video
         {
             target = Target;
             context = Context;
-
-            htmlCache.ChangedValue += () =>
-            {
-                isAvailabDmcCash = true;
-            };
         }
 
         /// <summary>
@@ -90,12 +85,12 @@ namespace UNicoAPI2.VideoService.Video
         /// <summary>
         /// html5APIを使用して動画を取得する
         /// </summary>
-        /// <returns>接続維持セッションを持ったVideoSource</returns>
-        public Session<DmcVideoSource> GetDmcVideoSource()
+        /// <returns>ContentURL</returns>
+        public Session<Uri> GetVideoSource()
         {
-            return new Session<DmcVideoSource>((flow) =>
+            return new Session<Uri>((flow) =>
             {
-                if (!htmlCache.IsAvailab || !isAvailabDmcCash || DateTime.Now > (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MinValue))
+                if (!htmlCache.IsAvailab || DateTime.Now > (htmlCache.GotTime?.AddSeconds(30) ?? DateTime.MinValue))
                 {
 
                     flow.Return(new APIs.html.video_page.Accessor()
@@ -107,20 +102,19 @@ namespace UNicoAPI2.VideoService.Video
                     var parser = new APIs.html.video_page.Parser();
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
-                isAvailabDmcCash = false;
 
-                flow.Return(new APIs.dmc.media_session.Accessor()
+                flow.Return(new APIs.nvapi.access_rights.Accessor()
                 {
                     CookieContainer = context.CookieContainer,
-                    MediaInfo = htmlCache.Value.media
+                    videoId = target.ID,
+                    actionTrackId = htmlCache.Value.client.watchTrackId,
+                    domand = htmlCache.Value.media.domand,
                 });
 
                 {
-                    var parser = new APIs.dmc.heartbeats.Parser();
-                    return new DmcVideoSource(
-                        context.CookieContainer,
-                        new Uri(htmlCache.Value.media.delivery.movie.session.urls[0].url),
-                        parser.Parse(flow.GetResult()));
+                    var parser = new APIs.nvapi.access_rights.Parser();
+                    var contentUrl = new Uri(parser.Parse(flow.GetResult()).data.contentUrl);
+                    return contentUrl;
                 }
             });
         }
