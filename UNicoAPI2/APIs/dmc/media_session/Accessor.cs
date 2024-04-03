@@ -130,6 +130,7 @@ namespace UNicoAPI2.APIs.dmc.media_session
 
             request.Headers["Content-Length"] = DataLength.ToString();
             request.Headers["Connection"] = "keep-alive";
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             return request.GetRequestStreamAsync();
         }

@@ -22,6 +22,7 @@ namespace UNicoAPI2.APIs.nvapi.mylitv2
             request.CookieContainer = CcookieContainer;
             request.Headers["X-Frontend-Id"] = "6";
             request.Headers["X-Frontend-Version"] = "6";
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             return request.GetResponseAsync();
         }

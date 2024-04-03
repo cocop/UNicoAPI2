@@ -17,6 +17,7 @@ namespace UNicoAPI2.APIs
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = CookieContainer;
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             if (Length != -1)
                 request.Headers["Range"] = $"bytes={Position}-{Length}";

@@ -13,13 +13,9 @@ namespace UNicoAPI2.APIs.html.my_page
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             request = (HttpWebRequest)WebRequest.Create("http://www.nicovideo.jp/my");
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             request.CookieContainer = CookieContainer;
-            request.Headers["Sec-Fetch-Dest"] = "document";
-            request.Headers["Sec-Fetch-Mode"] = "navigate";
-            request.Headers["Sec-Fetch-Site"] = "none";
-            request.Headers["Sec-Fetch-User"] = "?1";
-            request.Headers["Upgrade-Insecure-Requests"] = "1";
 
             return request.GetResponseAsync();
         }

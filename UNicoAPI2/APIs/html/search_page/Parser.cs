@@ -13,7 +13,7 @@ namespace UNicoAPI2.APIs.html.search_page
             var htmlParser = new AngleSharp.Html.Parser.HtmlParser();
             var htmlDocuments = htmlParser.ParseDocument(Value);
 
-            foreach (var item in htmlDocuments.QuerySelectorAll(@".videoList > ul[class=""list""] > .item:not(.nicoadVideoItem)"))
+            foreach (var item in htmlDocuments.QuerySelectorAll(@"ul[class=""videoListInner""] > li"))
             {
                 var thumbnailUrl = item.QuerySelector(@"img[class=""thumb""]")?.GetAttribute("src");
                 if (thumbnailUrl != null && thumbnailUrl[thumbnailUrl.Length - 2] == '.')

@@ -51,6 +51,7 @@ namespace UNicoAPI2.APIs.login
             request.ContentType = ContentType.Form;
             request.Headers["Cache-Control"] = "max-age=0";
             request.Headers["Content-Length"] = DataLength.ToString();
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
             request.CookieContainer = CookieContainer;
 
             return request.GetRequestStreamAsync();

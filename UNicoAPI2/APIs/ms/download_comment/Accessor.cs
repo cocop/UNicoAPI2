@@ -20,6 +20,7 @@ namespace UNicoAPI2.APIs.ms.download_comment
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = CookieContainer;
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             return request.GetResponseAsync();
         }

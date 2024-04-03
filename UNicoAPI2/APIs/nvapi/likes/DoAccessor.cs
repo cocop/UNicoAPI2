@@ -16,6 +16,7 @@ namespace UNicoAPI2.APIs.nvapi.likes
 
             request.Method = ContentMethod.Post;
             request.CookieContainer = CookieContainer;
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             return request.GetResponseAsync();
         }

@@ -75,6 +75,7 @@ namespace UNicoAPI2.APIs.nvapi.access_rights
             request.Headers["X-Request-With"] = "https://www.nicovideo.jp";
             request.Headers["X-Access-Right-Key"] = domand.accessRightKey;
             request.Headers["Content-Length"] = DataLength.ToString();
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             return request.GetRequestStreamAsync();
         }

@@ -40,6 +40,8 @@ namespace UNicoAPI2.APIs.tag_edit
 
             request.CookieContainer = CookieContainer;
             request.ContentType = ContentType.Form;
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
+
             return request.GetRequestStreamAsync();
         }
 

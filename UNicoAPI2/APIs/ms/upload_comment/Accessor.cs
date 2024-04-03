@@ -38,6 +38,7 @@ namespace UNicoAPI2.APIs.ms.upload_comment
 
             request.Method = ContentMethod.Post;
             request.ContentType = ContentType.Xml;
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
             request.CookieContainer = CookieContainer;
 
             return request.GetRequestStreamAsync();

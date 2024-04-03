@@ -33,6 +33,7 @@ namespace UNicoAPI2.APIs.login
             request.Headers["Sec-Fetch-Site"] = "same-origin";
             request.Headers["Sec-Fetch-User"] = "?1";
             request.Headers["Upgrade-Insecure-Requests"] = "1";
+            request.Headers["User-Agent"] = "UNicoAPI2 (https://github.com/cocop/UNicoAPI2)";
 
             return request.GetRequestStreamAsync();
         }
