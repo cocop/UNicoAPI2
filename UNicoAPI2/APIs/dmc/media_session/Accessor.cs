@@ -14,7 +14,7 @@ namespace UNicoAPI2.APIs.dmc.media_session
     public class Accessor : IAccessorWithUploadData
     {
         public CookieContainer CookieContainer { get; set; }
-        public html.video_page.Response.Rootobject.Media MediaInfo { get; set; }
+        public html.video_page.Response.Rootobject.Data.Response.Media MediaInfo { get; set; }
 
         HttpWebRequest request;
 
@@ -94,7 +94,7 @@ namespace UNicoAPI2.APIs.dmc.media_session
             };
         }
 
-        private Request.Content_Src_Ids[] CreateContentSrcIds(html.video_page.Response.Rootobject.Media.Delivery.Movie.Session sessionInfo)
+        private Request.Content_Src_Ids[] CreateContentSrcIds(html.video_page.Response.Rootobject.Data.Response.Media.Delivery.Movie.Session sessionInfo)
         {
             var contentSrcIds = new List<Request.Content_Src_Ids>();
 
