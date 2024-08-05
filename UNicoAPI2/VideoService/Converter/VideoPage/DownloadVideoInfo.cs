@@ -35,7 +35,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return result;
         }
 
-        public static VideoInfo VideoInfo(Context Context, APIs.html.video_page.Response.Rootobject.Series.Video.Item Response)
+        public static VideoInfo VideoInfo(Context Context, APIs.html.video_page.Response.Rootobject.Data.Response.Series.Video.Item Response)
         {
             if (Response == null)
             {
@@ -51,7 +51,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             };
         }
 
-        public static User.User ToUser(Context Context, APIs.html.video_page.Response.Rootobject.Series.Video.Item.Owner Response)
+        public static User.User ToUser(Context Context, APIs.html.video_page.Response.Rootobject.Data.Response.Series.Video.Item.Owner Response)
         {
             var user = Context.IDContainer.GetUser(Response?.id);
             user.Name = Response?.name;
@@ -82,32 +82,32 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
         {
             var result = new Response<VideoInfo>();
             result.Status = Status.OK;
-            result.Result = Context.IDContainer.GetVideoInfo(Response.video.id);
+            result.Result = Context.IDContainer.GetVideoInfo(Response.data.response.video.id);
 
-            result.Result.ComentCounter = Response.video.count.comment;
-            result.Result.Description = Response.video.description;
-            result.Result.IsExternalPlay = Response.video.isEmbedPlayerAllowed;
-            result.Result.Length = TimeSpan.FromSeconds(Response.video.duration);
-            result.Result.MylistCounter = Response.video.count.mylist;
-            result.Result.PostTime = DateTime.Parse(Response.video.registeredAt);
-            result.Result.Tags = ToTags(Response.tag);
-            result.Result.Title = Response.video.title;
-            result.Result.ViewCounter = Response.video.count.view;
-            result.Result.LikeCounter = Response.video.count.like;
-            result.Result.Thumbnail = new Picture(Response.video.thumbnail.url, Context.CookieContainer);
-            result.Result.User = ToUser(Context, Response.owner);
-            if (Response?.series != null)
+            result.Result.ComentCounter = Response.data.response.video.count.comment;
+            result.Result.Description = Response.data.response.video.description;
+            result.Result.IsExternalPlay = Response.data.response.video.isEmbedPlayerAllowed;
+            result.Result.Length = TimeSpan.FromSeconds(Response.data.response.video.duration);
+            result.Result.MylistCounter = Response.data.response.video.count.mylist;
+            result.Result.PostTime = DateTime.Parse(Response.data.response.video.registeredAt);
+            result.Result.Tags = ToTags(Response.data.response.tag);
+            result.Result.Title = Response.data.response.video.title;
+            result.Result.ViewCounter = Response.data.response.video.count.view;
+            result.Result.LikeCounter = Response.data.response.video.count.like;
+            result.Result.Thumbnail = new Picture(Response.data.response.video.thumbnail.url, Context.CookieContainer);
+            result.Result.User = ToUser(Context, Response.data.response.owner);
+            if (Response?.data.response.series != null)
             {
-                result.Result.Series = Context.IDContainer.GetSeries(Response.series.id.ToString());
-                result.Result.Series.Title = Response.series.title;
-                result.Result.First = VideoInfo(Context, Response.series?.video?.first);
-                result.Result.Next = VideoInfo(Context, Response.series?.video?.next);
-                result.Result.Prev = VideoInfo(Context, Response.series?.video?.prev);
+                result.Result.Series = Context.IDContainer.GetSeries(Response.data.response.series.id.ToString());
+                result.Result.Series.Title = Response.data.response.series.title;
+                result.Result.First = VideoInfo(Context, Response.data.response.series?.video?.first);
+                result.Result.Next = VideoInfo(Context, Response.data.response.series?.video?.next);
+                result.Result.Prev = VideoInfo(Context, Response.data.response.series?.video?.prev);
             }
             return result;
         }
 
-        public static User.User ToUser(Context Context, APIs.html.video_page.Response.Rootobject.Owner Response)
+        public static User.User ToUser(Context Context, APIs.html.video_page.Response.Rootobject.Data.Response.Owner Response)
         {
             var user = Context.IDContainer.GetUser(Response?.id.ToString());
             user.Name = Response?.nickname;
@@ -115,7 +115,7 @@ namespace UNicoAPI2.VideoService.Converter.VideoPage
             return user;
         }
 
-        private static Tag[] ToTags(APIs.html.video_page.Response.Rootobject.Tag Response)
+        private static Tag[] ToTags(APIs.html.video_page.Response.Rootobject.Data.Response.Tag Response)
         {
             var result = new Tag[Response.items.Length];
 

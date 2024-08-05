@@ -9,7 +9,7 @@ namespace UNicoAPI2.APIs.html.video_page
     public class Parser : HtmlParser<Response.Rootobject>
     {
         static readonly Regex info =
-            new Regex("<div id=\"js-initial-watch-data\" data-api-data=\"(?<value>.*?)\" data-environment=\"");
+            new Regex("<meta name=\"server-response\" content=\"(?<value>.*?)\" />");
 
         public override Response.Rootobject Parse(string Value)
         {

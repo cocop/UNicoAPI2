@@ -4,7 +4,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using UNicoAPI2.Connect;
-using static UNicoAPI2.APIs.html.video_page.Response.Rootobject.Media;
+using static UNicoAPI2.APIs.html.video_page.Response.Rootobject.Data.Response.Media;
 
 namespace UNicoAPI2.APIs.nvapi.access_rights
 {

@@ -107,8 +107,8 @@ namespace UNicoAPI2.VideoService.Video
                 {
                     CookieContainer = context.CookieContainer,
                     videoId = target.ID,
-                    actionTrackId = htmlCache.Value.client.watchTrackId,
-                    domand = htmlCache.Value.media.domand,
+                    actionTrackId = htmlCache.Value.data.response.client.watchTrackId,
+                    domand = htmlCache.Value.data.response.media.domand,
                 });
 
                 {
@@ -181,7 +181,7 @@ namespace UNicoAPI2.VideoService.Video
                     htmlCache.Value = parser.Parse(parser.Parse(flow.GetResult()));
                 }
 
-                var postTarget = Array.Find(htmlCache.Value.comment.nvComment._params.targets, (i) => i.fork == "main");
+                var postTarget = Array.Find(htmlCache.Value.data.response.comment.nvComment._params.targets, (i) => i.fork == "main");
 
                 if (postKey == null)
                 {
@@ -240,9 +240,9 @@ namespace UNicoAPI2.VideoService.Video
                 flow.Return(new APIs.nvcomment.get.Accessor()
                 {
                     CookieContainer = context.CookieContainer,
-                    ThreadKey = htmlCache.Value.comment.nvComment.threadKey,
+                    ThreadKey = htmlCache.Value.data.response.comment.nvComment.threadKey,
                     Target = Array.ConvertAll(
-                        htmlCache.Value.comment.nvComment._params.targets,
+                        htmlCache.Value.data.response.comment.nvComment._params.targets,
                         (i) =>
                         {
                             return new APIs.nvcomment.get.Request.Target()
