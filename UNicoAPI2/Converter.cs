@@ -11,5 +11,10 @@ namespace UNicoAPI2
 
             return new TimeSpan((int)(minute / 60), minute % 60, int.Parse(buf[1]));
         }
+
+        public static TimeSpan TimeSpan(int s)
+        {
+            return new TimeSpan(0, 0, s);
+        }
     }
 }
