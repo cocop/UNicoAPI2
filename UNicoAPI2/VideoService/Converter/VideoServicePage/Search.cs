@@ -42,24 +42,24 @@ namespace UNicoAPI2.VideoService.Converter.VideoServicePage
 
         /*----------------------------------------*/
 
-        public static Response<VideoInfo[]> From(Context Context, Dictionary<string, string>[] Response)
+        public static Response<VideoInfo[]> From(Context Context, APIs.html.search_page.Response.Rootobject Response)
         {
-            var result = Converter.Response.From<VideoInfo[]>(200, null);
+            var result = Converter.Response.From<VideoInfo[]>(Response.meta.code, null);
 
             var videoList = new List<VideoInfo>();
-            foreach (var item in Response)
+            foreach (var item in Response.data.response.getSearchVideoV2.data.items)
             {
                 videoList.Add(new VideoInfo()
                 {
-                    ID = item["id"],
-                    Title = item["title"],
-                    ShortDescription = item["short_desc"],
-                    Length = UNicoAPI2.Converter.TimeSpan(item["length"]),
-                    Thumbnail = new Picture(item["thumbnail"], Context.CookieContainer),
-                    ViewCounter = int.Parse(item["view"].Replace(",", "")),
-                    ComentCounter = int.Parse(item["comment"].Replace(",", "")),
-                    LikeCounter = int.Parse(item["like"].Replace(",", "")),
-                    MylistCounter = int.Parse(item["mylist"].Replace(",", "")),
+                    ID = item.id,
+                    Title = item.title,
+                    ShortDescription = item.shortDescription,
+                    Length = UNicoAPI2.Converter.TimeSpan(item.duration),
+                    Thumbnail = new Picture(item.thumbnail.url, Context.CookieContainer),
+                    ViewCounter = item.count.view,
+                    ComentCounter = item.count.comment,
+                    LikeCounter = item.count.like,
+                    MylistCounter = item.count.mylist,
                 });
             }
 

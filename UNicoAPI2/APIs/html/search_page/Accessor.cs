@@ -16,7 +16,7 @@ namespace UNicoAPI2.APIs.html.search_page
         public Task<WebResponse> GetDownloadStreamAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(
-                $"https://www.nicovideo.jp/{Type}/{Word}?new_search=false&page={Page}&sort={Sort}&order={Order}");
+                $"https://www.nicovideo.jp/{Type}/{Word}?new_search=true&page={Page}&sort={Sort}&order={Order}");
 
             request.Method = ContentMethod.Get;
             request.CookieContainer = CookieContainer;
